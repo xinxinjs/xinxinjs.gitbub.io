@@ -1,7 +1,6 @@
 ---
 title: test
-date: 2018-03-20 10:56:00
-tags:
+date: 2019-06-27 15:42:07
+tags: test
 ---
-
-test
+测试新建文件
