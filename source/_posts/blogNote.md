@@ -4,7 +4,7 @@ date: 2019-06-27 16:22:58
 tags: 其他
 ---
 
-搭建：
+搭建参考教程：
 
 1. [全民博客时代的到来——20 分钟简要教程](https://www.jianshu.com/p/e99ed60390a8)
 2. [Hexo博客的跨设备同步](https://www.jianshu.com/p/6fb0b287f950)
