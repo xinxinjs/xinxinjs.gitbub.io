@@ -12,4 +12,4 @@ this.setState((state, props) => ({
 }));
 ```
 
-上一个state作为第一个参数，此次更新的props作为第二个参数
+上一个状态的state作为第一个参数，此次更新的props作为第二个参数
