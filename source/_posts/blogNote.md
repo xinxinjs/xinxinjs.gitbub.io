@@ -39,3 +39,11 @@ tags: 其他
 使用了主题，比如 next ,在根目录执行：git clone https://github.com/iissnan/hexo-theme-next themes/next，安装主题，否则不能生成静态目录
 
 - 又发现另外一个待解决的问题： 如果使用的主题皮肤，主题皮肤是另外一个仓库的，有自己的 git 配置，不能被我的 git 仓库管理，解决方法：https://juejin.im/post/5c2e22fcf265da615d72c596
+
+
+```
+git submodule add https://github.com/iissnan/hexo-theme-next themes/next
+```
+这个命令可以将外部的仓库作为当前项目的子模块添加进来
+
+报错： 'themes/next' already exists in the index
