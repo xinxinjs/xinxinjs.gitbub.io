@@ -1,7 +1,7 @@
 ---
 title: react/context
 date: 2019-06-28 15:12:29
-tags:
+tags: react
 ---
 
 context 提供了一个无需为每层组件手动添加 props，就可以在组件树之间进行数据传递的方法
