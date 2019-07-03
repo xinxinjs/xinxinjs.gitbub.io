@@ -41,9 +41,23 @@ tags: 其他
 - 又发现另外一个待解决的问题： 如果使用的主题皮肤，主题皮肤是另外一个仓库的，有自己的 git 配置，不能被我的 git 仓库管理，解决方法：https://juejin.im/post/5c2e22fcf265da615d72c596
 
 
-```
-git submodule add https://github.com/iissnan/hexo-theme-next themes/next
-```
-这个命令可以将外部的仓库作为当前项目的子模块添加进来
 
-报错： 'themes/next' already exists in the index
+  1. git submodule add https://github.com/iissnan/hexo-theme-next themes/next
+  这个命令可以将外部的仓库作为当前项目的子模块添加进来
+
+  2. 报错： 'themes/next' already exists in the index，原因是themes/next文件夹已经在git stage里面缓存了，执行git rm -r --cached theme/next命令从stage 移除该文件夹
+
+  3. 继续添加子模块：  git submodule add https://github.com/iissnan/hexo-theme-next themes/next
+
+  4. 子模块添加成功后，根目录会出现一个 ：.gitmodules文件，这是一个配置文件，记录子模块
+
+  5. 执行 git commit -m "添加皮肤主题next作为子模块"
+
+  ```
+  [hexo 16896fd] 添加皮肤主题next作为子模块
+  2 files changed, 4 insertions(+)
+  create mode 100644 .gitmodules
+  create mode 160000 themes/next
+  ```
+
+create mode 160000，表示themes/next 条目是160000，这在Git中是一个特殊模式意思是你将一根提交，记录为目录项，而不是子目录或者文件
