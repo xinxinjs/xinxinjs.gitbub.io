@@ -61,3 +61,13 @@ tags: 其他
   ```
 
 create mode 160000，表示themes/next 条目是160000，这在Git中是一个特殊模式意思是你将一根提交，记录为目录项，而不是子目录或者文件
+
+## 如果再换电脑
+
+1. 使用git clone克隆整个仓库，然后themes/next存在，是空的
+
+2. 执行git submodule init命令来初始化本地的配置文件
+
+3. git submodule update来从那个项目拉取所有数据并检出你上层项目里所列的合适的提交
+
+## 如果皮肤的作者有更新
