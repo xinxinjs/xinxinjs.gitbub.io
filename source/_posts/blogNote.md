@@ -53,7 +53,7 @@ tags: 其他
 
   5. 执行 git commit -m "添加皮肤主题next作为子模块"
 
-  ```
+  ``` bash
   [hexo 16896fd] 添加皮肤主题next作为子模块
   2 files changed, 4 insertions(+)
   create mode 100644 .gitmodules
