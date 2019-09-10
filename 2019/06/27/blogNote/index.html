@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="小心心的笔记">
 <meta property="og:description" content="搭建参考教程：  全民博客时代的到来——20 分钟简要教程 Hexo博客的跨设备同步  换了电脑之后 hexo 配置都没有了 思路：新建一个分支 hexo，管理 hexo 配置和主题文件，原来的 master 分支继续存放生成的静态页面即要发布的内容 操作： 新建 hexo 分支，把 hexo 的配置和主题文件复制进去，然后执行：git add … git push ，push 到 hexo 分支">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-10T06:07:49.999Z">
+<meta property="og:updated_time" content="2019-09-10T06:19:15.635Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="搭建博客，换了电脑之后踩坑记录">
 <meta name="twitter:description" content="搭建参考教程：  全民博客时代的到来——20 分钟简要教程 Hexo博客的跨设备同步  换了电脑之后 hexo 配置都没有了 思路：新建一个分支 hexo，管理 hexo 配置和主题文件，原来的 master 分支继续存放生成的静态页面即要发布的内容 操作： 新建 hexo 分支，把 hexo 的配置和主题文件复制进去，然后执行：git add … git push ，push 到 hexo 分支">
@@ -338,7 +338,7 @@
 <li>新建 hexo 分支，把 hexo 的配置和主题文件复制进去，然后执行：git add … git push ，push 到 hexo 分支</li>
 <li>生成并发布到 master 执行：hexo g，然后 hexo d</li>
 </ol>
-<p>换电脑之后：</p>
+<p>换电脑之后(windows)：</p>
 <ol>
 <li>先 clone 一下 hexo 分支的代码</li>
 <li>安裝 npm install hexo-cli -g</li>
@@ -370,8 +370,10 @@
 </li>
 </ol>
 <p>create mode 160000，表示themes/next 条目是160000，这在Git中是一个特殊模式意思是你将一根提交，记录为目录项，而不是子目录或者文件</p>
-<h2 id="如果再换电脑（MAC）"><a href="#如果再换电脑（MAC）" class="headerlink" title="如果再换电脑（MAC）"></a>如果再换电脑（MAC）</h2><ol>
+<h2 id="如果再换电脑（MAC）"><a href="#如果再换电脑（MAC）" class="headerlink" title="如果再换电脑（MAC）"></a>如果再换电脑（MAC）</h2><ul>
 <li><p>使用git clone克隆整个仓库，然后themes/next存在，是空的</p>
+</li>
+<li><p>生成添加密钥: 执行命令 ssh-keygen -t rsa -C “Github 的注册邮箱地址”，一路回车，待秘钥生成完毕，会得到两个文件 id_rsa 和 id_rsa.pub，用带格式的记事本打开 id_rsa.pub，Ctrl + a 复制里面的所有内容，然后进入<a href="https://github.com/settings/keys" target="_blank" rel="noopener">https://github.com/settings/keys</a></p>
 </li>
 <li><p>执行git submodule init命令来初始化本地的配置文件</p>
 </li>
@@ -381,7 +383,8 @@
 </li>
 <li><p>尝试执行 hexo s,启动服务</p>
 </li>
-</ol>
+</ul>
+<h3 id="其他错误处理"><a href="#其他错误处理" class="headerlink" title="其他错误处理"></a>其他错误处理</h3><p><a href="https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally" target="_blank" rel="noopener">全局安装软件包时解决EACCES权限错误</a></p>
 <h2 id="如果皮肤的作者有更新"><a href="#如果皮肤的作者有更新" class="headerlink" title="如果皮肤的作者有更新"></a>如果皮肤的作者有更新</h2>
       
     </div>
@@ -492,7 +495,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -503,7 +506,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -567,7 +570,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路："><span class="nav-number">1.</span> <span class="nav-text">思路：</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#操作："><span class="nav-number"></span> <span class="nav-text">操作：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如果再换电脑（MAC）"><span class="nav-number"></span> <span class="nav-text">如果再换电脑（MAC）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如果皮肤的作者有更新"><span class="nav-number"></span> <span class="nav-text">如果皮肤的作者有更新</span></a></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路："><span class="nav-number">1.</span> <span class="nav-text">思路：</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#操作："><span class="nav-number"></span> <span class="nav-text">操作：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如果再换电脑（MAC）"><span class="nav-number"></span> <span class="nav-text">如果再换电脑（MAC）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#其他错误处理"><span class="nav-number">1.</span> <span class="nav-text">其他错误处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如果皮肤的作者有更新"><span class="nav-number"></span> <span class="nav-text">如果皮肤的作者有更新</span></a></li></div>
             
 
           </div>
