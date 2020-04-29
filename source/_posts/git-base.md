@@ -28,3 +28,11 @@ git stash list将列出所有暂存项。
 git stash clear 清除所有暂存项。
 
 git stash apply 将暂存的修改重新应用，使用git status可以看到以前暂存的修改又回来了
+
+### 其他操作
+
+git log 查看提交日志
+
+git reset HEAD^  撤回上一次的commit提交
+
+git reset --hard [commit的版本id] ，回滚到某个版本的提交
