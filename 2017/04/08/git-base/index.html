@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="小心心的笔记">
 <meta property="og:description" content="基本操作新建分支： git checkout -b [分支]git push –set-upstream origin [分支] 删除本地分支：先切换到别的分支，然后git branch -d [分支] 删除远程分支 ：git push origin –delete [分支] 切换远程仓库的地址：git remote set-url oringin &amp;lt;新的远程仓库URL&amp;gt; 查看远程仓库">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-08T02:40:41.417Z">
+<meta property="og:updated_time" content="2020-04-27T08:16:59.154Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git操作">
 <meta name="twitter:description" content="基本操作新建分支： git checkout -b [分支]git push –set-upstream origin [分支] 删除本地分支：先切换到别的分支，然后git branch -d [分支] 删除远程分支 ：git push origin –delete [分支] 切换远程仓库的地址：git remote set-url oringin &amp;lt;新的远程仓库URL&amp;gt; 查看远程仓库">
@@ -337,6 +337,9 @@
 <p>git stash list将列出所有暂存项。</p>
 <p>git stash clear 清除所有暂存项。</p>
 <p>git stash apply 将暂存的修改重新应用，使用git status可以看到以前暂存的修改又回来了</p>
+<h3 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h3><p>git log 查看提交日志</p>
+<p>git reset HEAD^  撤回上一次的commit提交</p>
+<p>git reset –hard [commit的版本id] ，回滚到某个版本的提交</p>
 
       
     </div>
@@ -522,7 +525,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本操作"><span class="nav-number">1.</span> <span class="nav-text">基本操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-stash"><span class="nav-number">2.</span> <span class="nav-text">git stash</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本操作"><span class="nav-number">1.</span> <span class="nav-text">基本操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-stash"><span class="nav-number">2.</span> <span class="nav-text">git stash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他操作"><span class="nav-number">3.</span> <span class="nav-text">其他操作</span></a></li></ol></div>
             
 
           </div>
