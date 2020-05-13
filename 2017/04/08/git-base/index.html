@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="小心心的笔记">
 <meta property="og:description" content="基本操作新建分支： git checkout -b [分支]git push –set-upstream origin [分支] 删除本地分支：先切换到别的分支，然后git branch -d [分支] 删除远程分支 ：git push origin –delete [分支] 切换远程仓库的地址：git remote set-url oringin &amp;lt;新的远程仓库URL&amp;gt; 查看远程仓库">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-27T08:16:59.154Z">
+<meta property="og:updated_time" content="2020-04-29T02:51:07.830Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git操作">
 <meta name="twitter:description" content="基本操作新建分支： git checkout -b [分支]git push –set-upstream origin [分支] 删除本地分支：先切换到别的分支，然后git branch -d [分支] 删除远程分支 ：git push origin –delete [分支] 切换远程仓库的地址：git remote set-url oringin &amp;lt;新的远程仓库URL&amp;gt; 查看远程仓库">
@@ -337,6 +337,7 @@
 <p>git stash list将列出所有暂存项。</p>
 <p>git stash clear 清除所有暂存项。</p>
 <p>git stash apply 将暂存的修改重新应用，使用git status可以看到以前暂存的修改又回来了</p>
+<p>git stash pop 弹出最后一个stash</p>
 <h3 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h3><p>git log 查看提交日志</p>
 <p>git reset HEAD^  撤回上一次的commit提交</p>
 <p>git reset –hard [commit的版本id] ，回滚到某个版本的提交</p>
@@ -450,7 +451,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -461,7 +462,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
