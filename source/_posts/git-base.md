@@ -29,6 +29,8 @@ git stash clear 清除所有暂存项。
 
 git stash apply 将暂存的修改重新应用，使用git status可以看到以前暂存的修改又回来了
 
+git stash pop 弹出最后一个stash
+
 ### 其他操作
 
 git log 查看提交日志
