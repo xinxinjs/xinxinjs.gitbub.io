@@ -92,13 +92,13 @@
 <meta property="og:site_name" content="小心心的笔记">
 <meta property="og:description" content="需求：点击打印按钮，打印出两个不同的文件，第一个文件是普通的表格，无特殊要求，第二个是打印一份录用员工的offer，打印offer需要每一页都有水印、带有公司logo的页头和带有公司网站的页底 每一页的带有公司logo的页头页底，可以使用样式 position: fixed;设置为position: fixed;样式属性的元素，可以在打印的时候每一页纸上都显示在固定位置，样式如下： 1234567">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2020/05/08/img/print/test1.jpeg">
-<meta property="og:image" content="http://yoursite.com/2020/05/08/img/print/test2.png">
-<meta property="og:updated_time" content="2020-05-13T02:58:57.234Z">
+<meta property="og:image" content="http://yoursite.com/img/print/test1.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/print/test2.png">
+<meta property="og:updated_time" content="2020-05-14T09:12:03.975Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="window.print打印设置水印和页头页底">
 <meta name="twitter:description" content="需求：点击打印按钮，打印出两个不同的文件，第一个文件是普通的表格，无特殊要求，第二个是打印一份录用员工的offer，打印offer需要每一页都有水印、带有公司logo的页头和带有公司网站的页底 每一页的带有公司logo的页头页底，可以使用样式 position: fixed;设置为position: fixed;样式属性的元素，可以在打印的时候每一页纸上都显示在固定位置，样式如下： 1234567">
-<meta name="twitter:image" content="http://yoursite.com/2020/05/08/img/print/test1.jpeg">
+<meta name="twitter:image" content="http://yoursite.com/img/print/test1.jpeg">
 
 
 
@@ -334,10 +334,10 @@
 <p>每一页的带有公司logo的页头页底，可以使用样式 <code>position: fixed;</code>设置为position: fixed;样式属性的元素，可以在打印的时候每一页纸上都显示在固定位置，样式如下：</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.header</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.footer</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>正文部分设置适当的paddingTop值，使用 <code>pageBreakAfter: &#39;always&#39;</code>在适当的位置强制分页，效果：</p>
-<p><img src="../img/print/test1.jpeg" alt="效果"></p>
+<p><img src="/img/print/test1.jpeg" alt="效果"></p>
 <p>水印部分也要每个页面都有，同样思路使用 <code>position: fixed;</code>定位元素，正文部分要浮在水印的上面，使用<code>z-index</code>让正文部分的值高于水印部分的值：</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.text</span> &#123;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">60px</span>;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.watermark</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">z-index</span>: -<span class="number">1</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">scale</span>(10) <span class="built_in">rotate</span>(-45deg);</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#fffffe</span>;</span><br><span class="line">  <span class="attribute">opacity</span>: <span class="number">0.3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="../img/print/test2.png" alt="效果"></p>
+<p><img src="/img/print/test2.png" alt="效果"></p>
 <p>碰到另外一个问题：点击一个按钮同时打印出来的除了offer还有另外一个审批的表格table，这个表格不需要页头页底和水印。</p>
 <p>解决方案：设置一个足够高的白色蒙版，<code>absolute</code>相对于offer定位，遮住不需要的水印和页头页底</p>
 <p>absolute定位的元素不会在每一页都显示，但是会根据相对的父级元素定位，可以用来遮住不想显示的内容</p>
@@ -383,6 +383,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/13/webpack-start/" rel="prev" title="Webpack配置-基础配置">
+                Webpack配置-基础配置 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -443,7 +447,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -454,7 +458,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
