@@ -24,7 +24,7 @@ tags: [print]
 
 正文部分设置适当的paddingTop值，使用 `pageBreakAfter: 'always'`在适当的位置强制分页，效果：
 
-![效果](../img/print/test1.jpeg)
+![效果](/img/print/test1.jpeg)
 
 水印部分也要每个页面都有，同样思路使用 `position: fixed;`定位元素，正文部分要浮在水印的上面，使用`z-index`让正文部分的值高于水印部分的值：
 
@@ -51,7 +51,7 @@ tags: [print]
 }
 ```
 
-![效果](../img/print/test2.png)
+![效果](/img/print/test2.png)
 
 碰到另外一个问题：点击一个按钮同时打印出来的除了offer还有另外一个审批的表格table，这个表格不需要页头页底和水印。
 
