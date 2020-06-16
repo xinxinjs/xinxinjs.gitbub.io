@@ -403,4 +403,457 @@ module.exports = webpackConfig;
 
 ## tree shaking
 
-摇树优化，一个模块可能有多个方法，只要有其中一个方法被用到了，整个模块就会被打包到
+摇树优化，一个模块可能有多个方法，只要有其中一个方法被用到了，整个模块就会被打包到bundle里面去，tree shaking就是把用到的方法打包进去，多余的代码在uglify阶段就会被清除掉
+
+删除无用代码的工作原理：
+
+- 不会执行到的代码，不会到达的代码
+
+- 代码执行的结果不会被用到
+
+- 代码只写不读
+
+tree shaking原理：利用es6模块的特点，import 、export都是出现在顶层，并且import进来的代码不可修改，tree shaking对模块的代码静态分析，在编译阶段分析哪些代码没有用到，对这些代码进行标记，在uglify阶段把它清除掉
+
+在webpack config的配置文件中，设置`mode: 'production',`就会自动开始tree shaking
+
+## scope hoisting
+
+对于每一个模块打包出来的文件都会有一个包裹的函数，模块数量越多，导致大量的函数闭包导致bundle的体积很大，而且打包的时候还增加内存的消耗
+
+scope hoisting原理：将所有的模块按照引用的顺序包裹在一个函数里，适当的重命名变量防止变量冲突
+
+在webpack config的配置文件中，设置`mode: 'production',`就会自动开始scope hoisting
+
+## 代码分割
+
+代码分割的适用场景：js懒加载，抽离相同的代码到一个共享模块
+
+代码分割搭配动态import使用，动态import并不被原生的es6支持，需要安装一个babel-plugin-syntax-dynamic-import插件
+
+`npm install --save-dev @babel/plugin-syntax-dynamic-import`
+
+在.babelrc文件中配置，引入这个插件
+
+```json
+// .babelrc
+{
+  // ..
+  "plugins": ["@babel/plugin-syntax-dynamic-import"]
+}
+```
+
+写一个动态加载的js函数，在组建中使用这个函数，动态import返回的是一个promise对象：
+
+```jsx
+const loadComponent = () => {
+  import('./testSync').then((text) => {
+    setText(text.default);
+  });
+}
+```
+
+在动态加载的时候使用jsonp的形式加载动态加载的js文件
+
+## 使用ESLint
+
+安装eslint 一套 `npm i eslint eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-import -D`
+
+安装eslint-loader: `npm i eslint-loader -D`
+
+安装babel-eslint:`npm i babel-eslint -D`
+
+安装：`npm i eslint-config-airbnb -D`
+
+在根目录新建.eslintrc.js
+
+```javascript
+// .eslintrc.js
+module.exports = {
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "env": {
+    "browser": true,
+    "node": true
+  }
+}
+```
+
+运行构建
+
+## webpack打包库和组件
+
+新建项目根目录 large-number，进入项目目录,`npm init -y`初始化package.json
+
+安装webpack，webpack-cli:`npm i webpack webpack-cli -D`
+
+在根目录新建src/index.js，写一个库函数，例如大数相加
+
+```javascript
+// src/index.js
+// 大整数相加
+export default function add(a, b) {
+  let i = a.length - 1; // 从个位开始相加
+  let j = b.length - 1; // b的个位数
+
+  let ret = '';
+  let carry = 0;
+
+    while(i >= 0 || j >= 0) {
+      let sum = 0;
+      let x = 0;
+      let y = 0;
+      if(i >= 0) {
+        x = a[i] - 0;
+        i--;
+      }
+      if(j >= 0) {
+        y = b[j] - 0;
+        j--;
+      } 
+      sum = x + y + carry;
+      if(sum >= 10) {
+        carry = 1;
+        sum = sum - 10;
+      }else {
+        carry = 0;
+      }
+      ret = sum + ret;
+    }
+  
+  if(carry) {
+    return ret = carry + ret;
+  }
+  return ret;
+}
+
+// add('9999', '666');
+```
+
+写好之后，在根目录新建webpack.config.js
+
+```javascript
+// webpack.config.js
+const TerserPlugin = require('terser-webpack-plugin'); //npm i terser-webpack-plugin -D
+
+module.exports = {
+  mode: 'none',
+  entry: {
+    'large-number': './src/index.js',
+    'large-number.min': './src/index.js',
+  },
+  output: {
+    filename: '[name].js',
+    library: 'largeNumber',
+    libraryTarget: 'umd',
+    libraryExport: 'default'
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin(
+        {include: /\.min\.js$/}
+      )
+    ]
+  }
+}
+```
+
+修改packagr.json，增加build命令和prepublish
+
+```json
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "prepublish": "webpack" // 发布的时候使用
+  },
+```
+
+在根目录新建index.js
+
+```javascript
+if(process.env.NODE_ENV = 'production') {
+  module.exports = require('./dist/large-number.min.js');
+}else {
+  module.exports = require('./dist/large-number.js');
+}
+```
+
+npm login登陆npm账号
+
+npm publish发布组件到npm库
+
+## SSR打包
+
+SSR指的是在服务端渲染页面然后返回给前端浏览器做显示
+
+根目录新建server目录，新建server/index.js，编写服务端渲染的代码逻辑
+
+```javascript
+if(typeof window === 'undefined') {
+  global.window = {};
+}
+
+const express = require('express');
+const { renderToString } = require('react-dom/server');
+const SSR = require('../dist/search-server.js');
+
+const server = (port) => {
+  const app = express();
+  app.use(express.static('dist'));
+  app.get('/search', (req, res) => {
+    const html = renderMarkup(renderToString(SSR));
+    res.status(200).send(html);
+  });
+  app.listen(port, () => {
+    console.log('Server is running on port:' + port)
+  })
+}
+
+server(process.env.PORT || 3000);
+
+const renderMarkup = (str) => {
+  return `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="root">${str}</div>
+  </body>
+  </html>`
+}
+```
+
+在根目录新建webpack.ssr.js文件，编写服务端打包的webpack配置
+
+```javascript
+const path = require('path');
+
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OpimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
+
+// 动态设置entry 和 htmlWebpackPlugin
+const glob = require('glob');
+setMPA = () => {
+  const entry = {};
+  const htmlWebpackPlugin = [];
+
+  const entryFiles = glob.sync(path.join(__dirname, './src/*/index-server.jsx'));
+  Object.keys(entryFiles).map((index) => {
+    const entryFile = entryFiles[index];
+    const match = entryFile.match(/src\/(.*)\/index-server\.jsx/);
+    const pageName = match && match[1];
+    console.log(entryFile)
+    if(pageName) {
+      entry[pageName] = entryFile;
+      htmlWebpackPlugin.push(
+        new HtmlWebpackPlugin({
+          template: path.join(__dirname, `src/${pageName}/index.html`),
+          filename: `${pageName}.html`, //打包后的文件名
+          chunks: ['vendors', pageName],
+          inject: true,
+          minify: {
+            html5: true,
+            preserveLineBreaks: false,
+            removeAttributeQuotes: false, //是否删除属性的双引号
+            collapseWhitespace: true, //是否折叠空白
+            removeComments: true,
+            minifyCSS: true,
+            minifyJS: true
+          },
+        })
+      )
+    }
+  });
+
+  return {
+    entry, htmlWebpackPlugin
+  }
+}
+
+const {entry, htmlWebpackPlugin} = setMPA();
+
+const webpackConfig = {
+  mode: 'production',
+  entry: entry,
+  output: {
+    path: path.resolve(__dirname, 'dist'), //必须是绝对路径
+    filename: '[name]-server.js',
+    libraryTarget: 'umd'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        use: ['babel-loader', 'eslint-loader']
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader,'css-loader']
+      },
+      {
+        test: /\.less$/,
+        use: [MiniCssExtractPlugin.loader,'css-loader', {
+          loader: 'postcss-loader', options: {
+            plugins: () => [
+              require('autoprefixer')({
+                overrideBrowserslist: ['last 2 version', '>1%', 'ios 7']
+              })
+            ]
+          }
+        }, 'less-loader', {
+          loader: 'px2rem-loader',
+          options: {
+            remUnit: 75, // 转换率：1rem = 75px
+            remPrecision: 8 // 转换之后保留小数点后位数
+          }
+        }]
+      },
+      {
+        test: /\.(png|jpg|gif|jpeg)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name]_[hash:8].[ext]'
+          }
+        }
+      },
+      {
+        test: /\.(woff|woff2|eot|otf|ttf)$/,
+        use: ['file-loader']
+      }
+    ]
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    ...htmlWebpackPlugin,
+    new MiniCssExtractPlugin({
+      filename: '[name]_[contenthash:8].css'
+    }),
+    new OpimizeCssAssetsPlugin({
+      AccetNameRegExp: /\.css$/g,
+      cssProcessor: require('cssnano')
+    }),
+  ],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /(react|react-dom)/,
+          name: 'vendors',
+          chunks: 'all'
+        }
+      }
+    }
+  }
+}
+
+module.exports = webpackConfig;
+
+```
+
+安装：`npm i express -D`
+
+新建src/search/index-server.js，编写一个服务端渲染页面的页面代码，注意使用方法：
+
+```javascript
+const React = require('react');
+
+function Index() {
+  return (
+    <>
+      ssr test
+    </>
+  );
+}
+
+module.exports = <Index />;
+```
+
+运行npm run build查看dist目录
+
+### 使用打包出来的浏览器端的html文件作为，模版可以显示样式
+
+修改server/index.js
+
+```javascript
+...
+const fs = require('fs');
+const path = require('path');
+...
+
+const template = fs.readFileSync(path.join(__dirname, '../dist/search.html'), 'utf-8');
+
+...
+
+const renderMarkup = (str) => {
+  // 打包好的模版里面会有注释的占位符，然后用服务端渲染好的代码替换注释
+  return template.replace('<!--HTML_PLACEHOLDER-->', str);
+}
+```
+
+修改search/index.html模版文件，添加一个占位符
+
+```html
+<body>
+  <div id="root"><!--HTML_PLACEHOLDER--></div>
+</body>
+```
+
+### 服务端获取数据
+
+新建server/data.json
+
+修改search/index.html模版文件，添加一个数据占位符
+
+```html
+<body>
+  <!--INITIAL_DATA_PLACEHOLDER-->
+</body>
+```
+
+修改server/index.js加载数据
+
+```javascript
+const data = require('./data.json');
+
+const renderMarkup = (str) => {
+  const dataStr = JSON.stringify(data);
+  return template.replace('<!--HTML_PLACEHOLDER-->', str).replace('<!--INITIAL_DATA_PLACEHOLDER-->', `<script>window.__initial_data=${dataStr}</script>`);
+}
+```
+
+把数据加载到页面，后续就可以使用数据渲染页面
+
+## 构建时候命令行的日志展示优化
+
+在webpack.config.js设置stats字段
+
+stats预设值：
+
+![图片](/img/webpack/w16.png)
+
+### Friendly-errors-webpack-plugin
+
+Friendly-errors-webpack-plugin识别某些类别的webpack错误，并清理，聚合和优先级，以提供更好的开发人员体验。
+
+安装：`npm install friendly-errors-webpack-plugin --save-dev`
+
+安装好了之后，在webpack.prod.js和webpack.dev.js中分别引入，并使用
+
+```javascript
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+
+plugins: [
+    new FriendlyErrorsWebpackPlugin()
+  ],
+```
+
+之后在运行npm run build活着npm run dev的时候，在构建成功会用绿色提示，并显示构建所需要的时间，有警告的时候会使用黄色的提示，编译报错的时候使用红色的颜色标记
