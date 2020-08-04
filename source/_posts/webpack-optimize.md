@@ -1,498 +1,458 @@
 ---
-title: 编写可维护的webpack构建配置，进阶学习
-date: 2020-05-27 17:26:16
+title: webpack构建速度、体积分析和优化
+date: 2020-06-16 15:11:30
 tags: webpack
 ---
 
-如何把webpack的配置编写的更加通用，把webpack的配置编写成一个构建包，在每个项目里都能快速使用
+![图片](/img/webpack/36.png)
 
-现在的webpack配置分为webpack.prod.js，  webpack.dev.js，  webpack.ssr.js，分别对应三个不同的环境场景，三个配置文件里面的配置有些都是相同的例如es6代码的转换，react的使用、处理less样式文件等，不得不每次复制到每个配置文件代码里面去，而不同的环境场景的配置又具有差异，解决思路就是新建一个webpack.base.js文件存放共用的配置，使用webpack-merge组件合并配置
+## 初级分析：构建体积和速度
 
-在根目录新建build-webpack文件夹，cd build-webpack，进入目录，npm init -y初始化package.json文件
+基本的分析可以使用webpack内置的stats进行构建的统计分析，例如总共消耗的时间和每个构建资源的大小，使用方法就是在根目录的package.json方法里面添加运行脚本：
 
-build-webpack文件夹下新建lib目录，存放webpack配置文件，在lib文件下新建webpack.base.js，webpack.prod.js，  webpack.dev.js，  webpack.ssr.js文件：
+```json
+"scripts": {
+    "build:stats": "webpack --config webpack.prod.js --json > stats.json"
+  },
+```
+
+运行npm run build:stats会在根目录生成一个stats.json文件，里面包含构建资源的信息，是否构架成功，大致用了多少时间构建，但是这个分析只是作为一个基础的分析，颗粒度泰国粗糙
+
+## 精细分析：构建速度分析
+
+借助speed-measure-webpack-plugin 插件分析详细的构建速度，可以清晰的看到每个loader和plugin的耗时情况
+
+安装：`npm i speed-measure-webpack-plugin -D`
+
+在webpack.prod.js中引入并使用：
 
 ```javascript
-// webpack.base.js
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+// webpack.prod.js
+// ...
+const SpeedMeasireWebpackPlugin = require('speed-measure-webpack-plugin');
 
-// 动态设置entry 和 htmlWebpackPlugin
-const glob = require('glob');
-setMPA = () => {
-  const entry = {};
-  const htmlWebpackPlugin = [];
+const smp = new SpeedMeasireWebpackPlugin();
 
-  const entryFiles = glob.sync(path.join(__dirname, './src/*/index.jsx'));
-  Object.keys(entryFiles).map((index) => {
-    const entryFile = entryFiles[index];
-    const match = entryFile.match(/src\/(.*)\/index\.jsx/);
-    const pageName = match && match[1];
-    entry[pageName] = entryFile;
-    htmlWebpackPlugin.push(
-      new HtmlWebpackPlugin({
-        template: path.join(__dirname, `src/${pageName}/index.html`),
-        filename: `${pageName}.html`, //打包后的文件名
-        chunks: ['vendors', pageName],
-        inject: true,
-        minify: {
-          html5: true,
-          preserveLineBreaks: false,
-          removeAttributeQuotes: false, //是否删除属性的双引号
-          collapseWhitespace: true, //是否折叠空白
-          removeComments: true,
-          minifyCSS: true,
-          minifyJS: true
-        },
-    })
-    )
-  });
+// ...
 
-  return {
-    entry, htmlWebpackPlugin
-  }
-}
+const webpackConfig = smp.wrap({
+  // ...
+});
 
-const {entry, htmlWebpackPlugin} = setMPA();
+module.exports = webpackConfig;
+```
 
-module.exports = {
-  entry: entry,
-  output: {
-    path: path.resolve(projectRoot, 'dist'), //必须是绝对路径
-    filename: '[name]_[chunkhash:8].js',
-  },
+在终端运行npm run build，结果：
+
+![图片](/img/webpack/w22.png)
+
+速度正常的会用绿色显示，速度稍慢的会用黄色表示，速度很慢需要重点关注的会用红色表示，然后可以做一下调整的优化方便的工作
+
+## 构建体积的分析
+
+借助webpack-bundle-analyzer可以分析构建体积
+
+安装：`npm install webpack-bundle-analyzer -D`
+
+在webpack.prod.js中引入并使用：
+
+```javascript
+// webpack.prod.js
+// ...
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
+// ...
+
+const webpackConfig = smp.wrap({
+  // ...
+  plugins: [
+    // ...
+    new BundleAnalyzerPlugin(),
+  ],
+  // ...
+});
+
+module.exports = webpackConfig;
+```
+
+运行npm run build 会在浏览器自动打开一个http://127.0.0.1:8888/ 页面，页面里面展示的是构建包的体积大小，可以针对性的找出是哪个包的体积大，还是某个组件的体积太大，针对性的作出处理
+
+## 高版本的webpack
+
+![图片](/img/webpack/w23.png)
+
+## 多进程/多实例构建
+
+使用happypack实现多进程：安装`npm i happypack -D`
+
+在webpack.prod.js中引入并使用：
+
+```javascript
+// webpack.prod.js
+const HappyPack = require('happypack');
+
+const webpackConfig = smp.wrap({
+  // ...
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        use: ['babel-loader']
+        // use: ['babel-loader', 'eslint-loader']
+        use: ['happypack/loader']
       },
+      // ...
+    ]
+  },
+  plugins: [
+    // ...
+    new HappyPack({
+      loaders: ['babel-loader']
+    })
+  ],
+  // ...
+});
+
+module.exports = webpackConfig;
+
+```
+
+先看一下没有使用happypack前的构建速度,3726ms
+
+![图片](/img/webpack/w24.png)
+
+使用了happypack之后的构建速度：
+
+![图片](/img/webpack/w24.png)
+
+可以看到happy默认启用了三个线程构建，构建速度2605ms，速度的提升还是很明显的
+
+再看一下使用webpack提供的thread-loader实现多进程的构建，安装： `npm i thread-loader -D`,
+
+在webpack.prod.js中引入并使用：
+
+```javascript
+// webpack.prod.js
+const HappyPack = require('happypack');
+
+const webpackConfig = smp.wrap({
+  // ...
+  module: {
+    rules: [
       {
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader,'css-loader']
+        test: /\.(js|jsx)$/,
+        use: ['babel-loader', {loader: 'thread-loader', options: {workers: 3}}]
+        // use: ['happypack/loader']
       },
+      // ...
+    ]
+  },
+  plugins: [
+    // ...
+    // new HappyPack({
+    //   loaders: ['babel-loader']
+    // })
+  ],
+  // ...
+});
+
+module.exports = webpackConfig;
+
+```
+
+运行npm run build，在终端查看构建速度，2122ms
+
+![图片](/img/webpack/26.png)
+
+## 多进程并行压缩
+
+在webpack推荐使用TerserPlugin，安装：`npm install terser-webpack-plugin --save-dev`
+
+在webpack.prod.js中引入并使用：
+
+```javascript
+// webpack.prod.js
+const TerserPlugin = require('terser-webpack-plugin');
+
+const webpackConfig = smp.wrap({
+  // ...
+  optimization: {
+    // 
+    minimizer: [new TerserPlugin({
+      parallel: true
+    })]
+  },
+  // ...
+});
+
+module.exports = webpackConfig;
+
+```
+
+添加并行压缩前后构建时间对比：
+
+![图片](/img/webpack/27.png)
+
+![图片](/img/webpack/28.png)
+
+## 分包-预编译资源模块
+
+前面使用的HtmlWebpackExternalsPlugin，可以把一些静态资源通过cdn的方式引入，以减少构建包的体积，那么如果这种静态引入的包越多，就需要每个配置，然后在模版页面每个引入
+
+可以使用DLLPlugin可以对多个组件或者框架哭进行提取
+
+根目录新建webpack.dll.js配置文件，配置dll预编译的配置:先给目前使用的react相关的进行分包预编译配置，
+
+```javascript
+const path = require('path');
+const webpack = require('webpack');
+
+module.exports = {
+  entry: {
+    library: [
+      'react', 'react-dom'
+    ]
+  },
+  output: {
+    filename: '[name]_[chunkhash].dll.js',
+    path: path.join(__dirname, 'build/library'),
+    library: '[name]'
+  }, 
+  plugins: [
+    new webpack.DllPlugin({
+      name: '[name]_[hash]',
+      path: path.join(__dirname, 'build/library/[name].json'),
+    })
+  ]
+}
+```
+
+在根目录的的package.json增加dll命令脚本：
+
+```json
+"scripts": {
+    "dll": "webpack --config webpack.dll.js"
+  },
+```
+
+运行npm run dll，会在根目录生成一个build文件夹，里面是预编译的react代码，同时会生成一个json文件，包含预编译代码的信息，
+
+然后在webpack.prod.js中引用预编译的代码：
+
+```javascript
+const webpack = require('webpack');
+
+const webpackConfig = smp.wrap({
+  plugins: [
+    new webpack.DllReferencePlugin({
+      manifest: './build/library/library.json'
+    })
+  ],
+});
+
+module.exports = webpackConfig;
+
+```
+
+## 利用缓存提升二次构建的速度
+
+缓存对二次构建速度有用，先看一下没有开启缓存之前的构建速度：
+
+![图片](/img/webpack/29.png)
+
+目前的项目比较小，构建一下大概2秒多一点
+
+### babel-loader开启转换缓存
+
+babel转换js的语法缓存，在缓存之后下一次再构建的时候就可以直接使用缓存好的转换结果，从而提升转换的速度，开启babel-loader缓存的方法很简单，在webpack.prod.js文件中给babel-loader加一个开启缓存的参数
+
+```javascript
+// webpack.prod.js
+const webpackConfig = smp.wrap({
+  module: {
+    rules: [
       {
-        test: /\.less$/,
-        use: [MiniCssExtractPlugin.loader,'css-loader', {
-          loader: 'postcss-loader', options: {
-            plugins: () => [
-              require('autoprefixer')({
-                overrideBrowserslist: ['last 2 version', '>1%', 'ios 7']
-              })
-            ]
-          }
-        }, 'less-loader', {
-          loader: 'px2rem-loader',
-          options: {
-            remUnit: 75, // 转换率：1rem = 75px
-            remPrecision: 8 // 转换之后保留小数点后位数
-          }
-        }]
+        test: /\.(js|jsx)$/,
+        use: ['babel-loader?cacheDirectory=true', {loader: 'thread-loader', options: {workers: 3}}]
+        // use: ['happypack/loader']
       },
+    ]
+  },
+});
+
+module.exports = webpackConfig;
+
+```
+
+加好缓存之后，运行一次npm run build，这次build会生成缓存，在node_modules问价夹下生成一个.cache文件夹，里面存放的是缓存资源
+
+![图片](/img/webpack/30.png)
+
+然后，第二次执行npm run build，因为使用了缓存，速度的提升还是有的，只不过因为项目太小了，不是很明显
+
+![图片](/img/webpack/31.png)
+
+### terser开启压缩缓存
+
+开启压缩缓存提升压缩速度，也是很简单，在webpack.prod.js中开启terser的缓存参数就好
+
+```javascript
+// webpack.prod.js
+const webpackConfig = smp.wrap({
+  optimization: {
+    minimizer: [new TerserPlugin({
+      parallel: true,
+      cache: true
+    })]
+});
+
+module.exports = webpackConfig;
+```
+
+开启压缩缓存之后，第一次运行npm run build:
+
+![图片](/img/webpack/32.png)
+
+再一次运行npm run build:
+
+![图片](/img/webpack/33.png)
+
+### 针对模块的缓存
+
+HardSourceWebpackPlugin为模块提供中间缓存，使用方法：
+
+安装：`npm install --save-dev hard-source-webpack-plugin`
+
+```javascript
+// webpack.prod.js
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+
+const webpackConfig = smp.wrap({
+  plugins: [
+    new HardSourceWebpackPlugin()
+  ],
+});
+
+module.exports = webpackConfig;
+
+```
+
+配置好之后，第一次运行npm run build，可以看到这个插件在写入缓存
+
+![图片](/img/webpack/34.png)
+
+第二次运行之后，可以看到插件提示使用了1M的缓存，速度也是有了明显的提升
+
+![图片](/img/webpack/35.png)
+
+## 缩小构建体积
+
+webpack自带的配置也可以用来缩小构建体积，例如配置模块查找字段resolve,include,exclude等字段
+
+```javascript
+// webpack.prod.js
+const webpackConfig = smp.wrap({
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        include: path.resolve('src'),
+        use: ['babel-loader?cacheDirectory=true', {loader: 'thread-loader', options: {workers: 3}}]
+        // use: ['happypack/loader']
+      },
+    ]
+  },
+  resolve: {
+    alias: {
+      'react': path.resolve(__dirname, './node_modules/react/umd/react.production.min.js'),
+      'react-dom': path.resolve(__dirname, './node_modules/react-dom/umd/react-dom.production.min.js')
+    },
+    extensions: ['.js'],
+    mainFields: ['main'],
+  }
+});
+
+module.exports = webpackConfig;
+
+```
+
+## tree shaking清除无用的代码
+
+purgecss-webpack-plugin擦除无用的css，安装： `npm i purgecss-webpack-plugin -D`
+
+使用：
+
+```javascript
+// webpack.prod.js
+const purgecssWebpackplugin = require('purgecss-webpack-plugin');
+
+const PATHS = {
+  src: path.join(__dirname, 'src')
+}
+
+const webpackConfig = smp.wrap({
+  module: {
+    rules: [
+    new purgecssWebpackplugin({
+      paths: glob.sync(`${PATHS.src}/**/*`,  { nodir: true }),
+    })
+  ],
+});
+
+module.exports = webpackConfig;
+
+```
+
+写一行没有用到的css，运行npm run build，样式并没有被打包到bundle文件中去
+
+## 图片压缩
+
+安装loader: `npm install image-webpack-loader --save-dev`
+
+```javascript
+// webpack.prod.js
+const webpackConfig = smp.wrap({
+  module: {
+    rules: [
       {
         test: /\.(png|jpg|gif|jpeg)$/,
-        use: {
+        use: [{
           loader: 'file-loader',
           options: {
             name: '[name]_[hash:8].[ext]'
           }
-        }
-      },
-      {
-        test: /\.(woff|woff2|eot|otf|ttf)$/,
-        use: ['file-loader']
-      }
-    ]
-  },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin({
-      filename: '[name]_[contenthash:8].css'
-    }),
-    ...htmlWebpackPlugin,
-    new FriendlyErrorsWebpackPlugin(),
-    function() {
-      this.hooks.done.tab('done', (stats) => {
-        if(stats.compilation.errors && stats.compilation.errors.length && process.argv.indexOf('--watch') == -1) {
-          console.log('build error');
-          process.exit(1);
-        }
-      })
-    }
-  ],
-  stats: 'errors-only'
-}
-```
-
-安装 :`npm i webpack-merge -D`
-
-webpack.dev.js包括热更新和source-map，使用webpack-merge合并配置
-
-```javascript
-// webpack.dev.js
-const merge = require('webpack-merge');
-const baseConfig = require('./webpack.base');
-const webpack = require('webpack');
-
-// 热更新，source-map
-
-const devConfig = {
-  plugins: [
-    new webpack.HotModuleReplacementPlugin()
-  ],
-  devServer: {
-    contentBase: './dist', // 服务基础目录
-    hot: true, // 开启热更新
-    stats: 'errors-only'
-  },
-  devtool: 'source-map',
-  mode: 'development',
-}
-
-module.exports = merge(baseConfig, devConfig);
-```
-
-webpack.prod.jsb包括代码压缩，文件指纹,公共资源的提取：
-
-```javascript
-// webpack.prod.js
-const merge = require('webpack-merge');
-const baseConfig = require('./webpack.base');
-const OpimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
-
-// 代码压缩，文件指纹,公共资源的提取
-
-const prodConfig = {
-  mode: 'production',
-  plugins: [
-    new OpimizeCssAssetsPlugin({
-      AccetNameRegExp: /\.css$/g,
-      cssProcessor: require('cssnano')
-    }),
-    new HtmlWebpackExternalsPlugin({
-      externals: [{
-        module: 'react',
-        entry: 'https://unpkg.com/react@16/umd/react.development.js',
-        global: 'React'
-      },{
-        module: 'react-dom',
-        entry: 'https://unpkg.com/react-dom@16/umd/react-dom.development.js',
-        global: 'ReactDom'
-      }]
-    })
-  ],
-  optimization: {
-    splitChunks: {
-      minSize: 0,
-      cacheGroups: {
-        commons: {
-          name: 'commons',
-          chunks: 'all',
-          minChunks: 2
-        }
-      }
-    }
-  },
-}
-
-module.exports = merge(baseConfig, prodConfig);
-```
-
-webpack.ssr.js主要是不解析css文件
-
-```javascript
-// webpack.ssr.js
-const merge = require('webpack-merge');
-const baseConfig = require('./webpack.base');
-const OpimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
-
-// 代码压缩，文件指纹,公共资源的提取
-
-const prodConfig = {
-  mode: 'production',
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: 'ignore-loader'
-      },
-      {
-        test: /\.less$/,
-        use: 'ignore-loader'
+        },{
+          loader: 'image-webpack-loader',
+          options: {
+            mozjpeg: {
+              progressive: true,
+              quality: 65
+            },
+            // optipng.enabled: false will disable optipng
+            optipng: {
+              enabled: false,
+            },
+            pngquant: {
+              quality: [0.65, 0.90],
+              speed: 4
+            },
+            gifsicle: {
+              interlaced: false,
+            },
+            // the webp option will enable WEBP
+            webp: {
+              quality: 75
+            }
+          }
+        }]
       },
     ]
   },
-  plugins: [
-    new OpimizeCssAssetsPlugin({
-      AccetNameRegExp: /\.css$/g,
-      cssProcessor: require('cssnano')
-    }),
-    new HtmlWebpackExternalsPlugin({
-      externals: [{
-        module: 'react',
-        entry: 'https://unpkg.com/react@16/umd/react.development.js',
-        global: 'React'
-      },{
-        module: 'react-dom',
-        entry: 'https://unpkg.com/react-dom@16/umd/react-dom.development.js',
-        global: 'ReactDom'
-      }]
-    })
-  ],
-  optimization: {
-    splitChunks: {
-      minSize: 0,
-      cacheGroups: {
-        commons: {
-          name: 'commons',
-          chunks: 'all',
-          minChunks: 2
-        }
-      }
-    }
-  },
-}
+});
 
-module.exports = merge(baseConfig, prodConfig);
+module.exports = webpackConfig;
+
 ```
 
-新建.gitignore文件
+## 动态polyfill
 
-```json
-/node_modules
-/logs
-```
-
-## 使用eslint规范构建脚本
-
-eslint可以帮助在构建之前检查代码的规范，而不是等到运行的时候在报错
-
-在build-webpack目录安装eslint以及eslint所需要的依赖：`npm i eslint eslint-config-airbnb-base babel-eslint -D`
-
-新建.eslintrc.js文件
-
-```javascript
-// build-webpack/.eslintrc.
-module.exports = {
-  "parser": "babel-eslint",
-  "extends": "airbnb-base",
-  "env": {
-    "browser": true,
-    "node": true
-  }
-}
-```
-
-在package.json增加eslint script
-
-```json
-// build-webpack/package.json
-"scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "eslint": "eslint ./lib --fix"
-  },
-```
-
-运行npm run eslint可以帮助在构建之前检查规范，
-
-在命令行运行npm run eslint
-
-![图片](/img/webpack/w17.png)
-
-这边的报错是因为我的webpack配置中使用的插件没有安装
-
-根据报错一次安装插件到dependencies，根据提示解决报错
-
-## 冒烟测试
-
-冒烟测试确保构建没有大问题，检测一些基本的功能可用
-
-例如构建是否成功，每次构建完成是否正确的打包静态资源
-
-在test新建template目录，作为模版目录，也就是要使用构建脚本构建的项目，可以把之前的项目复制一份进来，删除不需要的文件：
-
-![图片](/img/webpack/w18.png)
-
-在build-webpack目录新建test目录，test新建smoke目录，smoke新建index.js文件用来编写测试脚本：
-
-```javascript
-// test/smoke/index.js
-const path = require('path');
-const webpack = require('webpack');
-const rimraf = require('rimraf');
-
-// 进入tamplate，__dirname代表运行时候的目录
-process.chdir(path.join(__dirname, 'template'));
-
-// 每次构建之前，删除dist目录
-rimraf('./dist', () => {
-  // 引入配置
-  const prodConfig = require('../../lib/webpack.prod.js');
-  // 通过webpack对template目录的代码运行prodConfig这个配置
-  webpack(prodConfig, (err, stats) => {
-    if(err) {
-      console.log(err);
-      process.exit(2);
-    }
-    console.log(stats.toString({
-      color: true,
-      modules: false,
-      children: false
-    }))
-  })
-})
-```
-
-在build-webpack目录安装： `npm i rimraf -S`
-
-修改webpack.base.js文件，增加projectRoot，修改执行的目录为tamplate目录
-
-```javascript
-// webpack.base.js
-const projectRoot = process.cwd(); // 当前目录
-const setMPA = () => {
-  const entryFiles = glob.sync(path.join(projectRoot, './src/*/index.jsx'));
-  Object.keys(entryFiles).map((index) => {
-    // ...
-    return htmlWebpackPlugin.push(
-      new HtmlWebpackPlugin({
-        template: path.join(projectRoot, `src/${pageName}/index.html`),
-        // ...
-      }),
-    );
-  });
-
-  return {
-    entry, htmlWebpackPlugin,
-  };
-};
-```
-
-在终端运行：`node test/smoke/index.js`
-
-### 检查dist目录是否有构建出来的文件
-
-使用mocha编写单元测试的测试用例，安装： `npm i mocha -D`
-
-`npm i glob-all -D`
-
-新建smoke/html-test.js：
-
-```javascript
-const glob = require('glob-all');
-
-describe('checking generated html files', () => {
-  it('should genarate html files', (done) => {
-    const files = glob.sync(['./dist/index.html', './dist/search.html']);
-    if(files.length > 0) done();
-    else throw new Error('no html files genarated');
-  })
-})
-```
-
-新建smoke/css-js-test.js:
-
-```javascript
-const glob = require('glob-all');
-
-describe('checking generated css js files', () => {
-  it('should genarate css js files', (done) => {
-    const files = glob.sync(['./dist/index_*.js', './dist/search_*.js', './dist/index_*.css', './dist/search_*.css']);
-    if(files.length > 0) done();
-    else throw new Error('no css js files genarated');
-  })
-})
-```
-
-修改smoke/index.js
-
-```javascript
-// /...
-const Mocha = require('mocha');
-
-const mocha = new Mocha({
-  timeout: '10000ms'
-})
-// ...
-// 每次构建之前，删除dist目录
-rimraf('./dist', () => {
-  webpack(prodConfig, (err, stats) => {
-    // ...
-    console.log('webpack build success, begin run test');
-    mocha.addFile(path.join(__dirname, 'html-test.js'));
-    mocha.addFile(path.join(__dirname, 'css-js-test.js'));
-    mocha.run();
-  })
-})
-```
-
-在终端运行：`node test/smoke/index.js`，冒烟测试成功之后会在终端打印
-
-![图片](/img/webpack/w19.png)
-
-## 单元测试
-
-使用抹茶和断言库进行单元测试
-
-安装断言库：`npm i assert -D`
-
-在test目录新建index文件，作为单元测试的入口，在test目录新建unit目录，这个目录放单元测试的代码
-
-测试webpack.base配置，test/unit/webpack-base-test.js:
-
-```javascript
-// test/unit/webpack-base-test.js
-describe('webpack.base.js test case', () => {
-  const baseConfig = require('../../lib/webpack.base');
-  const assert = require('assert');
-  // console.log(baseConfig)
-  // 测试entry字段
-  it('entry', () => {
-    assert.equal(baseConfig.entry.index, '/Users/lizhaoxin/mypro/webpack-first/build-webpack/test/smoke/template/src/index/index.jsx');
-    assert.equal(baseConfig.entry.search, '/Users/lizhaoxin/mypro/webpack-first/build-webpack/test/smoke/template/src/search/index.jsx')
-  })
-})
-```
-
-test/index：
-
-```javascript
-const path = require('path');
-
-// 进入tamplate, __dirname代表运行时候的目录
-process.chdir(path.join(__dirname, 'smoke/template'));
-// 引入测试代码
-describe('builder-webpack test case', () => {
-  require('./unit/webpack-base-test');
-})
-```
-
-修改build-webpack/package.json，增加test运行脚本
-
-```json
-"scripts": {
-    "test": "./node_modules/.bin/_mocha",
-  },
-```
-
-运行npm run test:测试用例成功了，会在前面打勾
-
-![图片](/img/webpack/w20.png)
-
-测试覆盖率， istanbul是一个单元测试代码覆盖率检查工具，可以很直观地告诉我们，单元测试对代码的控制程度。，安装 npm i istanbul -D, 修改build-webpack/package.json
-
-```json
-"scripts": {
-    "test": "istanbul cover ./node_modules/.bin/_mocha",
-  },
-```
-
-运行npm run build,可以在终端看到，测试用例的覆盖情况,例如单元测试覆盖了多少函数，多少代码行数，多少分支：
-
-![图片](/img/webpack/w21.png)
-
-## 持续集成
+polyfill可以垫平不同浏览器之间的差异，但是有些浏览器版本较高，对于es6的语法支持很好，依然还是会使用polyfill，其实这些高版本的浏览器都是不需要的，所有会造成浪费，动态polyfill会判断当前浏览器的内核以及版本，动态的返回这个浏览器所需要的代码，从而提升速度
