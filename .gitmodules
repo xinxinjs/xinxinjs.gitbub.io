@@ -1,3 +1,6 @@
 [submodule "themes/next"]
 	path = themes/next
 	url = git@github.com:starsight/hexo-theme-next.git
+[submodule "themes/diaspora"]
+	path = themes/diaspora
+	url = https://github.com/Fechin/hexo-theme-diaspora.git
