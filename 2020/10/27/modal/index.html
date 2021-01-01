@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>模态框的最佳实践 - 小心心的笔记</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="所念皆星河，星河不及你,原文：模态框的最佳实践
+引言为什么选择这篇文章呢？
+
+前端工程师的定位不仅仅在于讨论如何解决架构层面的问题，更应该重视交互体验
+
+前端工程师从未停止过对用户体验的追求，如何思考模态框在产品中的存在和,"> 
+    <meta name="author" content="小心心"> 
+    <link rel="alternative" href="atom.xml" title="小心心的笔记" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    <link rel="stylesheet" href="/css/diaspora.css">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">小心心的笔记</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">模态框的最佳实践</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">模态框的最佳实践</h1>
+        <div class="stuff">
+            <span>十月 27, 2020</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/用户体验/">用户体验</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>原文：<a href="http://www.jerrychane.com/user-experience/3.html" target="_blank" rel="noopener">模态框的最佳实践</a></p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>为什么选择这篇文章呢？</p>
+<ol>
+<li><p>前端工程师的定位不仅仅在于讨论如何解决架构层面的问题，更应该重视交互体验</p>
+</li>
+<li><p>前端工程师从未停止过对用户体验的追求，如何思考模态框在产品中的存在和使用，存在许多争议；</p>
+</li>
+</ol>
+<h2 id="知识普及"><a href="#知识普及" class="headerlink" title="知识普及"></a>知识普及</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>维基百科上对模态框的定义如下：模态框是一个定位于应用视窗顶层的元素。它创造了一种模式让自身保持在一个最外层的子视窗下显示，并让主视窗失效。用户必须通过在它上面做交互动作，才可以回到主视窗。</p>
+<h3 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h3><ul>
+<li><p>抓住用户的吸引力；</p>
+</li>
+<li><p>需要用户输入内容；</p>
+</li>
+<li><p>在上下文下显示额外的信息；</p>
+</li>
+<li><p>不在上下文下显示额外的信息；</p>
+</li>
+</ul>
+<h3 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h3><ul>
+<li><p>退出的方式，可以是模态框上的一个按钮，键盘上的一个按键，也可以是模态框外的区域；</p>
+</li>
+<li><p>描述性标题，标题是给用户标识在哪个位置进行操作的上下文信息；</p>
+</li>
+<li><p>按钮的内容，它一定是用户可以理解，并促使用户进行下一步行动的内容，不会产生迷惑；</p>
+</li>
+<li><p>大小与位置，模态框不要太大，也不要太小，位置建议在视窗中间偏上(太低在移动端显示不全)；</p>
+</li>
+<li><p>焦点的切换，模态框的出现会吸引用户的注意力，建议键盘焦点切换到框内；</p>
+</li>
+<li><p>需用户发起，通过用户的动作，如点击按钮促使模态框出现，不然会惊吓到用户；</p>
+</li>
+</ul>
+<h3 id="移动端"><a href="#移动端" class="headerlink" title="移动端"></a>移动端</h3><p>模态框由于太大，占用太多控件，在移动端很难适配。通常建议增加设备按键或内置滚动条来操作，用户可以滑动或放大缩小来操作模态框。</p>
+<h3 id="无障碍访问"><a href="#无障碍访问" class="headerlink" title="无障碍访问"></a>无障碍访问</h3><ul>
+<li><p>快捷键 - 考虑在打开、移动、管理焦点和关闭时增加对模态框的快捷键；</p>
+</li>
+<li><p>ARIA - 在前端代码层面加上 aria 的标识，如 Role = “dailog”,aria-hidden,aria-label;</p>
+</li>
+</ul>
+<h2 id="思考与实践"><a href="#思考与实践" class="headerlink" title="思考与实践"></a>思考与实践</h2><h3 id="定位思考"><a href="#定位思考" class="headerlink" title="定位思考"></a>定位思考</h3><p>Modal 与 Toast、Notification、Message 以及 Popover 都会在某个时间点被触发并弹出一个浮层。但从定义上来看上述组件都不属于模态框，因为模态框始终会阻塞原来主视窗下的操作，只能在框内做后续操作。模态框的出现从界面上彻底打断了用户的心流。如果是一般的消息提醒，可以用信息条、小红点等交互形式，至少不会阻塞用户的操作。</p>
+<p>那么模态框有什么优点吗？要知道模态框的体验要比页面跳转更加轻量，更让用户感觉舒适。例如，用户在电商网站看中一款产品，想登陆购买，此时弹出模态框的体验就远远好于跳转到登录页面，因为用户在模态框中登录后，就可以直接购买了。</p>
+<p>也就是说，当我们设计好模态框出现的时机，流畅的弹出体验，必要的上下文信息，以及友好的退出反馈，足以提升体验。模态框的目的在于吸引用户的注意，而且一定要提供能够在本页面即可完成额外的流程操作或是信息告知，可以是一个重要的操作，也可以是一份重要的协议。</p>
+<h3 id="合理使用"><a href="#合理使用" class="headerlink" title="合理使用"></a>合理使用</h3><p>-内容是否相关。模态框作为当前页面的一种衍生或补充，若其内容与当前页面无关联，可以使用其他操作代替模态框，例如页面跳转。</p>
+<p>-避免过多操作。模态框应该给用户留下一种看完即走，潇洒自如的感觉，而非繁杂的交互留住或牵制用户。</p>
+<p>-避免多模态框。出现多个模态框，会加深产品垂直深度，提高视觉复杂度，而且让用户感到烦躁。</p>
+<p>-用户主动触发。不要突然打开或自动打开模态框，会惊吓到用户。</p>
+<p>-大小尺寸适中。模态框大小要严格限制，避免内容过多出现滚动条的情况，除非需展示明细内容。</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>错误示例</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='/music/夜的钢琴曲(五).mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='/music/S.E.N.S. (神思者)-伽罗 (Kyara).mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#引言"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#知识普及"><span class="toc-number">2.</span> <span class="toc-text">知识普及</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#定义"><span class="toc-number">2.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用途"><span class="toc-number">2.2.</span> <span class="toc-text">用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组成"><span class="toc-number">2.3.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#移动端"><span class="toc-number">2.4.</span> <span class="toc-text">移动端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#无障碍访问"><span class="toc-number">2.5.</span> <span class="toc-text">无障碍访问</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考与实践"><span class="toc-number">3.</span> <span class="toc-text">思考与实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#定位思考"><span class="toc-number">3.1.</span> <span class="toc-text">定位思考</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#合理使用"><span class="toc-number">3.2.</span> <span class="toc-text">合理使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码实现"><span class="toc-number">3.3.</span> <span class="toc-text">代码实现</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

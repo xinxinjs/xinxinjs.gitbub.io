@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>js数组操作 - 小心心的笔记</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="所念皆星河，星河不及你,数组随机排序随机数打乱数组的排序遍历数组，每次循环都随机一个在数组长度范围内的数，并交换本次循环的位置和随机数位置上的元素
+通过随机数打乱数组原有的排序
+1234567891011function ,"> 
+    <meta name="author" content="小心心"> 
+    <link rel="alternative" href="atom.xml" title="小心心的笔记" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    <link rel="stylesheet" href="/css/diaspora.css">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">小心心的笔记</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">js数组操作</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">js数组操作</h1>
+        <div class="stuff">
+            <span>八月 04, 2019</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/javascript/">javascript</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/数组/">数组</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h2 id="数组随机排序"><a href="#数组随机排序" class="headerlink" title="数组随机排序"></a>数组随机排序</h2><h3 id="随机数打乱数组的排序"><a href="#随机数打乱数组的排序" class="headerlink" title="随机数打乱数组的排序"></a>随机数打乱数组的排序</h3><p>遍历数组，每次循环都随机一个在数组长度范围内的数，并交换本次循环的位置和随机数位置上的元素</p>
+<p>通过随机数打乱数组原有的排序</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomSort1</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = arr.length; i &lt; l; i++) &#123;</span><br><span class="line">    <span class="comment">// 生成一个在数组长度范围内的随机数</span></span><br><span class="line">    <span class="keyword">let</span> rc = <span class="built_in">parseInt</span>(<span class="built_in">Math</span>.random() * l)</span><br><span class="line">    <span class="comment">// 让当前循环的数组元素和随机出来的数组元素交换位置</span></span><br><span class="line">    <span class="keyword">const</span> current = arr[i]</span><br><span class="line">    arr[i] = arr[rc]</span><br><span class="line">    arr[rc] = current</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="生成新的随机排序数组"><a href="#生成新的随机排序数组" class="headerlink" title="生成新的随机排序数组"></a>生成新的随机排序数组</h3><p>通过随机数从数组中随机取出某一项，重新排序组成新的数组</p>
+<ul>
+<li><p>循环给定的数组，</p>
+</li>
+<li><p>每次循环根据数组的长度获取随机整数</p>
+</li>
+<li><p>以获取的随机数为索引，从数组中取出该随机数所对应的那一项，push到新的数组中去</p>
+</li>
+<li><p>然后用splice方法从原数组中删除已经放进新数组的那一项</p>
+</li>
+<li><p>循环执行以上操作</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomSort2</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> mixedArr = []</span><br><span class="line">  <span class="keyword">while</span> (arr.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> rc = <span class="built_in">parseInt</span>(<span class="built_in">Math</span>.random() * arr.length)</span><br><span class="line">    mixedArr.push(arr[rc])</span><br><span class="line">    arr.splice(rc, <span class="number">1</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> mixedArr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="array-sort方法排序"><a href="#array-sort方法排序" class="headerlink" title="array.sort方法排序"></a>array.sort方法排序</h3><p>sort方法会在愿数组上进行排序，接受一个排序的方法，通过生成随机数的方式，决定要不要调换当前两个元素的顺序</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomSort3</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  arr.sort(<span class="function"><span class="keyword">function</span> (<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Math</span>.random() - <span class="number">0.5</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="对象数组排序"><a href="#对象数组排序" class="headerlink" title="对象数组排序"></a>对象数组排序</h2><h3 id="根据对象单个属性排序"><a href="#根据对象单个属性排序" class="headerlink" title="根据对象单个属性排序"></a>根据对象单个属性排序</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">compare</span>(<span class="params">property</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> value1 = a[property]</span><br><span class="line">    <span class="keyword">let</span> value2 = b[property]</span><br><span class="line">    <span class="keyword">return</span> value1 - value2</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> arr = [</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">'zopp'</span>, <span class="attr">age</span>: <span class="number">10</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">'gpp'</span>, <span class="attr">age</span>: <span class="number">18</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">'yjj'</span>, <span class="attr">age</span>: <span class="number">8</span> &#125;,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">arr.sort(compare(<span class="string">'age'</span>))</span><br></pre></td></tr></table></figure>
+<h3 id="多个属性排序"><a href="#多个属性排序" class="headerlink" title="多个属性排序"></a>多个属性排序</h3><h2 id="数组扁平化"><a href="#数组扁平化" class="headerlink" title="数组扁平化"></a>数组扁平化</h2><h3 id="ES6-中的-flat-方法"><a href="#ES6-中的-flat-方法" class="headerlink" title="ES6 中的 flat 方法"></a>ES6 中的 flat 方法</h3><p>array.flat接受一个数字，表示要扁平化的深度</p>
+<h3 id="利用递归"><a href="#利用递归" class="headerlink" title="利用递归"></a>利用递归</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> result = []</span><br><span class="line"><span class="keyword">let</span> flatten = <span class="function"><span class="keyword">function</span> (<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    <span class="keyword">let</span> item = arr[i]</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(arr[i])) &#123;</span><br><span class="line">      flatten(item)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      result.push(item)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="利用-reduce-函数迭代"><a href="#利用-reduce-函数迭代" class="headerlink" title="利用 reduce 函数迭代"></a>利用 reduce 函数迭代</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">flatten2</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> arr.reduce(<span class="function">(<span class="params">pre, cur</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> pre.concat(<span class="built_in">Array</span>.isArray(cur) ? flatten2(cur) : cur)</span><br><span class="line">  &#125;, [])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="扩展运算符"><a href="#扩展运算符" class="headerlink" title="扩展运算符"></a>扩展运算符</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">flatten3</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (arr.some(<span class="function">(<span class="params">item</span>) =&gt;</span> <span class="built_in">Array</span>.isArray(item))) &#123;</span><br><span class="line">    arr = [].concat(...arr)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="数组去重"><a href="#数组去重" class="headerlink" title="数组去重"></a>数组去重</h2><h3 id="利用indexOf"><a href="#利用indexOf" class="headerlink" title="利用indexOf"></a>利用indexOf</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> newArr = []</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (newArr.indexOf(arr[i]) === <span class="number">-1</span>) &#123;</span><br><span class="line">      newArr.push(arr[i])</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> newArr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="先将原数组排序，在与相邻的进行比较，如果不同则存入新数组"><a href="#先将原数组排序，在与相邻的进行比较，如果不同则存入新数组" class="headerlink" title="先将原数组排序，在与相邻的进行比较，如果不同则存入新数组"></a>先将原数组排序，在与相邻的进行比较，如果不同则存入新数组</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique2</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> formArr = arr.sort()</span><br><span class="line">  <span class="keyword">var</span> newArr = [formArr[<span class="number">0</span>]]</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; formArr.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (formArr[i] !== formArr[i - <span class="number">1</span>]) &#123;</span><br><span class="line">      newArr.push(formArr[i])</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> newArr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="利用对象属性存在的特性，如果没有该属性则存入新数组"><a href="#利用对象属性存在的特性，如果没有该属性则存入新数组" class="headerlink" title="利用对象属性存在的特性，如果没有该属性则存入新数组"></a>利用对象属性存在的特性，如果没有该属性则存入新数组</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique3</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> obj = &#123;&#125;</span><br><span class="line">  <span class="keyword">var</span> newArr = []</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!obj[arr[i]]) &#123;</span><br><span class="line">      obj[arr[i]] = <span class="number">1</span></span><br><span class="line">      newArr.push(arr[i])</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> newArr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="利用数组原型对象上的-includes-方法"><a href="#利用数组原型对象上的-includes-方法" class="headerlink" title="利用数组原型对象上的 includes 方法"></a>利用数组原型对象上的 includes 方法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique4</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> newArr = []</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!newArr.includes(arr[i])) &#123;</span><br><span class="line">      newArr.push(arr[i])</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> newArr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="利用数组原型对象上的-filter-和-includes-方法"><a href="#利用数组原型对象上的-filter-和-includes-方法" class="headerlink" title="利用数组原型对象上的 filter 和 includes 方法"></a>利用数组原型对象上的 filter 和 includes 方法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique5</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> newArr = []</span><br><span class="line">  newArr = arr.filter(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> newArr.includes(item) ? <span class="string">''</span> : newArr.push(item)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">return</span> newArr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="利用-ES6-的-set-方法"><a href="#利用-ES6-的-set-方法" class="headerlink" title="利用 ES6 的 set 方法"></a>利用 ES6 的 set 方法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Array</span>.from(<span class="keyword">new</span> <span class="built_in">Set</span>(arr)) <span class="comment">// 利用Array.from将Set结构转换成数组</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="根据属性去重"><a href="#根据属性去重" class="headerlink" title="根据属性去重"></a>根据属性去重</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique6</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> res = <span class="keyword">new</span> <span class="built_in">Map</span>()</span><br><span class="line">  <span class="keyword">return</span> arr.filter(<span class="function">(<span class="params">item</span>) =&gt;</span> !res.has(item.id) &amp;&amp; res.set(item.id, <span class="number">1</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(unique6([&#123;<span class="attr">id</span>: <span class="number">1</span>, <span class="attr">name</span>: <span class="string">'aa'</span>&#125;, &#123;<span class="attr">id</span>: <span class="number">1</span>, <span class="attr">name</span>: <span class="string">'bb'</span>&#125;]))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique7</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = []</span><br><span class="line">  <span class="keyword">let</span> obj = &#123;&#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!obj[arr[i].id]) &#123;</span><br><span class="line">      result.push(arr[i])</span><br><span class="line">      obj[arr[i].id] = <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="取数组的交集-并集-差集"><a href="#取数组的交集-并集-差集" class="headerlink" title="取数组的交集/并集/差集"></a>取数组的交集/并集/差集</h2><h3 id="includes-方法结合-filter-方法"><a href="#includes-方法结合-filter-方法" class="headerlink" title="includes 方法结合 filter 方法"></a>includes 方法结合 filter 方法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">let</span> b = [<span class="number">2</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 并集</span></span><br><span class="line"><span class="keyword">let</span> union = a.concat(b.filter(<span class="function">(<span class="params">v</span>) =&gt;</span> !a.includes(v)))</span><br><span class="line"><span class="comment">// [1,2,3,4,5]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 交集</span></span><br><span class="line"><span class="keyword">let</span> intersection = a.filter(<span class="function">(<span class="params">v</span>) =&gt;</span> b.includes(v))</span><br><span class="line"><span class="comment">// [2]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 差集</span></span><br><span class="line"><span class="keyword">let</span> difference = a.concat(b).filter(<span class="function">(<span class="params">v</span>) =&gt;</span> !a.includes(v) || !b.includes(v))</span><br><span class="line"><span class="comment">// [1,3,4,5]</span></span><br></pre></td></tr></table></figure>
+<h3 id="ES6-的-Set-数据结构"><a href="#ES6-的-Set-数据结构" class="headerlink" title="ES6 的 Set 数据结构"></a>ES6 的 Set 数据结构</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="keyword">new</span> <span class="built_in">Set</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line"><span class="keyword">let</span> b = <span class="keyword">new</span> <span class="built_in">Set</span>([<span class="number">2</span>, <span class="number">4</span>, <span class="number">5</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">// 并集</span></span><br><span class="line"><span class="keyword">let</span> union = <span class="keyword">new</span> <span class="built_in">Set</span>([...a, ...b])</span><br><span class="line"><span class="comment">// Set &#123;1, 2, 3, 4,5&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 交集</span></span><br><span class="line"><span class="keyword">let</span> intersect = <span class="keyword">new</span> <span class="built_in">Set</span>([...a].filter(<span class="function">(<span class="params">x</span>) =&gt;</span> b.has(x)))</span><br><span class="line"><span class="comment">// set &#123;2&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 差集</span></span><br><span class="line"><span class="keyword">let</span> difference = <span class="keyword">new</span> <span class="built_in">Set</span>([...a, ...b].filter(<span class="function">(<span class="params">x</span>) =&gt;</span> !b.has(x) || !a.has(x)))</span><br><span class="line"><span class="comment">// Set &#123;1, 3, 4 , 5&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="数组求和"><a href="#数组求和" class="headerlink" title="数组求和"></a>数组求和</h2><h3 id="for-循环"><a href="#for-循环" class="headerlink" title="for 循环"></a>for 循环</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sum</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> s = <span class="number">0</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = arr.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    s += arr[i]</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> s</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="递归方法"><a href="#递归方法" class="headerlink" title="递归方法"></a>递归方法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sum2</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> len = arr.length</span><br><span class="line">  <span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (len == <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> arr[<span class="number">0</span>]</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> arr[<span class="number">0</span>] + sum(arr.slice(<span class="number">1</span>))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="ES6-的-reduce-方法"><a href="#ES6-的-reduce-方法" class="headerlink" title="ES6 的 reduce 方法"></a>ES6 的 reduce 方法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sum</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> arr.reduce(<span class="function"><span class="keyword">function</span> (<span class="params">prev, curr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> prev + curr</span><br><span class="line">  &#125;, <span class="number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="类数组转化"><a href="#类数组转化" class="headerlink" title="类数组转化"></a>类数组转化</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> arr = <span class="built_in">Array</span>.from(<span class="built_in">arguments</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> arr = [...arguments]</span><br></pre></td></tr></table></figure>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='/music/夜的钢琴曲(五).mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='/music/S.E.N.S. (神思者)-伽罗 (Kyara).mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#数组随机排序"><span class="toc-number">1.</span> <span class="toc-text">数组随机排序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#随机数打乱数组的排序"><span class="toc-number">1.1.</span> <span class="toc-text">随机数打乱数组的排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生成新的随机排序数组"><span class="toc-number">1.2.</span> <span class="toc-text">生成新的随机排序数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#array-sort方法排序"><span class="toc-number">1.3.</span> <span class="toc-text">array.sort方法排序</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对象数组排序"><span class="toc-number">2.</span> <span class="toc-text">对象数组排序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#根据对象单个属性排序"><span class="toc-number">2.1.</span> <span class="toc-text">根据对象单个属性排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多个属性排序"><span class="toc-number">2.2.</span> <span class="toc-text">多个属性排序</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数组扁平化"><span class="toc-number">3.</span> <span class="toc-text">数组扁平化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ES6-中的-flat-方法"><span class="toc-number">3.1.</span> <span class="toc-text">ES6 中的 flat 方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用递归"><span class="toc-number">3.2.</span> <span class="toc-text">利用递归</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用-reduce-函数迭代"><span class="toc-number">3.3.</span> <span class="toc-text">利用 reduce 函数迭代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#扩展运算符"><span class="toc-number">3.4.</span> <span class="toc-text">扩展运算符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数组去重"><span class="toc-number">4.</span> <span class="toc-text">数组去重</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#利用indexOf"><span class="toc-number">4.1.</span> <span class="toc-text">利用indexOf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#先将原数组排序，在与相邻的进行比较，如果不同则存入新数组"><span class="toc-number">4.2.</span> <span class="toc-text">先将原数组排序，在与相邻的进行比较，如果不同则存入新数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用对象属性存在的特性，如果没有该属性则存入新数组"><span class="toc-number">4.3.</span> <span class="toc-text">利用对象属性存在的特性，如果没有该属性则存入新数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用数组原型对象上的-includes-方法"><span class="toc-number">4.4.</span> <span class="toc-text">利用数组原型对象上的 includes 方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用数组原型对象上的-filter-和-includes-方法"><span class="toc-number">4.5.</span> <span class="toc-text">利用数组原型对象上的 filter 和 includes 方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用-ES6-的-set-方法"><span class="toc-number">4.6.</span> <span class="toc-text">利用 ES6 的 set 方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#根据属性去重"><span class="toc-number">5.</span> <span class="toc-text">根据属性去重</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#取数组的交集-并集-差集"><span class="toc-number">6.</span> <span class="toc-text">取数组的交集/并集/差集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#includes-方法结合-filter-方法"><span class="toc-number">6.1.</span> <span class="toc-text">includes 方法结合 filter 方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ES6-的-Set-数据结构"><span class="toc-number">6.2.</span> <span class="toc-text">ES6 的 Set 数据结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数组求和"><span class="toc-number">7.</span> <span class="toc-text">数组求和</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#for-循环"><span class="toc-number">7.1.</span> <span class="toc-text">for 循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#递归方法"><span class="toc-number">7.2.</span> <span class="toc-text">递归方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ES6-的-reduce-方法"><span class="toc-number">7.3.</span> <span class="toc-text">ES6 的 reduce 方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类数组转化"><span class="toc-number">8.</span> <span class="toc-text">类数组转化</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

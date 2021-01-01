@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>不容错过的 Babel7 知识 - 小心心的笔记</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="所念皆星河，星河不及你,博客原文地址：不容错过的 Babel7 知识
+简单了解Babel
+是什么Babel 是一个 JS 编译器。
+Babel 是一个工具链，主要用于将 ECMAScript 2015+ 版本的代码转换为向,"> 
+    <meta name="author" content="小心心"> 
+    <link rel="alternative" href="atom.xml" title="小心心的笔记" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    <link rel="stylesheet" href="/css/diaspora.css">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">小心心的笔记</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">不容错过的 Babel7 知识</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">不容错过的 Babel7 知识</h1>
+        <div class="stuff">
+            <span>三月 31, 2019</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/babel/">babel</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/babel7/">babel7</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>博客原文地址：<a href="https://juejin.im/post/5ddff3abe51d4502d56bd143" target="_blank" rel="noopener">不容错过的 Babel7 知识</a></p>
+<p>简单了解Babel</p>
+<h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><p>Babel 是一个 JS 编译器。</p>
+<p>Babel 是一个工具链，主要用于将 ECMAScript 2015+ 版本的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。</p>
+<h2 id="做什么"><a href="#做什么" class="headerlink" title="做什么"></a>做什么</h2><ul>
+<li><p>语法转换</p>
+</li>
+<li><p>通过 Polyfill 方式在目标环境中添加缺失的特性(@babel/polyfill模块)</p>
+</li>
+<li><p>源码转换(codemods)</p>
+</li>
+</ul>
+<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><h3 id="核心库-babel-core"><a href="#核心库-babel-core" class="headerlink" title="核心库 @babel/core"></a>核心库 @babel/core</h3><p>不安装 @babel/core，无法使用 babel 进行编译。</p>
+<p>npm install –save-dev @babel/core</p>
+<h3 id="CLI命令行工具-babel-cli"><a href="#CLI命令行工具-babel-cli" class="headerlink" title="CLI命令行工具 @babel/cli"></a>CLI命令行工具 @babel/cli</h3><p>babel 提供的命令行工具，主要是提供 babel 这个命令，适合安装在项目里。</p>
+<p>@babel/node 提供了 babel-node 命令，但是 @babel/node 更适合全局安装，不适合安装在项目里。</p>
+<p>npm install –save-dev @babel/cli</p>
+<p>将命令配置在 package.json 文件的 scripts 字段中:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "compiler": "babel src --out-dir lib --watch"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h3><p>配置在.babelrc文件中</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123;</span><br><span class="line">    "plugins": ["@babel/plugin-transform-arrow-functions"], //插件发布在 npm 上，可以直接填写插件的名称，</span><br><span class="line">    "plugins": ["./node_modules/@babel/plugin-transform-arrow-functions"], //也可以指定插件的相对/绝对路径</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="预设"><a href="#预设" class="headerlink" title="预设"></a>预设</h3><p>通过使用或创建一个 preset 即可轻松使用一组插件。</p>
+<p>@babel/preset-env 主要作用是对我们所使用的并且目标浏览器中缺失的功能进行代码转换和加载 polyfill，在不进行任何配置的情况下，@babel/preset-env 所包含的插件将支持所有最新的JS特性(ES2015,ES2016等，不包含 stage 阶段)，将其转换成ES5代码。例如，如果你的代码中使用了可选链(目前，仍在 stage 阶段)，那么只配置 @babel/preset-env，转换时会抛出错误，需要另外安装相应的插件。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"presets"</span>: [<span class="string">"@babel/preset-env"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="polyfill"><a href="#polyfill" class="headerlink" title="polyfill"></a>polyfill</h3><p>垫片就是垫平不同浏览器或者不同环境下的差异，让新的内置函数、实例方法等在低版本浏览器中也可以使用。</p>
+<p>@babel/polyfill 模块包括 core-js 和一个自定义的 regenerator runtime 模块，可以模拟完整的 ES2015+ 环境（不包含第4阶段前的提议）。</p>
+<p>安装 @babel/polyfill 依赖: npm install –save @babel/polyfill</p>
+<p>注意：不使用 –save-dev，因为这是一个需要在源码之前运行的垫片。</p>
+<p>我们需要将完整的 polyfill 在代码之前加载，</p>
+<p>@babel/polyfill 需要在其它代码之前引入，我们也可以在 webpack 中进行配置。</p>
+<p>例如:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">entry: [</span><br><span class="line">    require.resolve('./polyfills'),</span><br><span class="line">    path.resolve('./index')</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>@babel/preset-env 提供了一个 useBuiltIns 参数，设置值为 usage 时，就只会包含代码需要的 polyfill 。有一点需要注意：配置此参数的值为 usage ，必须要同时设置 corejs (如果不设置，会给出警告，默认使用的是”corejs”: 2) ，注意: 这里仍然需要安装 @babel/polyfill(当前 @babel/polyfill 版本默认会安装 “corejs”: 2):</p>
+<p>npm install –save core-js@3</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//.babelrcconst </span><br><span class="line">presets = [    [        "@babel/env",        &#123;               "useBuiltIns": "usage",            "corejs": 3        &#125;    ]]</span><br></pre></td></tr></table></figure>
+<p>Babel 会检查所有代码，以便查找在目标环境中缺失的功能，然后仅仅把需要的 polyfill 包含进来。</p>
+<p>Babel 会使用很小的辅助函数来实现类似 _createClass 等公共方法。默认情况下，它将被添加(inject)到需要它的每个文件中。</p>
+<h3 id="babel-plugin-transform-runtime"><a href="#babel-plugin-transform-runtime" class="headerlink" title="@babel/plugin-transform-runtime"></a>@babel/plugin-transform-runtime</h3><p>@babel/plugin-transform-runtime 是一个可以重复使用 Babel 注入的帮助程序，以节省代码大小的插件。</p>
+<p>@babel/plugin-transform-runtime 需要和 @babel/runtime 配合使用。</p>
+<p>npm install –save-dev @babel/plugin-transform-runtime</p>
+<p>npm install –save @babel/runtime</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123; <span class="attr">"presets"</span>: [</span><br><span class="line">    [<span class="string">"@babel/preset-env"</span>, &#123;<span class="attr">"useBuiltIns"</span>: <span class="string">"usage"</span>, <span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"plugins"</span>: [[<span class="string">"@babel/plugin-transform-runtime"</span>]]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果我们希望 @babel/plugin-transform-runtime 不仅仅处理帮助函数，同时也能加载 polyfill 的话，我们需要给 @babel/plugin-transform-runtime 增加配置信息。</p>
+<p>新增依赖 @babel/runtime-corejs3: npm install @babel/runtime-corejs3 –save</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">"presets"</span>: [</span><br><span class="line">    [<span class="string">"@babel/preset-env"</span>, &#123;<span class="attr">"useBuiltIns"</span>: <span class="string">"usage"</span>, <span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"plugins"</span>: [[<span class="string">"@babel/plugin-transform-runtime"</span>, &#123;<span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="插件-预设补充知识"><a href="#插件-预设补充知识" class="headerlink" title="插件/预设补充知识"></a>插件/预设补充知识</h3><p>如果两个转换插件都将处理“程序（Program）”的某个代码片段，则将根据转换插件或 preset 的排列顺序依次执行。</p>
+<ul>
+<li><p>插件在 Presets 前运行。</p>
+</li>
+<li><p>插件顺序从前往后排列。</p>
+</li>
+<li><p>Preset 顺序是颠倒的（从后往前）。</p>
+</li>
+</ul>
+<p>插件参数</p>
+<p>插件和 preset 都可以接受参数，参数由插件名和参数对象组成一个数组。preset 设置参数也是这种格式。</p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>Babel 支持多种格式的配置文件。</p>
+<p>所有的 Babel API 参数都可以被配置，但是如果该参数需要使用的 JS 代码，那么可能需要使用 JS 代码版的配置文件。</p>
+<p>如果希望以编程的方式创建配置文件或者希望编译 node_modules 目录下的模块：那么 babel.config.js 可以满足你的需求。</p>
+<p>如果只是需要一个简单的并且中用于单个软件包的配置：那么 .babelrc 即可满足你的需求。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='/music/夜的钢琴曲(五).mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='/music/S.E.N.S. (神思者)-伽罗 (Kyara).mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#是什么"><span class="toc-number">1.</span> <span class="toc-text">是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#做什么"><span class="toc-number">2.</span> <span class="toc-text">做什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何使用"><span class="toc-number">3.</span> <span class="toc-text">如何使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#核心库-babel-core"><span class="toc-number">3.1.</span> <span class="toc-text">核心库 @babel/core</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CLI命令行工具-babel-cli"><span class="toc-number">3.2.</span> <span class="toc-text">CLI命令行工具 @babel/cli</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#插件"><span class="toc-number">3.3.</span> <span class="toc-text">插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预设"><span class="toc-number">3.4.</span> <span class="toc-text">预设</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#polyfill"><span class="toc-number">3.5.</span> <span class="toc-text">polyfill</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#babel-plugin-transform-runtime"><span class="toc-number">3.6.</span> <span class="toc-text">@babel/plugin-transform-runtime</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#插件-预设补充知识"><span class="toc-number">3.7.</span> <span class="toc-text">插件/预设补充知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置文件"><span class="toc-number">3.8.</span> <span class="toc-text">配置文件</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

@@ -138,7 +138,7 @@
 <h2 id="动态polyfill"><a href="#动态polyfill" class="headerlink" title="动态polyfill"></a>动态polyfill</h2><p>polyfill可以垫平不同浏览器之间的差异，但是有些浏览器版本较高，对于es6的语法支持很好，依然还是会使用polyfill，其实这些高版本的浏览器都是不需要的，所有会造成浪费，动态polyfill会判断当前浏览器的内核以及版本，动态的返回这个浏览器所需要的代码，从而提升速度</p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
-            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
                 <source type="audio/mpeg" src="">
             </audio>
             
