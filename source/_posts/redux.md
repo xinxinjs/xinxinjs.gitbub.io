@@ -4,15 +4,17 @@ date: 2020-08-11 16:04:29
 tags: redux
 ---
 
-参考链接：
-
-[阮一峰老师：Redux 入门教程（二）：中间件与异步操作](http://www.ruanyifeng.com/blog/2016/09/redux_tutorial_part_two_async_operations.html)
-
-[Redux 中文文档](https://www.redux.org.cn/)
-
-[redux教程](https://juejin.im/post/6856791557035524109#heading-14)
-
 ## 基础概念
+
+Redux 是 JavaScript 状态容器，提供可预测化的状态管理。
+
+redux三大原则：
+
+- 单一数据源
+
+- state是只读的
+
+- 使用纯函数来改变state
 
 ### store
 
@@ -311,3 +313,11 @@ createStore可以接受applyMiddleware作为第二个参数，applyMiddleware是
 当然支持异步能支持异步数据流的中间件不只有redux-thunk，redux-promise也是一样可以的
 
 关于redux的知识点看了这些之后差不多就会使用redux了
+
+参考链接：
+
+[阮一峰老师：Redux 入门教程（二）：中间件与异步操作](http://www.ruanyifeng.com/blog/2016/09/redux_tutorial_part_two_async_operations.html)
+
+[Redux 中文文档](https://www.redux.org.cn/)
+
+[redux教程](https://juejin.im/post/6856791557035524109#heading-14)

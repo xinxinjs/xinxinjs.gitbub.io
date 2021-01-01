@@ -19,6 +19,12 @@ Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [docume
 
 ## Quick Start
 
+## 新建分类页面
+
+```bash
+$ hexo new page categories
+```
+
 ### Create a new post
 
 ``` bash

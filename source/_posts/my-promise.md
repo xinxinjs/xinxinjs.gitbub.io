@@ -1,5 +1,5 @@
 ---
-title: 手写Promise，了解Promise核心原理
+title: 手写一个Promise，了解Promise核心原理
 date: 2020-10-23 11:24:51
 tags: promise
 ---
@@ -648,4 +648,108 @@ catch方法的作用跟then里的第二个回调函数一样，因此我们可�
 
 ## 实现Promise.resolve
 
+Promise.resolve方法可以传三种值
 
+1. 不是promise
+2. 成功状态的promise
+3. 失败状态的promise
+
+```javascript
+Promise.resolve(1)
+Promise.resolve(Promise.resolve(1))
+Promise.resolve(Promise.reject(1))
+```
+
+具体的实现
+
+```javascript
+/*
+  Promise函数对象的resovle方法
+  返回一个指定结果的promise对象
+ */
+Promise.resolve = function(value){
+  return new Promise((resolve,reject)=>{
+    if (value instanceof Promise){
+        // 如果value 是promise
+        value.then(
+            value => {resolve(value)},
+            reason => {reject(reason)}
+        )
+    } else{
+        // 如果value不是promise
+        resolve(value)
+    }
+  })
+}
+```
+
+## 实现Promise.reject
+
+```javascript
+/*
+  Promise函数对象的reject方法
+  返回一个指定reason的失败状态的promise对象
+*/
+Promise.reject = function(reason){
+  return new Promise((resolve,reject)=>{
+    reject(reason);
+  })
+}
+```
+
+## 实现Promise.all
+
+```javascript
+/*
+  Promise函数对象的all方法
+  返回一个promise对象，只有当所有promise都成功时返回的promise状态才成功
+*/
+Promise.all = function(promises){
+  const values = new Array(promises.length)
+  var resolvedCount = 0 //计状态为resolved的promise的数量
+  return new Promise((resolve,reject)=>{
+    // 遍历promises，获取每个promise的结果
+    promises.forEach((p,index)=>{
+      Promise.resolve(p).then(
+        value => {
+          // p状态为resolved，将值保存起来
+          values[index] = value
+          resolvedCount++;
+          // 如果全部p都为resolved状态，return的promise状态为resolved
+          if(resolvedCount === promises.length){
+            resolve(values)
+          }
+        },
+        reason => { //只要有一个失败，return的promise状态就为reject
+          reject(reason);
+        }
+      )    
+    })    
+  })
+}
+```
+
+## 实现Promise.race
+
+```javascript
+/*
+  Promise函数对象的race方法
+  返回一个promise对象，状态由第一个完成的promise决定
+*/
+Promise.race = function(promises){
+  return new Promise((resolve,reject)=>{
+    // 遍历promises，获取每个promise的结果
+    promises.forEach((p,index)=>{
+        Promise.resolve(p).then(
+            value => {
+                // 只要有一个成功，返回的promise的状态九尾resolved
+                resolve(value)
+            },
+            reason => { //只要有一个失败，return的promise状态就为reject
+                reject(reason)
+            }
+        )
+    })
+  })
+}
+```
