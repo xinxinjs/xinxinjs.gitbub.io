@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>从性能优化的角度看 - 小心心的笔记</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="所念皆星河，星河不及你,缓存的作用重复利用已经获取的资源，减少延迟和网络阻塞，
+缓存分类
+数据库缓存
+
+服务器缓存
+代理服务器缓存
+cdn缓存
+
+浏览器缓存
+http缓存
+数据缓存
+应用离线缓存 PWA
+
+
+浏览器缓存-强,"> 
+    <meta name="author" content="小心心"> 
+    <link rel="alternative" href="atom.xml" title="小心心的笔记" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    <link rel="stylesheet" href="/css/diaspora.css">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">小心心的笔记</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">从性能优化的角度看</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">从性能优化的角度看</h1>
+        <div class="stuff">
+            <span>三月 30, 2021</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/缓存/">缓存</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h2 id="缓存的作用"><a href="#缓存的作用" class="headerlink" title="缓存的作用"></a>缓存的作用</h2><p>重复利用已经获取的资源，减少延迟和网络阻塞，</p>
+<h2 id="缓存分类"><a href="#缓存分类" class="headerlink" title="缓存分类"></a>缓存分类</h2><ul>
+<li><p>数据库缓存</p>
+</li>
+<li><p>服务器缓存</p>
+<p>代理服务器缓存</p>
+<p>cdn缓存</p>
+</li>
+<li><p>浏览器缓存</p>
+<p>http缓存</p>
+<p>数据缓存</p>
+<p>应用离线缓存 PWA</p>
+</li>
+</ul>
+<h2 id="浏览器缓存-强缓存和协商缓存"><a href="#浏览器缓存-强缓存和协商缓存" class="headerlink" title="浏览器缓存-强缓存和协商缓存"></a>浏览器缓存-强缓存和协商缓存</h2><p>浏览器命中缓存原理</p>
+<ol>
+<li><p>浏览器在请求资源的时候，根据请求头部的expires 和cache-control判断是否命中强缓存，如果命中强缓存，就直接从浏览器获取缓存，而不会发送请求到服务器</p>
+</li>
+<li><p>如果没有命中强缓存，就一定会发送请求到服务器，通过last-modified和Etag判断是否命中协商缓存，如果命中了协商缓存，服务器会返回这个请求，并返回状态码 304 not-modified，但是不会返回这个资源的数据，依然是从缓存获取数据</p>
+</li>
+<li><p>如果既没有命中强缓存，也没有命中协商缓存，则从服务器获取资源并加载</p>
+</li>
+</ol>
+<h3 id="强缓存"><a href="#强缓存" class="headerlink" title="强缓存"></a>强缓存</h3><p>强缓存通过expires和cache-control两种请求头实现</p>
+<ol>
+<li><p>expires，设置绝对时间，表示资源过期的时间</p>
+</li>
+<li><p>Cache-Control，设置指令短语 max-age，表示相对时间</p>
+</li>
+</ol>
+<p>如果当前的时间在给定的时间之内，就会使用本地的缓存，而不会向服务器再去请求</p>
+<h3 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h3><p>当浏览器对某个资源的请求没有命中强缓存，就会发一个请求到服务器，验证协商缓存是否命中，如果协商缓存命中，请求响应返回的http状态为304并且会显示一个Not Modified的字符串</p>
+<p>实现协商缓存</p>
+<h4 id="last-modified和if-modified-since"><a href="#last-modified和if-modified-since" class="headerlink" title="last-modified和if-modified-since"></a>last-modified和if-modified-since</h4><p>浏览器上一次返回资源在返回头里返回last-modified首部字段，该首部字段表示该资源上次修改的时间，然后浏览器下次请求的时候会在请求头里设置if-modified-since，该首部字段设置为上次last-modified返回的值，</p>
+<p>以这种方式询问服务器这个资源从这个时间之后是否有修改，如果有就会返回新的资源，如果没有则返回304 not-modified状态码</p>
+<p>但是如果在本地打开缓存文件，就会造成 Last-Modified 被修改，所以在 HTTP / 1.1 出现了 ETag</p>
+<h4 id="Etag和if-none-match"><a href="#Etag和if-none-match" class="headerlink" title="Etag和if-none-match"></a>Etag和if-none-match</h4><p>浏览器上一次返回资源在返回头里返回Etag这个首部字段，Etag表示文件指纹，然后浏览器下次请求的时候会在请求头里设置if-none-match，该首部字段设置为上次eTag的值</p>
+<p>以这种方式询问服务器，请求的资源是否有更新，如果有就返回新的资源，如果没有则返回304 not-modified状态码</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='/music/夜的钢琴曲(五).mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='/music/S.E.N.S. (神思者)-伽罗 (Kyara).mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存的作用"><span class="toc-number">1.</span> <span class="toc-text">缓存的作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存分类"><span class="toc-number">2.</span> <span class="toc-text">缓存分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#浏览器缓存-强缓存和协商缓存"><span class="toc-number">3.</span> <span class="toc-text">浏览器缓存-强缓存和协商缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#强缓存"><span class="toc-number">3.1.</span> <span class="toc-text">强缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#协商缓存"><span class="toc-number">3.2.</span> <span class="toc-text">协商缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#last-modified和if-modified-since"><span class="toc-number">3.2.1.</span> <span class="toc-text">last-modified和if-modified-since</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Etag和if-none-match"><span class="toc-number">3.2.2.</span> <span class="toc-text">Etag和if-none-match</span></a></li></ol></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
