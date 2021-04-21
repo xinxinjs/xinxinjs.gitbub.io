@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>React 使用 Redux - 小心心的笔记</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="所念皆星河，星河不及你,Redux 和 React 之间没有关系。Redux 支持 React、Angular、Ember、jQuery 甚至纯 JavaScript。
+react-redux是redux为react专门封,"> 
+    <meta name="author" content="小心心"> 
+    <link rel="alternative" href="atom.xml" title="小心心的笔记" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    <link rel="stylesheet" href="/css/diaspora.css">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">小心心的笔记</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://xinxinjs.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">React 使用 Redux</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">React 使用 Redux</h1>
+        <div class="stuff">
+            <span>十月 27, 2018</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/react-redux/">react-redux</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>Redux 和 React 之间没有关系。Redux 支持 React、Angular、Ember、jQuery 甚至纯 JavaScript。</p>
+<p>react-redux是redux为react专门封装的库，Redux 默认并不包含 React 绑定库，需要单独安装。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save react-redux</span><br></pre></td></tr></table></figure>
+<p>学习使用react-redux之前先了解一些知识</p>
+<h2 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h2><p>React-Redux 将所有组件分成两大类：UI 组件（presentational component）和容器组件（container component）。</p>
+<h3 id="UI组件"><a href="#UI组件" class="headerlink" title="UI组件"></a>UI组件</h3><p>只负责展示UI</p>
+<p>UI 组件有以下几个特征：</p>
+<ul>
+<li><p>只负责 UI 的呈现，不带有任何业务逻辑</p>
+</li>
+<li><p>没有状态</p>
+</li>
+<li><p>所有数据都由参数（props）提供</p>
+</li>
+<li><p>不使用任何 Redux 的 API</p>
+</li>
+</ul>
+<p>例如：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Title =</span><br><span class="line">  value =&gt; <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;value&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</span><br></pre></td></tr></table></figure>
+<p>因为不含有状态，UI 组件又称为”纯组件”，即它纯函数一样，纯粹由参数决定它的值。</p>
+<h3 id="容器组件"><a href="#容器组件" class="headerlink" title="容器组件"></a>容器组件</h3><p>容器组件的特征恰恰相反:</p>
+<ul>
+<li><p>负责管理数据和业务逻辑，不负责 UI 的呈现</p>
+</li>
+<li><p>带有内部状态</p>
+</li>
+<li><p>使用 Redux 的 API</p>
+</li>
+</ul>
+<h2 id="学习使用react-redux"><a href="#学习使用react-redux" class="headerlink" title="学习使用react-redux"></a>学习使用react-redux</h2><p>从一个例子，来学习如何使用react-redux：实现一个todo列表，一个 todo 项被点击后，会增加一条删除线并标记 completed。我们会显示用户新增一个 todo 字段。在 footer 里显示一个可切换的显示全部/只显示 completed 的/只显示 incompleted 的 todos。</p>
+<p>这里使用react hooks ，ts 外加react-redux实现，整体的思路是先写出UI组件，在使用react-redux把UI组件和状态业务逻辑链接起来</p>
+<h3 id="写出UI组件"><a href="#写出UI组件" class="headerlink" title="写出UI组件"></a>写出UI组件</h3><h4 id="todo项组件"><a href="#todo项组件" class="headerlink" title="todo项组件"></a>todo项组件</h4><p>负责展示每一条todo的内容，先简单的写一个</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">interface TodoProps &#123;</span><br><span class="line">  text: string</span><br><span class="line">&#125;</span><br><span class="line">const Todo = (&#123;text&#125;: TodoProps) =&gt; (</span><br><span class="line">  &lt;li&gt;&#123;text&#125;&lt;/li&gt;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h4 id="TodoList组件"><a href="#TodoList组件" class="headerlink" title="TodoList组件"></a>TodoList组件</h4><p>负责展示整个todo列表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const TodoList = (&#123; todos, onTodoClick &#125;) =&gt; &#123;</span><br><span class="line">  return (</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">      &#123;todos.map((todo, index) =&gt; (</span><br><span class="line">      &lt;Todo key=&#123;index&#125; &#123;...todo&#125; onClick=&#123;() =&gt; onTodoClick(index)&#125; /&gt;</span><br><span class="line">    ))&#125;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Link组件"><a href="#Link组件" class="headerlink" title="Link组件"></a>Link组件</h4><p>在footer里面用来展示todos</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const Link = (&#123; active, children &#125;: LinkProps) =&gt; &#123;</span><br><span class="line">  if (active) &#123;</span><br><span class="line">    return &lt;span&gt;&#123;children&#125;&lt;/span&gt;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return (</span><br><span class="line">    &lt;a href=&quot;&quot; &gt;</span><br><span class="line">      &#123;children&#125;</span><br><span class="line">    &lt;/a&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Footer组件"><a href="#Footer组件" class="headerlink" title="Footer组件"></a>Footer组件</h3><p>然后如何把UI组件和redux的state连接起来呢？这就是react-redux做的工作了，React-Redux 提供connect方法，用于从 UI 组件生成容器组件。connect的意思，就是将这两种组件连起来。</p>
+<h3 id="生成容器组件"><a href="#生成容器组件" class="headerlink" title="生成容器组件"></a>生成容器组件</h3><p>content()使用方法，把刚才写的UI组件TodoList生成容器组件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">'react-redux'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> VisibleTodoList = connect(</span><br><span class="line">  mapStateToProps,</span><br><span class="line">  mapDispatchToProps</span><br><span class="line">)(TodoList)</span><br></pre></td></tr></table></figure>
+<p>content()是一个高阶组件，接受两个参数mapStatetoProps和mapDispatchToProps</p>
+<p>使用 connect() 生成容器组件之前，需要先定义 mapStateToProps 这个函数来指定如何把当前 Redux store state 映射到展示组件的 props 中。</p>
+<h4 id="mapStateToProps"><a href="#mapStateToProps" class="headerlink" title="mapStateToProps"></a>mapStateToProps</h4><p>mapStateToProps是一个函数，建立一个从（外部的）state对象到（UI 组件的）props对象的映射关系。该函数执行后返回一个对象，里面每一个健值对就是一个映射。</p>
+<p>mapStateToProps会订阅 Store，每当state更新的时候，就会自动执行，重新计算 UI 组件的参数，从而触发 UI 组件的重新渲染。</p>
+<p>mapStateToProps的第一个参数总是state对象，还可以使用第二个参数，代表容器组件的props对象。</p>
+<p>connect方法可以省略mapStateToProps参数，那样的话，UI 组件就不会订阅Store，就是说 Store 的更新不会引起 UI 组件的更新。</p>
+<p>上面例子的需求中：在footer 里显示一个可切换的显示全部/只显示 completed 的/只显示 incompleted 的 todos，所以定义了根据 state.visibilityFilter 来过滤 state.todos 的方法，并在 mapStateToProps 中使用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">const getVisibleTodos = (todos: any[], filter: string) =&gt; &#123;</span><br><span class="line">  switch (filter) &#123;</span><br><span class="line">    case &apos;SHOW_COMPLETED&apos;:</span><br><span class="line">      return todos.filter(t =&gt; t.completed)</span><br><span class="line">    case &apos;SHOW_ACTIVE&apos;:</span><br><span class="line">      return todos.filter(t =&gt; !t.completed)</span><br><span class="line">    case &apos;SHOW_ALL&apos;:</span><br><span class="line">    default:</span><br><span class="line">      return todos</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">const mapStateToProps = (state) =&gt; &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    todos: getVisibleTodos(state.todos, state.visibilityFilter)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>mapStateToProps接受state作为参数，返回一个对象，对象有一个todos属性，代表了UI组件的同名参数，后面的getVisibleTodos也是一个函数，可以从state算出 todos 的值。</p>
+<h4 id="mapDispatchToProps"><a href="#mapDispatchToProps" class="headerlink" title="mapDispatchToProps"></a>mapDispatchToProps</h4><p>除了读取 state，容器组件还能分发 action。这就要用到connect()方法的第二个参数,mapDispatchToProps可以是一个函数，也可以是一个对象。</p>
+<p>mapDispatchToProps() 方法接收 dispatch() 方法并返回期望注入到展示组件的 props 中的回调方法</p>
+<p>mapDispatchToProps作为函数，应该返回一个对象，该对象的每个键值对都是一个映射，定义了 UI 组件的参数怎样发出 Action。</p>
+<p>如果mapDispatchToProps是一个对象，它的每个键名也是对应 UI 组件的同名参数，键值应该是一个函数，会被当作 Action creator ，返回的 Action 会由 Redux 自动发出。</p>
+<p>现在我们希望 VisibleTodoList 向 TodoList 组件中注入一个叫 onTodoClick 的 props ，还希望 onTodoClick 能分发 TOGGLE_TODO 这个 action：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">const mapDispatchToProps = dispatch =&gt; &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    onTodoClick: id =&gt; &#123;</span><br><span class="line">      dispatch(toggleTodo(id))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>未完。。。</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p><a href="https://www.redux.org.cn/docs/react-redux/" target="_blank" rel="noopener">react-redux文档</a></p>
+<p><a href="http://www.ruanyifeng.com/blog/2016/09/redux_tutorial_part_three_react-redux.html" target="_blank" rel="noopener">Redux 入门教程（三）：React-Redux 的用法</a></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='/music/夜的钢琴曲(五).mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='/music/S.E.N.S. (神思者)-伽罗 (Kyara).mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#组件"><span class="toc-number">1.</span> <span class="toc-text">组件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#UI组件"><span class="toc-number">1.1.</span> <span class="toc-text">UI组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#容器组件"><span class="toc-number">1.2.</span> <span class="toc-text">容器组件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#学习使用react-redux"><span class="toc-number">2.</span> <span class="toc-text">学习使用react-redux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#写出UI组件"><span class="toc-number">2.1.</span> <span class="toc-text">写出UI组件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#todo项组件"><span class="toc-number">2.1.1.</span> <span class="toc-text">todo项组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TodoList组件"><span class="toc-number">2.1.2.</span> <span class="toc-text">TodoList组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Link组件"><span class="toc-number">2.1.3.</span> <span class="toc-text">Link组件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Footer组件"><span class="toc-number">2.2.</span> <span class="toc-text">Footer组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生成容器组件"><span class="toc-number">2.3.</span> <span class="toc-text">生成容器组件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#mapStateToProps"><span class="toc-number">2.3.1.</span> <span class="toc-text">mapStateToProps</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mapDispatchToProps"><span class="toc-number">2.3.2.</span> <span class="toc-text">mapDispatchToProps</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文档"><span class="toc-number">3.</span> <span class="toc-text">参考文档</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

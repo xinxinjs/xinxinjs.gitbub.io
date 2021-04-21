@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>跨域问题的解决方案 - 小心心的笔记</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="所念皆星河，星河不及你,为什么会产生跨域前后端分离，前端的代码和服务端的代码分别部署在不同的域名下，导致的跨域问题
+协议，域名端，口号不一样都是跨域
+跨域资源共享CORS定义在访问跨域资源的时候，浏览器与服务端如何沟通
+使,"> 
+    <meta name="author" content="小心心"> 
+    <link rel="alternative" href="atom.xml" title="小心心的笔记" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    <link rel="stylesheet" href="/css/diaspora.css">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">小心心的笔记</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://xinxinjs.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">跨域问题的解决方案</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">跨域问题的解决方案</h1>
+        <div class="stuff">
+            <span>四月 14, 2018</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/前端/">前端</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h2 id="为什么会产生跨域"><a href="#为什么会产生跨域" class="headerlink" title="为什么会产生跨域"></a>为什么会产生跨域</h2><p>前后端分离，前端的代码和服务端的代码分别部署在不同的域名下，导致的跨域问题</p>
+<p>协议，域名端，口号不一样都是跨域</p>
+<h2 id="跨域资源共享CORS"><a href="#跨域资源共享CORS" class="headerlink" title="跨域资源共享CORS"></a>跨域资源共享CORS</h2><p>定义在访问跨域资源的时候，浏览器与服务端如何沟通</p>
+<p>使用自定义的HTTP头部让浏览器与服务器进行沟通，例如：</p>
+<p>Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
+<p>如果浏览器可以处理请求，就在Access-Control-Allow-Origin头部中返回相同的源信息，例如</p>
+<p>Access-Control-Allow-Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
+<h2 id="其他的跨域方案"><a href="#其他的跨域方案" class="headerlink" title="其他的跨域方案"></a>其他的跨域方案</h2><h3 id="jsonp"><a href="#jsonp" class="headerlink" title="jsonp"></a>jsonp</h3><p>动态创建script标签， src赋值为要请求的地址，仅支持get请求</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">  function func(data) &#123;&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'http://xx.com/list/callback=func'</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>jsonp存在的问题：不安全、有缓存、传递的信息有限制、需要服务器处理</p>
+<h3 id="服务端允许跨域"><a href="#服务端允许跨域" class="headerlink" title="服务端允许跨域"></a>服务端允许跨域</h3><p>设置一个允许跨域访问的源：Access-Control-Allow-Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
+<h3 id="webpack-proxy"><a href="#webpack-proxy" class="headerlink" title="webpack proxy"></a>webpack proxy</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"proxy": "代里地址"</span><br></pre></td></tr></table></figure>
+<h3 id="nginx反向代理"><a href="#nginx反向代理" class="headerlink" title="nginx反向代理"></a>nginx反向代理</h3>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='/music/夜的钢琴曲(五).mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='/music/S.E.N.S. (神思者)-伽罗 (Kyara).mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么会产生跨域"><span class="toc-number">1.</span> <span class="toc-text">为什么会产生跨域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#跨域资源共享CORS"><span class="toc-number">2.</span> <span class="toc-text">跨域资源共享CORS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他的跨域方案"><span class="toc-number">3.</span> <span class="toc-text">其他的跨域方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#jsonp"><span class="toc-number">3.1.</span> <span class="toc-text">jsonp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务端允许跨域"><span class="toc-number">3.2.</span> <span class="toc-text">服务端允许跨域</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#webpack-proxy"><span class="toc-number">3.3.</span> <span class="toc-text">webpack proxy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nginx反向代理"><span class="toc-number">3.4.</span> <span class="toc-text">nginx反向代理</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

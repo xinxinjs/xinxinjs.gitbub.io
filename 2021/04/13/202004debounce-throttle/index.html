@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>每日一题之防抖节流 - 小心心的笔记</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="所念皆星河，星河不及你,防抖和节流都是优化高频率执行代码的一种手段，例如浏览器的resize，scroll，input等事件，
+这些事件在被触发的时候会不断的调用绑定在事件上的回调函数，这个就会极大的浪费资源，降低前端的性,"> 
+    <meta name="author" content="小心心"> 
+    <link rel="alternative" href="atom.xml" title="小心心的笔记" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    <link rel="stylesheet" href="/css/diaspora.css">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">小心心的笔记</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://xinxinjs.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">每日一题之防抖节流</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">每日一题之防抖节流</h1>
+        <div class="stuff">
+            <span>四月 13, 2021</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/数据结构与算饭/">数据结构与算饭</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>防抖和节流都是优化高频率执行代码的一种手段，例如浏览器的resize，scroll，input等事件，</p>
+<p>这些事件在被触发的时候会不断的调用绑定在事件上的回调函数，这个就会极大的浪费资源，降低前端的性能</p>
+<p>为了优化体验就需要对这些代码的调用次数做限制，所使用的方法就是防抖或者节流算法</p>
+<h2 id="防抖"><a href="#防抖" class="headerlink" title="防抖"></a>防抖</h2><p>防抖的概念：连续触发事件N秒后执行该函数，如果在N秒内事件被重复触发，则重新计时</p>
+<p>防抖算法：使用闭包</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> debounce = <span class="function">(<span class="params">delay, callback</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> timer;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</span><br><span class="line">      clearTimeout(timer);</span><br><span class="line">      timer = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        callback(value);</span><br><span class="line">      &#125;, delay);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span> (<span class="params">value</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(value)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 保存在外部调用</span></span><br><span class="line"><span class="keyword">const</span> debounceFunc = debounce(<span class="number">1000</span>, func);</span><br><span class="line"><span class="keyword">const</span> click = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  debounceFunc(e.target.value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用场景：防止重复的执行</p>
+<ul>
+<li><p>搜索框输入查询，用户连续触发input事件，在停止输入后的N秒执行函数</p>
+</li>
+<li><p>手机号码验证输入，用户连续触发input事件，在停止输入的N秒之后做校验</p>
+</li>
+<li><p>窗口大小改变，用户连续拖动改变窗口的大小，在停止拖动N秒之后执行函数</p>
+</li>
+</ul>
+<h2 id="节流"><a href="#节流" class="headerlink" title="节流"></a>节流</h2><p>N秒内之运行一次</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> throttle = <span class="function">(<span class="params">delay, callback</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> timer;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!timer) &#123;</span><br><span class="line">      timer = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        callback(value);</span><br><span class="line">        timer = <span class="literal">null</span>;</span><br><span class="line">      &#125;, delay);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用场景：</p>
+<ul>
+<li><p>滚动加载</p>
+</li>
+<li><p>加载更多</p>
+</li>
+<li><p>滚到底部监听</p>
+</li>
+<li><p>搜索联想功能</p>
+</li>
+</ul>
+<h2 id="防抖和节流的相同之处"><a href="#防抖和节流的相同之处" class="headerlink" title="防抖和节流的相同之处"></a>防抖和节流的相同之处</h2><ol>
+<li><p>实现方法，都是通过setTimeout实现的</p>
+</li>
+<li><p>目的一样，都是想要降低高频代码的执行顺序</p>
+</li>
+</ol>
+<h2 id="不同之处"><a href="#不同之处" class="headerlink" title="不同之处"></a>不同之处</h2><ol>
+<li><p>防抖是在一段连续操作结束后处理回调，利用clearTimeout和setTimeout实现</p>
+</li>
+<li><p>节流，是在一段连续操作中，每一段事件执行一次</p>
+</li>
+</ol>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='/music/夜的钢琴曲(五).mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='/music/S.E.N.S. (神思者)-伽罗 (Kyara).mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#防抖"><span class="toc-number">1.</span> <span class="toc-text">防抖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#节流"><span class="toc-number">2.</span> <span class="toc-text">节流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#防抖和节流的相同之处"><span class="toc-number">3.</span> <span class="toc-text">防抖和节流的相同之处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不同之处"><span class="toc-number">4.</span> <span class="toc-text">不同之处</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

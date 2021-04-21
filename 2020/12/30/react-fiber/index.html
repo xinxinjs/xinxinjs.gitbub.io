@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>react-fiber 原理介绍 - 小心心的笔记</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="所念皆星河，星河不及你,为什么会出现react-fiberreact15的问题：当我们调用setState更新页面的时候，React 会遍历应用的所有节点，计算出差异，然后再更新 UI。整个过程是一气呵成，不能被打断的
+默,"> 
+    <meta name="author" content="小心心"> 
+    <link rel="alternative" href="atom.xml" title="小心心的笔记" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    <link rel="stylesheet" href="/css/diaspora.css">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">小心心的笔记</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://xinxinjs.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">react-fiber 原理介绍</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">react-fiber 原理介绍</h1>
+        <div class="stuff">
+            <span>十二月 30, 2020</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/react/">react</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h2 id="为什么会出现react-fiber"><a href="#为什么会出现react-fiber" class="headerlink" title="为什么会出现react-fiber"></a>为什么会出现react-fiber</h2><p>react15的问题：当我们调用setState更新页面的时候，React 会遍历应用的所有节点，计算出差异，然后再更新 UI。整个过程是一气呵成，不能被打断的</p>
+<p>默认情况下，js运算，页面布局，页面绘制都在浏览器的主线程运行，如果页面元素很多，在大量的频繁计算之下，js运算持续占用主线成，页面就没有办法即使的更新</p>
+<h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>要解决上面的问题，就是要解决js运算占用主线成大量时间的问题，将运算切割成多个部分，分批完成</p>
+<p>15以下的react使用的是递归的方式进行渲染，使用js引擎自身调用函数栈，是不能被中断的，fiber使用window.requestIdleCallback()方法实现切片运行</p>
+<p>window.requestIdleCallback()会在浏览器空闲时期依次调用函数，</p>
+<h2 id="react是怎么做的"><a href="#react是怎么做的" class="headerlink" title="react是怎么做的"></a>react是怎么做的</h2><p>react框架内部的运作可以分为三层</p>
+<ul>
+<li><p>virtual DOM层，描述页面长什么样子</p>
+</li>
+<li><p>react reconciler（调节器） 负责调用组件生命周期方法，进行diff运算</p>
+</li>
+<li><p>Renderer，根据不同的平台，渲染出响应的页面，比较常见的是reactDom 和reactNative</p>
+</li>
+</ul>
+<p>fiber 是一个新的reconciler,它有一个新的名字叫fiber-reconsiler</p>
+<p>fiber-reconsiler运行一段时间就会把控制权交给浏览器</p>
+<p>Fiber Reconciler 在执行过程中，会分为 2 个阶段。</p>
+<ol>
+<li><p>生成 Fiber 树，得出需要更新的节点信息。这一步是一个渐进的过程，可以被打断。</p>
+</li>
+<li><p>将需要更新的节点一次过批量更新，这个过程不能被打断。</p>
+</li>
+</ol>
+<p>第一个阶段是Diff 计算的时候生成一个fiber树，这个阶段是可以被打断的，这颗新树每生成一个新的节点，都会将控制权交回给主线程，去检查有没有优先级更高的任务需要执行。如果没有，则继续构建树的过程：</p>
+<p>如果过程中有优先级更高的任务需要进行，则 Fiber Reconciler 会丢弃正在生成的树，在空闲的时候再重新执行一遍。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='/music/夜的钢琴曲(五).mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='/music/S.E.N.S. (神思者)-伽罗 (Kyara).mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么会出现react-fiber"><span class="toc-number">1.</span> <span class="toc-text">为什么会出现react-fiber</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决思路"><span class="toc-number">2.</span> <span class="toc-text">解决思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#react是怎么做的"><span class="toc-number">3.</span> <span class="toc-text">react是怎么做的</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
