@@ -133,6 +133,24 @@
       </tags>
   </entry>
   <entry>
+    <title>SMART原则</title>
+    <url>/2020/11/26/202011-smartstandard/</url>
+    <content><![CDATA[<p>SMART原则，是一种目标的制定和考核标准，使考核更加科学化、规范化，更能保证考核的公正、公开与公平。</p>
+<h2 id="SMART原则解析"><a href="#SMART原则解析" class="headerlink" title="SMART原则解析"></a>SMART原则解析</h2><ul>
+<li><p>S=Specific、具体的，就是说目标的制定必须是具体的，不能笼统</p>
+</li>
+<li><p>M=Measurable、可衡量的，目标是可以量化或者行为化的，验证指标是否达到标准的数据是可以获得的</p>
+</li>
+<li><p>A=Attainable、可实现的，指标在付出努力的情况下是可以达到的，不能设立的太高或者太低</p>
+</li>
+<li><p>R=Relevant、相关的，指标是与本职工作相关的</p>
+</li>
+<li><p>T=Time-bound、有时限的，指标具体完成的日期或者期限</p>
+</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
     <title>营销需求管理</title>
     <url>/2021/01/01/202101-xuqiu/</url>
     <content><![CDATA[<p>营销专家、科特勒集团合伙人王赛老师曾经提出过一个新鲜的观点，他说需求管理是营销的本质，营销回到原点，就是对需求的研究。</p>
@@ -161,24 +179,6 @@
       <tags>
         <tag>营销</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>SMART原则</title>
-    <url>/2020/11/26/202011-smartstandard/</url>
-    <content><![CDATA[<p>SMART原则，是一种目标的制定和考核标准，使考核更加科学化、规范化，更能保证考核的公正、公开与公平。</p>
-<h2 id="SMART原则解析"><a href="#SMART原则解析" class="headerlink" title="SMART原则解析"></a>SMART原则解析</h2><ul>
-<li><p>S=Specific、具体的，就是说目标的制定必须是具体的，不能笼统</p>
-</li>
-<li><p>M=Measurable、可衡量的，目标是可以量化或者行为化的，验证指标是否达到标准的数据是可以获得的</p>
-</li>
-<li><p>A=Attainable、可实现的，指标在付出努力的情况下是可以达到的，不能设立的太高或者太低</p>
-</li>
-<li><p>R=Relevant、相关的，指标是与本职工作相关的</p>
-</li>
-<li><p>T=Time-bound、有时限的，指标具体完成的日期或者期限</p>
-</li>
-</ul>
-]]></content>
   </entry>
   <entry>
     <title>关于项目风险来源</title>
@@ -461,6 +461,98 @@
       </tags>
   </entry>
   <entry>
+    <title>数据结构基本知识与常见的数据结构</title>
+    <url>/2019/04/20/data-structure/</url>
+    <content><![CDATA[<p>数据结构用来描述数据元素之间的关系</p>
+<p>数据元素之间存在特定的关系，这种关系可以分为两种：逻辑结构和物理结构</p>
+<h2 id="数据关系"><a href="#数据关系" class="headerlink" title="数据关系"></a>数据关系</h2><h3 id="逻辑结构"><a href="#逻辑结构" class="headerlink" title="逻辑结构"></a>逻辑结构</h3><p>逻辑结构描述了数据对象中数据元素之间的关系，按照逻辑结构可以分为四种：集合、线性结构、树形结构、图形结构</p>
+<h4 id="集合："><a href="#集合：" class="headerlink" title="集合："></a>集合：</h4><p>数据元素同属于一个集合，但是数据元素之间没有其他的关系，如图：</p>
+<p><img src="/img/data/jihe.jpeg" alt="集合"></p>
+<h4 id="线性结构："><a href="#线性结构：" class="headerlink" title="线性结构："></a>线性结构：</h4><p>是一组有序数据的集合，除了第一个元素和最后一个元素，其他的元素都是首位相接。</p>
+<p>js中数组就是典型的线性结构，除此之外还有队列、栈和链表也是线性结构</p>
+<p><img src="/img/data/xianxing.jpeg" alt="线性结构"></p>
+<h4 id="树形结构："><a href="#树形结构：" class="headerlink" title="树形结构："></a>树形结构：</h4><p>数据元素是一对多的关系</p>
+<p>前端最常接触的树形结构是DOM树</p>
+<p><img src="/img/data/shuxing.jpeg" alt="树形"></p>
+<h4 id="图形结构："><a href="#图形结构：" class="headerlink" title="图形结构："></a>图形结构：</h4><p>数据元素是多对多的关系</p>
+<p>比如地图导航就是使用的图形结构来存储数据</p>
+<p><img src="/img/data/tuxing.jpeg" alt="图形"></p>
+<h3 id="物理结构"><a href="#物理结构" class="headerlink" title="物理结构"></a>物理结构</h3><p>物理结构描述数据在内存中是如何存储的，数据的存储结构应该正确的反应数据之间的逻辑关系</p>
+<p>分为：顺序存储和链式存储</p>
+<h4 id="顺序存储"><a href="#顺序存储" class="headerlink" title="顺序存储"></a>顺序存储</h4><p>数据在内存中是连续内存地址来存储的，数据元素之间的逻辑关系和物理关系是一致的</p>
+<p>给数据分配内存的时候会在内存中开辟一段连续的内存地址</p>
+<p><img src="/img/data/shunxu.jpeg" alt="顺序存储"></p>
+<h4 id="链式存储"><a href="#链式存储" class="headerlink" title="链式存储"></a>链式存储</h4><p>链式存储会把数据元素放在任意的内存地址，可以是连续的地址，也可以是不连续的，链式存储是不能反映出数据元素之间的逻辑关系，所以链式存储需要一个叫做指针的东西，</p>
+<p>指针可以反映出链式存储的数据元素之间的逻辑关系</p>
+<p><img src="/img/data/lianshi.jpeg" alt="链式存储"></p>
+<h2 id="常见的数据结构"><a href="#常见的数据结构" class="headerlink" title="常见的数据结构"></a>常见的数据结构</h2><p><img src="/img/data/changjian.jpeg" alt="常见的数据结构"></p>
+<p>下面是常见的数据结构的基本知识，和优缺点</p>
+<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>数组是比较常用的数据结构。作为一个前端，主要需要了解js的数组。</p>
+<p>首先先了解一下传统意义上的数组的概念是：相同类型元素的有序集合，计算机会在内存中开辟一段连续的内存空间来存储数组</p>
+<p>但是js中的数组我们有时候会写成这样子：<code>[1, &#39;a&#39;, &#39;b&#39;, 2]</code>，这显然不符合传统意义对于数组的定义，人家要求是相同类型的数据，所以说js中的数组不是传统意义上的数组。</p>
+<p>在js中定义一个数组：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [];</span><br><span class="line"><span class="keyword">var</span> arr1 = <span class="keyword">new</span> <span class="built_in">Array</span>();</span><br></pre></td></tr></table></figure>
+<p>数组的每一个元素都有一个索引，从0开始，连续排列：</p>
+<p><img src="/img/data/shuzu.jpeg" alt="数组"></p>
+<p>那么在js中数组作为比较常见的数据结构他有什么优点呢：</p>
+<ol>
+<li><p>从上图看出，可以按照索引查询数组元素，速度会很快，我们在js语言中可以通过<code>array[index]</code>的方式来快速的查询数组元素</p>
+</li>
+<li><p>数组可以存储大量的数据</p>
+</li>
+<li><p>可以通过索引去遍历数组</p>
+</li>
+</ol>
+<p>数组的缺点：在js的数组中插入和删除的时候不太方便，从上面的图片可以看出索引和数组元素一一对应、连续排列，当我们对数组进行插入和删除操作的时候，索引和数组元素的对应关系在内存会重新整理，比如插入一个元素，在插入元素的位置后面的元素都要依次往后移动相应的位置，删除数组元素的时候，从删除元素位置后面的元素都要依次往前移动相对应的位置。这些移动的操作都会消耗一定的内存</p>
+<p><img src="/img/data/caozuoshuzu.jpeg" alt="数组"></p>
+<p>所以要尽量避免从数组的头部插入或者删除元素，因为这样子数组里的每一个元素都要移动。尽可能的从数组的尾部插入或者删除元素</p>
+<h3 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h3><p>在内存中有一个叫做栈内存，内存中的栈是真实存在的物理区，而我们这里讨论的是数据结构中的栈，是从栈内存抽象而来的数据结构存储结构</p>
+<p>我们先来看一下栈的一些概念：</p>
+<ol>
+<li><p>是一种受限制的线性表，遵循后进先出的规则：（LIFO）last in first out</p>
+</li>
+<li><p>受限制：仅允许在栈的一端进行插入和删除操作，这一端称之为栈顶，相对的另外一端称之为栈底</p>
+</li>
+<li><p>向一个栈插入新元素的操作称作：进栈、入栈、或者压栈</p>
+</li>
+<li><p>从一个栈删除元素又称之为退栈、出栈</p>
+</li>
+</ol>
+<p>下面这张图可以形象的描述栈的概念和受限制的操作</p>
+<p><img src="/img/data/zhan.jpeg" alt="栈"></p>
+<p>在js语言中可以通过数组的push和pop方法实现栈的数据结构方法</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Stack</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">this</span>.items = [];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 往栈内添加一个元素</span></span><br><span class="line">  push(ele) &#123;</span><br><span class="line">    <span class="keyword">this</span>.items.push(ele);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 原属出栈</span></span><br><span class="line">  pop() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items.pop();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回栈顶元素</span></span><br><span class="line">  peek() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items[<span class="keyword">this</span>.items.length<span class="number">-1</span>];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 判断是否为空栈</span></span><br><span class="line">  isEmpty() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items.length === <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 获取栈中元素的个数</span></span><br><span class="line">  size() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items.length;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 清空栈</span></span><br><span class="line">  clear() &#123;</span><br><span class="line">    <span class="keyword">this</span>.items.length = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> stack = <span class="keyword">new</span> Stack();</span><br><span class="line">stack.push(<span class="number">1</span>);</span><br><span class="line">stack.push(<span class="number">2</span>);</span><br><span class="line">stack.push(<span class="number">3</span>);</span><br><span class="line">stack.push(<span class="number">4</span>);</span><br><span class="line"><span class="built_in">console</span>.log(stack) <span class="comment">// Stack &#123;items: [1,2,3,4]&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(stack.pop()) <span class="comment">// 4</span></span><br><span class="line"><span class="built_in">console</span>.log(stack.isEmpty()) <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(stack.size()) <span class="comment">// 3</span></span><br><span class="line">stack.clear();</span><br><span class="line"><span class="built_in">console</span>.log(stack.isEmpty()) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h4 id="栈的实际运用"><a href="#栈的实际运用" class="headerlink" title="栈的实际运用"></a>栈的实际运用</h4><p>在js语言中实现栈的数据结构操作还是比较简单的，那么栈在实际运用中有什么作用呢？学习栈这个数据结构对我们学习和使用js有什么帮助呢</p>
+<h5 id="十进制转二进制"><a href="#十进制转二进制" class="headerlink" title="十进制转二进制"></a>十进制转二进制</h5><p>例如我们要把十进制数字100转换成二进制，需要使用除2取余，逆序排列</p>
+<p><img src="/img/data/10-2.jpeg" alt="十进制转二进制"></p>
+<p>由此得出100转二进制的结果是1100100</p>
+<p>那么如何用js的栈区实现这个算法呢？</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> binary = <span class="function"><span class="params">number</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> stack = <span class="keyword">new</span> Stack();</span><br><span class="line">  <span class="keyword">let</span> remainder = <span class="number">0</span> <span class="comment">// 余数</span></span><br><span class="line">  <span class="keyword">let</span> top = <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(number &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    remainder = number % <span class="number">2</span>;</span><br><span class="line">    stack.push(remainder);</span><br><span class="line">    number = <span class="built_in">Math</span>.floor(number / <span class="number">2</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(!stack.isEmpty()) &#123;</span><br><span class="line">    top += stack.pop();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> top;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(binary(<span class="number">100</span>)); <span class="comment">// 1100100</span></span><br></pre></td></tr></table></figure>
+<h5 id="理解js的调用栈"><a href="#理解js的调用栈" class="headerlink" title="理解js的调用栈"></a>理解js的调用栈</h5><p>js是单线程的，代码自上而下的执行，依次进栈，执行完成之后代码出栈</p>
+<p>如下图所示，首先是全局执行上下文入栈，然后outer函数入栈，最后inner函数入栈，然后inner函数出栈，outer函数出栈，全局环境出栈</p>
+<p><img src="/img/data/diaoyongzhan.jpeg" alt="调用栈"></p>
+<h5 id="递归的原理"><a href="#递归的原理" class="headerlink" title="递归的原理"></a>递归的原理</h5><p>从上面可以看出函数执行的时候就是函数的进栈和出栈，执行的时候函数先入栈，执行完了出栈，但是在函数调用的时候有一个特殊的情况，就是递归。</p>
+<p>执行递归的时候会进入递归栈：函数先进栈，达到跳出条件后在出栈，如果没有出栈就会导致栈溢出</p>
+<p>从一个数字n的阶乘来理解递归</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">factor</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n === <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">return</span> n * factor(n<span class="number">-1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(factor(<span class="number">5</span>)) <span class="comment">// 120</span></span><br></pre></td></tr></table></figure>
+<p>这个5的阶乘的函数调用栈如图所示:</p>
+<p><img src="/img/data/jiecheng.jpeg" alt="调用栈"></p>
+<h3 id="队列"><a href="#队列" class="headerlink" title="队列"></a>队列</h3><p>队列是一种运算受限制的线性表，它遵循一种先进先出的规则</p>
+<ol>
+<li><p>只能在队列的前端进行删除操作</p>
+</li>
+<li><p>在队列的尾端进行插入</p>
+</li>
+</ol>
+<h3 id="树"><a href="#树" class="headerlink" title="树"></a>树</h3>]]></content>
+      <categories>
+        <category>数据结构与算饭</category>
+      </categories>
+      <tags>
+        <tag>数据结构与算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>git操作</title>
     <url>/2017/04/08/git-base/</url>
     <content><![CDATA[<h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><p>新建分支：</p>
@@ -692,26 +784,6 @@
       </categories>
   </entry>
   <entry>
-    <title>window.print打印设置水印和页头页底</title>
-    <url>/2020/05/08/print/</url>
-    <content><![CDATA[<p>需求：点击打印按钮，打印出两个不同的文件，第一个文件是普通的表格，无特殊要求，第二个是打印一份录用员工的offer，打印offer需要每一页都有水印、带有公司logo的页头和带有公司网站的页底</p>
-<p>每一页的带有公司logo的页头页底，可以使用样式 <code>position: fixed;</code>设置为position: fixed;样式属性的元素，可以在打印的时候每一页纸上都显示在固定位置，样式如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.header</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.footer</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>正文部分设置适当的paddingTop值，使用 <code>pageBreakAfter: &#39;always&#39;</code>在适当的位置强制分页，效果：</p>
-<p><img src="/img/print/test1.jpeg" alt="效果"></p>
-<p>水印部分也要每个页面都有，同样思路使用 <code>position: fixed;</code>定位元素，正文部分要浮在水印的上面，使用<code>z-index</code>让正文部分的值高于水印部分的值：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.text</span> &#123;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">60px</span>;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.watermark</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">z-index</span>: -<span class="number">1</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">scale</span>(10) <span class="built_in">rotate</span>(-45deg);</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#fffffe</span>;</span><br><span class="line">  <span class="attribute">opacity</span>: <span class="number">0.3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/print/test2.png" alt="效果"></p>
-<p>碰到另外一个问题：点击一个按钮同时打印出来的除了offer还有另外一个审批的表格table，这个表格不需要页头页底和水印。</p>
-<p>解决方案：设置一个足够高的白色蒙版，<code>absolute</code>相对于offer定位，遮住不需要的水印和页头页底</p>
-<p>absolute定位的元素不会在每一页都显示，但是会根据相对的父级元素定位，可以用来遮住不想显示的内容</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">&lt;div</span><br><span class="line">  style=&#123;&#123;</span><br><span class="line">    position: <span class="string">'absolute'</span>,</span><br><span class="line">    top: <span class="number">-1199</span>,</span><br><span class="line">    left: <span class="number">0</span>,</span><br><span class="line">    width: <span class="string">'100%'</span>,</span><br><span class="line">    height: <span class="number">1200</span>,</span><br><span class="line">    zIndex: <span class="number">1</span>,</span><br><span class="line">    background: <span class="string">'#fff'</span>,</span><br><span class="line">  &#125;&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>print</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>浏览器在线预览文件（PDF,txt,html,ofd,docx,pptx,jpg,jpeg,png...等）</title>
     <url>/2020/11/09/preview/</url>
     <content><![CDATA[<p>最近做项目，接到一个需求：要求预览上传的文件，大概包括以下格式：PDF,txt,html,ofd,docx,pptx,jpg,jpeg,png…</p>
@@ -768,6 +840,26 @@
 <p>txt文件直接拿到内容就可以展示，最多处理一下换行什么的</p>
 <p>html格式的比较特殊，因为需要保留人家html的样式和布局，所以使用innerHTML的方式把字符串插入到dom中</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>window.print打印设置水印和页头页底</title>
+    <url>/2020/05/08/print/</url>
+    <content><![CDATA[<p>需求：点击打印按钮，打印出两个不同的文件，第一个文件是普通的表格，无特殊要求，第二个是打印一份录用员工的offer，打印offer需要每一页都有水印、带有公司logo的页头和带有公司网站的页底</p>
+<p>每一页的带有公司logo的页头页底，可以使用样式 <code>position: fixed;</code>设置为position: fixed;样式属性的元素，可以在打印的时候每一页纸上都显示在固定位置，样式如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.header</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.footer</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>正文部分设置适当的paddingTop值，使用 <code>pageBreakAfter: &#39;always&#39;</code>在适当的位置强制分页，效果：</p>
+<p><img src="/img/print/test1.jpeg" alt="效果"></p>
+<p>水印部分也要每个页面都有，同样思路使用 <code>position: fixed;</code>定位元素，正文部分要浮在水印的上面，使用<code>z-index</code>让正文部分的值高于水印部分的值：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.text</span> &#123;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">60px</span>;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.watermark</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">z-index</span>: -<span class="number">1</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">scale</span>(10) <span class="built_in">rotate</span>(-45deg);</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#fffffe</span>;</span><br><span class="line">  <span class="attribute">opacity</span>: <span class="number">0.3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/img/print/test2.png" alt="效果"></p>
+<p>碰到另外一个问题：点击一个按钮同时打印出来的除了offer还有另外一个审批的表格table，这个表格不需要页头页底和水印。</p>
+<p>解决方案：设置一个足够高的白色蒙版，<code>absolute</code>相对于offer定位，遮住不需要的水印和页头页底</p>
+<p>absolute定位的元素不会在每一页都显示，但是会根据相对的父级元素定位，可以用来遮住不想显示的内容</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">&lt;div</span><br><span class="line">  style=&#123;&#123;</span><br><span class="line">    position: <span class="string">'absolute'</span>,</span><br><span class="line">    top: <span class="number">-1199</span>,</span><br><span class="line">    left: <span class="number">0</span>,</span><br><span class="line">    width: <span class="string">'100%'</span>,</span><br><span class="line">    height: <span class="number">1200</span>,</span><br><span class="line">    zIndex: <span class="number">1</span>,</span><br><span class="line">    background: <span class="string">'#fff'</span>,</span><br><span class="line">  &#125;&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>print</tag>
+      </tags>
   </entry>
   <entry>
     <title>react/context</title>
@@ -912,19 +1004,6 @@
       </tags>
   </entry>
   <entry>
-    <title>react/renderProps</title>
-    <url>/2017/12/08/react-renderProps/</url>
-    <content><![CDATA[<p>具有reader prop的组件，接受一个函数，该函数返回一个react元素，并调用它，而不是事先自己的渲染逻辑</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;DataProvider render=&#123;data =&gt; (</span><br><span class="line">  &lt;h1&gt;Hello &#123;data.target&#125;&lt;<span class="regexp">/h1&gt;</span></span><br><span class="line"><span class="regexp">)&#125;/</span>&gt;</span><br></pre></td></tr></table></figure>
-<p>如何分享一个组件封装到其他需要相同state组件的状态或行为并不是很容易</p>
-<p>render prop是一个用于告知组件需要渲染什么内容的函数prop</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import React from &quot;react&quot;;</span><br><span class="line"></span><br><span class="line">class Cat extends React.Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    const mouse = this.props.mouse;</span><br><span class="line">    return (</span><br><span class="line">      &lt;p style=&#123;&#123; position: &quot;absolute&quot;, left: mouse.x, top: mouse.y &#125;&#125;&gt;猫咪&lt;/p&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Mouse extends React.Component &#123;</span><br><span class="line">  constructor(props) &#123;</span><br><span class="line">    super(props);</span><br><span class="line">    this.handelMouseMove = this.handelMouseMove.bind(this);</span><br><span class="line">    this.state = &#123; x: 0, y: 0 &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  handelMouseMove(event) &#123;</span><br><span class="line">    this.setState(&#123;</span><br><span class="line">      x: event.clientX,</span><br><span class="line">      y: event.clientY</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div style=&#123;&#123; height: &quot;100%&quot; &#125;&#125; onMouseMove=&#123;this.handelMouseMove&#125;&gt;</span><br><span class="line">        &#123;this.props.render(this.state)&#125;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MouseTracker extends React.Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;h1&gt;移动鼠标！&lt;/h1&gt;</span><br><span class="line">        &lt;Mouse render=&#123;mouse =&gt; &lt;Cat mouse=&#123;mouse&#125; /&gt;&#125; /&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default MouseTracker;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>react</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>react/refs</title>
     <url>/2018/02/15/react-refs/</url>
     <content><![CDATA[<p>官网文档的搬运者</p>
@@ -955,6 +1034,19 @@
 <p>调用高阶组件：logProps组件，并且传递props时，高阶组件会透传props到他的包裹组件，但refs不会传递，因为 ref 不是 prop 属性。就像 key 一样，其被 React 进行了特殊处理。如果你对 HOC 添加 ref，该 ref 将引用最外层的容器组件，而不是被包裹的组件。</p>
 <h3 id="使用React-forwardRef在高阶组件中传递refs"><a href="#使用React-forwardRef在高阶组件中传递refs" class="headerlink" title="使用React.forwardRef在高阶组件中传递refs"></a>使用React.forwardRef在高阶组件中传递refs</h3><p>重写上面的高阶组件：</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">logProps</span>(<span class="params">WrappedComponent</span>) </span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">LogProps</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    componentDidUpdate(prevProps) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"old props:"</span>, prevProps);</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"new props:"</span>, <span class="keyword">this</span>.props);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="keyword">const</span> &#123; forwardedRef, ...rest &#125; = <span class="keyword">this</span>.props;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">WrappedComponent</span> <span class="attr">ref</span>=<span class="string">&#123;forwardedRef&#125;</span> &#123;<span class="attr">...rest</span>&#125; /&gt;</span>;</span></span><br><span class="line"><span class="xml">    &#125;</span></span><br><span class="line"><span class="xml">  &#125;</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">  // return LogProps;</span></span><br><span class="line"><span class="xml">  return React.forwardRef((props, ref) =&gt; &#123;</span></span><br><span class="line">    return &lt;LogProps &#123;...props&#125; forwardedRef=&#123;ref&#125; /&gt;;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>react</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>react/renderProps</title>
+    <url>/2017/12/08/react-renderProps/</url>
+    <content><![CDATA[<p>具有reader prop的组件，接受一个函数，该函数返回一个react元素，并调用它，而不是事先自己的渲染逻辑</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;DataProvider render=&#123;data =&gt; (</span><br><span class="line">  &lt;h1&gt;Hello &#123;data.target&#125;&lt;<span class="regexp">/h1&gt;</span></span><br><span class="line"><span class="regexp">)&#125;/</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>如何分享一个组件封装到其他需要相同state组件的状态或行为并不是很容易</p>
+<p>render prop是一个用于告知组件需要渲染什么内容的函数prop</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import React from &quot;react&quot;;</span><br><span class="line"></span><br><span class="line">class Cat extends React.Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    const mouse = this.props.mouse;</span><br><span class="line">    return (</span><br><span class="line">      &lt;p style=&#123;&#123; position: &quot;absolute&quot;, left: mouse.x, top: mouse.y &#125;&#125;&gt;猫咪&lt;/p&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Mouse extends React.Component &#123;</span><br><span class="line">  constructor(props) &#123;</span><br><span class="line">    super(props);</span><br><span class="line">    this.handelMouseMove = this.handelMouseMove.bind(this);</span><br><span class="line">    this.state = &#123; x: 0, y: 0 &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  handelMouseMove(event) &#123;</span><br><span class="line">    this.setState(&#123;</span><br><span class="line">      x: event.clientX,</span><br><span class="line">      y: event.clientY</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div style=&#123;&#123; height: &quot;100%&quot; &#125;&#125; onMouseMove=&#123;this.handelMouseMove&#125;&gt;</span><br><span class="line">        &#123;this.props.render(this.state)&#125;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MouseTracker extends React.Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;h1&gt;移动鼠标！&lt;/h1&gt;</span><br><span class="line">        &lt;Mouse render=&#123;mouse =&gt; &lt;Cat mouse=&#123;mouse&#125; /&gt;&#125; /&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default MouseTracker;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <tags>
         <tag>react</tag>
@@ -1689,87 +1781,6 @@
 ]]></content>
       <tags>
         <tag>webpack</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据结构基本知识与常见的数据结构</title>
-    <url>/2019/04/20/data-structure/</url>
-    <content><![CDATA[<p>数据结构用来描述数据元素之间的关系</p>
-<p>数据元素之间存在特定的关系，这种关系可以分为两种：逻辑结构和物理结构</p>
-<h2 id="数据关系"><a href="#数据关系" class="headerlink" title="数据关系"></a>数据关系</h2><h3 id="逻辑结构"><a href="#逻辑结构" class="headerlink" title="逻辑结构"></a>逻辑结构</h3><p>逻辑结构描述了数据对象中数据元素之间的关系，按照逻辑结构可以分为四种：集合、线性结构、树形结构、图形结构</p>
-<h4 id="集合："><a href="#集合：" class="headerlink" title="集合："></a>集合：</h4><p>数据元素同属于一个集合，但是数据元素之间没有其他的关系，如图：</p>
-<p><img src="/img/data/jihe.jpeg" alt="集合"></p>
-<h4 id="线性结构："><a href="#线性结构：" class="headerlink" title="线性结构："></a>线性结构：</h4><p>是一组有序数据的集合，除了第一个元素和最后一个元素，其他的元素都是首位相接。</p>
-<p>js中数组就是典型的线性结构，除此之外还有队列、栈和链表也是线性结构</p>
-<p><img src="/img/data/xianxing.jpeg" alt="线性结构"></p>
-<h4 id="树形结构："><a href="#树形结构：" class="headerlink" title="树形结构："></a>树形结构：</h4><p>数据元素是一对多的关系</p>
-<p>前端最常接触的树形结构是DOM树</p>
-<p><img src="/img/data/shuxing.jpeg" alt="树形"></p>
-<h4 id="图形结构："><a href="#图形结构：" class="headerlink" title="图形结构："></a>图形结构：</h4><p>数据元素是多对多的关系</p>
-<p>比如地图导航就是使用的图形结构来存储数据</p>
-<p><img src="/img/data/tuxing.jpeg" alt="图形"></p>
-<h3 id="物理结构"><a href="#物理结构" class="headerlink" title="物理结构"></a>物理结构</h3><p>物理结构描述数据在内存中是如何存储的，数据的存储结构应该正确的反应数据之间的逻辑关系</p>
-<p>分为：顺序存储和链式存储</p>
-<h4 id="顺序存储"><a href="#顺序存储" class="headerlink" title="顺序存储"></a>顺序存储</h4><p>数据在内存中是连续内存地址来存储的，数据元素之间的逻辑关系和物理关系是一致的</p>
-<p>给数据分配内存的时候会在内存中开辟一段连续的内存地址</p>
-<p><img src="/img/data/shunxu.jpeg" alt="顺序存储"></p>
-<h4 id="链式存储"><a href="#链式存储" class="headerlink" title="链式存储"></a>链式存储</h4><p>链式存储会把数据元素放在任意的内存地址，可以是连续的地址，也可以是不连续的，链式存储是不能反映出数据元素之间的逻辑关系，所以链式存储需要一个叫做指针的东西，</p>
-<p>指针可以反映出链式存储的数据元素之间的逻辑关系</p>
-<p><img src="/img/data/lianshi.jpeg" alt="链式存储"></p>
-<h2 id="常见的数据结构"><a href="#常见的数据结构" class="headerlink" title="常见的数据结构"></a>常见的数据结构</h2><p><img src="/img/data/changjian.jpeg" alt="常见的数据结构"></p>
-<p>下面是常见的数据结构的基本知识，和优缺点</p>
-<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>数组是比较常用的数据结构。作为一个前端，主要需要了解js的数组。</p>
-<p>首先先了解一下传统意义上的数组的概念是：相同类型元素的有序集合，计算机会在内存中开辟一段连续的内存空间来存储数组</p>
-<p>但是js中的数组我们有时候会写成这样子：<code>[1, &#39;a&#39;, &#39;b&#39;, 2]</code>，这显然不符合传统意义对于数组的定义，人家要求是相同类型的数据，所以说js中的数组不是传统意义上的数组。</p>
-<p>在js中定义一个数组：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [];</span><br><span class="line"><span class="keyword">var</span> arr1 = <span class="keyword">new</span> <span class="built_in">Array</span>();</span><br></pre></td></tr></table></figure>
-<p>数组的每一个元素都有一个索引，从0开始，连续排列：</p>
-<p><img src="/img/data/shuzu.jpeg" alt="数组"></p>
-<p>那么在js中数组作为比较常见的数据结构他有什么优点呢：</p>
-<ol>
-<li><p>从上图看出，可以按照索引查询数组元素，速度会很快，我们在js语言中可以通过<code>array[index]</code>的方式来快速的查询数组元素</p>
-</li>
-<li><p>数组可以存储大量的数据</p>
-</li>
-<li><p>可以通过索引去遍历数组</p>
-</li>
-</ol>
-<p>数组的缺点：在js的数组中插入和删除的时候不太方便，从上面的图片可以看出索引和数组元素一一对应、连续排列，当我们对数组进行插入和删除操作的时候，索引和数组元素的对应关系在内存会重新整理，比如插入一个元素，在插入元素的位置后面的元素都要依次往后移动相应的位置，删除数组元素的时候，从删除元素位置后面的元素都要依次往前移动相对应的位置。这些移动的操作都会消耗一定的内存</p>
-<p><img src="/img/data/caozuoshuzu.jpeg" alt="数组"></p>
-<p>所以要尽量避免从数组的头部插入或者删除元素，因为这样子数组里的每一个元素都要移动。尽可能的从数组的尾部插入或者删除元素</p>
-<h3 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h3><p>在内存中有一个叫做栈内存，内存中的栈是真实存在的物理区，而我们这里讨论的是数据结构中的栈，是从栈内存抽象而来的数据结构存储结构</p>
-<p>我们先来看一下栈的一些概念：</p>
-<ol>
-<li><p>是一种受限制的线性表，遵循后进先出的规则：（LIFO）last in first out</p>
-</li>
-<li><p>受限制：仅允许在栈的一端进行插入和删除操作，这一端称之为栈顶，相对的另外一端称之为栈底</p>
-</li>
-<li><p>向一个栈插入新元素的操作称作：进栈、入栈、或者压栈</p>
-</li>
-<li><p>从一个栈删除元素又称之为退栈、出栈</p>
-</li>
-</ol>
-<p>下面这张图可以形象的描述栈的概念和受限制的操作</p>
-<p><img src="/img/data/zhan.jpeg" alt="栈"></p>
-<p>在js语言中可以通过数组的push和pop方法实现栈的数据结构方法</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Stack</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">this</span>.items = [];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 往栈内添加一个元素</span></span><br><span class="line">  push(ele) &#123;</span><br><span class="line">    <span class="keyword">this</span>.items.push(ele);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 原属出栈</span></span><br><span class="line">  pop() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items.pop();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回栈顶元素</span></span><br><span class="line">  peek() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items[<span class="keyword">this</span>.items.length<span class="number">-1</span>];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 判断是否为空栈</span></span><br><span class="line">  isEmpty() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items.length === <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 获取栈中元素的个数</span></span><br><span class="line">  size() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items.length;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 清空栈</span></span><br><span class="line">  clear() &#123;</span><br><span class="line">    <span class="keyword">this</span>.items.length = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> stack = <span class="keyword">new</span> Stack();</span><br><span class="line">stack.push(<span class="number">1</span>);</span><br><span class="line">stack.push(<span class="number">2</span>);</span><br><span class="line">stack.push(<span class="number">3</span>);</span><br><span class="line">stack.push(<span class="number">4</span>);</span><br><span class="line"><span class="built_in">console</span>.log(stack) <span class="comment">// Stack &#123;items: [1,2,3,4]&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(stack.pop()) <span class="comment">// 4</span></span><br><span class="line"><span class="built_in">console</span>.log(stack.isEmpty()) <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(stack.size()) <span class="comment">// 3</span></span><br><span class="line">stack.clear();</span><br><span class="line"><span class="built_in">console</span>.log(stack.isEmpty()) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-<h4 id="栈的实际运用"><a href="#栈的实际运用" class="headerlink" title="栈的实际运用"></a>栈的实际运用</h4><p>在js语言中实现栈的数据结构操作还是比较简单的，那么栈在实际运用中有什么作用呢？学习栈这个数据结构对我们学习和使用js有什么帮助呢</p>
-<h5 id="十进制转二进制"><a href="#十进制转二进制" class="headerlink" title="十进制转二进制"></a>十进制转二进制</h5><p>例如我们要把十进制数字100转换成二进制，需要使用除2取余，逆序排列</p>
-<p><img src="/img/data/10-2.jpeg" alt="十进制转二进制"></p>
-<p>由此得出100转二进制的结果是1100100</p>
-<p>那么如何用js的栈区实现这个算法呢？</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> binary = <span class="function"><span class="params">number</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> stack = <span class="keyword">new</span> Stack();</span><br><span class="line">  <span class="keyword">let</span> remainder = <span class="number">0</span> <span class="comment">// 余数</span></span><br><span class="line">  <span class="keyword">let</span> top = <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(number &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    remainder = number % <span class="number">2</span>;</span><br><span class="line">    stack.push(remainder);</span><br><span class="line">    number = <span class="built_in">Math</span>.floor(number / <span class="number">2</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(!stack.isEmpty()) &#123;</span><br><span class="line">    top += stack.pop();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> top;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(binary(<span class="number">100</span>)); <span class="comment">// 1100100</span></span><br></pre></td></tr></table></figure>
-<h5 id="理解js的调用栈"><a href="#理解js的调用栈" class="headerlink" title="理解js的调用栈"></a>理解js的调用栈</h5><p>js是单线程的，代码自上而下的执行，依次进栈，执行完成之后代码出栈</p>
-<p>如下图所示，首先是全局执行上下文入栈，然后outer函数入栈，最后inner函数入栈，然后inner函数出栈，outer函数出栈，全局环境出栈</p>
-<p><img src="/img/data/diaoyongzhan.jpeg" alt="调用栈"></p>
-<h5 id="递归的原理"><a href="#递归的原理" class="headerlink" title="递归的原理"></a>递归的原理</h5><p>从上面可以看出函数执行的时候就是函数的进栈和出栈，执行的时候函数先入栈，执行完了出栈，但是在函数调用的时候有一个特殊的情况，就是递归。</p>
-<p>执行递归的时候会进入递归栈：函数先进栈，达到跳出条件后在出栈，如果没有出栈就会导致栈溢出</p>
-]]></content>
-      <categories>
-        <category>数据结构与算饭</category>
-      </categories>
-      <tags>
-        <tag>数据结构与算法</tag>
       </tags>
   </entry>
 </search>
