@@ -1,6 +1,6 @@
 ---
 title: react/renderProps
-date: 2017-07-08 16:08:25
+date: 2017-12-08 16:08:25
 tags: react
 ---
 
