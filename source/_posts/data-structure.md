@@ -251,4 +251,50 @@ console.log(factor(5)) // 120
 
 ![队列](/img/data/duilie.jpeg
 
+用js实现一个队列：
+
+```javascript
+class Queue {
+  constructor() {
+    this.items = [];
+  }
+  // 入队
+  enqueue(ele) {
+    this.items.push(ele);
+  }
+  // 出队
+  dequeue() {
+    return this.items.shift();
+  }
+  // 查看队头
+  front() {
+    return this.items[0]
+  }
+  // 查看队尾
+  rear() {
+    return this.items[this.items.length-1]
+  }
+  // 是否为空
+  isEmpty() {
+    return this.items.length === 0;
+  }
+  // 获取长度
+  size() {
+    return this.items.length;
+  }
+  // 清空队列
+  clear() {
+    this.items.length = 0;
+  }
+}
+```
+
+队列这种数据结构，一般用于排队去一个一个的解决问题
+
+那么队列这种数据结构和我们前端有什么关系呢？
+
+#### 理解js的任务队列
+
+js在浏览器中运行是单线程的
+
 ### 树
