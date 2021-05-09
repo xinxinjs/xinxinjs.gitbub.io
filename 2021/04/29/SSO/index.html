@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>web前端的单点登录-三种实现方案 - 小心心的笔记</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="所念皆星河，星河不及你,https://zcy-cdn.oss-cn-shanghai.aliyuncs.com/f2e-assets/ebf178b6-0950-482b-8031-5bb70b4888d5.png?x-,"> 
+    <meta name="author" content="小心心"> 
+    <link rel="alternative" href="atom.xml" title="小心心的笔记" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    <link rel="stylesheet" href="/css/diaspora.css">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">小心心的笔记</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://xinxinjs.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">web前端的单点登录-三种实现方案</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">web前端的单点登录-三种实现方案</h1>
+        <div class="stuff">
+            <span>四月 29, 2021</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/前端/">前端</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p><a href="https://zcy-cdn.oss-cn-shanghai.aliyuncs.com/f2e-assets/ebf178b6-0950-482b-8031-5bb70b4888d5.png?x-oss-process=image/quality,Q_75/format,jpg" target="_blank" rel="noopener">https://zcy-cdn.oss-cn-shanghai.aliyuncs.com/f2e-assets/ebf178b6-0950-482b-8031-5bb70b4888d5.png?x-oss-process=image/quality,Q_75/format,jpg</a></p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>公司的统一登陆平台，也就是单点登录系统，因为某些地方不合理，需要重构，当我着手开始重构项目的时候意外的发现，单点登陆大概有三种实现的方案，所以详细的调研学习了一下三种实现的方案，并简单的对比了一下。</p>
+<h2 id="什么是单点登录"><a href="#什么是单点登录" class="headerlink" title="什么是单点登录"></a>什么是单点登录</h2><p>单点登陆，又叫做SSO（Single Sign On）</p>
+<p>我从网上抄了一段话来解释一下点单登陆的作用：是目前比较流行的企业业务整合的解决方案之一。SSO的定义是在多个应用系统中，用户只需要登录一次就可以访问所有相互信任的应用系统。</p>
+<p>例如百度公司下的百度地图和百度贴吧，用户只要登录一次，就能访问百度公司下的所有应用</p>
+<p>所以简单来说SSO的目的就是多个相互信任的系统之间共享登陆的状态</p>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><h3 id="单个系统实现登陆"><a href="#单个系统实现登陆" class="headerlink" title="单个系统实现登陆"></a>单个系统实现登陆</h3><p>实现单个系统的登陆的时候，我们通常使用浏览器的cookie来存储用户的登陆信息，</p>
+<p>首先会正常的请求接口，然后判断是否登陆，如果没有登陆则直接跳转登录的页面，用户输入用户名和密码登录，后端验证过登陆信息后，返回登录成功的状态，并且返回一个用户登录状态的token，把token存在浏览器的cookie里面，下次访问接口的时候把这个token带上，只要token在有效期之内，服务端就会通过验证，不需要再次登录</p>
+<h3 id="多个系统实现单点登陆"><a href="#多个系统实现单点登陆" class="headerlink" title="多个系统实现单点登陆"></a>多个系统实现单点登陆</h3><p>单点登录的本质就是要在多个系统中共享登录状态，也就是token，那么如何让多个系统共享一个登录状态呢？</p>
+<h2 id="实现单点登录的三种方法"><a href="#实现单点登录的三种方法" class="headerlink" title="实现单点登录的三种方法"></a>实现单点登录的三种方法</h2><p>我是前端，所以这里只讨论前端的实现</p>
+<h3 id="cookie提升"><a href="#cookie提升" class="headerlink" title="cookie提升"></a>cookie提升</h3><p>简单了解一下cookie的机制：</p>
+<ol>
+<li><p>cookie是存储在用户浏览器本地的一种方案，可以由服务器响应报文Set-Cookie的首部字段信息或者客户端 document.cookie来设置，并随着每次请求发送到服务器。</p>
+</li>
+<li><p>cookie是有域的限制的，不同的域名之间的cookie是不能共享的，但是子域名可以获取父级域名 Cookie。这是关cookie实现单点登录的关键</p>
+</li>
+</ol>
+<p>cookie的设置：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie = <span class="string">"cookieName=mader; expires=Fri, 31 Dec 2017 15:59:59 GMT; path=/mydir; domain=cnblogs.com; max-age=3600; secure=true"</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>cookieName=mader ：name=value，cookie的名称和值</p>
+</li>
+<li><p>expires=Fri, 31 Dec 2017 15:59:59 GMT： expires，cookie过期的日期，如果没有定义，cookie会在对话结束时过期。日期格式为 new Date().toUTCString()</p>
+</li>
+<li><p>path=/mydir: path=path (例如 ‘/‘, ‘/mydir’) 如果没有定义，默认为当前文档位置的路径。</p>
+</li>
+<li><p>domain=xxx.com： 指定域, 如果没有定义，默认为当前文档位置的路径的域名部分。</p>
+</li>
+<li><p>max-age=3600： 文档被查看后cookie过期时间，单位为秒</p>
+</li>
+<li><p>secure=true： cookie只会被https传输 ，即加密的https链接传输</p>
+</li>
+</ul>
+<p>浏览器会将domain和path都相同的cookie保存在一个文件里，cookie间用*隔开</p>
+<p>一般我们公司要实现单点登录只需要做自己公司的不同系统之间的登录状态共享，一般会有一个主域名，然后在主域名下申请二级域名给不同的系统部署，例如:百度的主域名是’baidu.com‘，而百度贴吧和百度地图的域名就是在主域名下面的二级域名：‘tieba.baidu.com’和‘map.baidu.com’</p>
+<p>利用cookie子域可以获取父域的特点，可是设置cookie的domain属性为最外的一级域名，path属性设置为‘/’，子域就可以获取父域的cookie了</p>
+<p>所有的域名都能共享一个token，传给服务端的时候服务端就会判断我们那已经登录过了</p>
+<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS（Central Authentication Service），即中央认证服务，也可以叫做认证中心，是 Yale 大学发起的一个开源项目，目的是为 Web 应用系统提供一种可靠的单点登录方法。</p>
+<p>中央认证，就是专门负责登录请求的web服务。认证中心是单点登陆的标准做法，支持跨域且扩展性好，但是实现起来稍微麻烦</p>
+<p>假设我们有两个相互信任的系统：a.xx.com 和 b.xx.com，这两个系统要实现单点登录，所以需要一个独立部署的中央认证登陆系统，例如：login.xx.com。</p>
+<p>因为中央认证服务是需要单独部署的一个应用，所以除了我们当前开发的项目的服务器，还另外需要一个中央认证的服务器，也就是CAS服务器</p>
+<p>首先是用户第一次进入a系统，需要登录：</p>
+<p>图片站位</p>
+<ol>
+<li><p>用户在浏览器输入a系统的网址：a.xx.com，访问a系统对应的a服务器</p>
+</li>
+<li><p>a服务器验证用户并没有登录，重定向到CAS服务器的登录页面，并且在重定向的地址后面携带登录成功后要返回的a系统的页面url，通常像这样子：<a href="https://ex-cas.com/login?service=https://a.xx.com" target="_blank" rel="noopener">https://ex-cas.com/login?service=https://a.xx.com</a></p>
+</li>
+<li><p>用户访问CAS的登录系统，CAS判断用户是否有CAS的session，也就是判断浏览器是否存有CAS的session</p>
+</li>
+<li><p>CAS判断用户并没有CAS的session，返回CAS的登录页面</p>
+</li>
+<li><p>用户输入：用户名和密码点击提交，提交到CAS服务器</p>
+</li>
+<li><p>CAS服务器验证用户信息，创建CAS的session，通过set-cookie写入用户的浏览器，</p>
+</li>
+<li><p>然后重定向到a.xx.com，并且在重定向的时候CAS服务器会在a.xx.com后面拼上CAS的一个ticket字段，例如：<a href="https://a.xx.com?ticket=123456" target="_blank" rel="noopener">https://a.xx.com?ticket=123456</a></p>
+</li>
+<li><p>这个就可以正常的访问a系统的应用了，然后a.xx.com会访问a系统对应的a服务器，a服务器会获取url后面的ticket，</p>
+</li>
+<li><p>a服务器拿ticket去向CAS服务器验证，验证成功之后，CAS服务器会返回验证成功的消息和一些必要的信息</p>
+</li>
+<li><p>a服务器通过set-cookie设置自己的session，然后重定向到<a href="https://a.xx.com，去掉后面的ticket" target="_blank" rel="noopener">https://a.xx.com，去掉后面的ticket</a></p>
+</li>
+<li><p>然后用户访问<a href="https://a.xx.com，a服务器验证用户是否登录，返回请求内容" target="_blank" rel="noopener">https://a.xx.com，a服务器验证用户是否登录，返回请求内容</a></p>
+</li>
+</ol>
+<p>整个过程有三次重定向，两次cookie的写入，还是比较耗费资源的</p>
+<p>然后用户第二次进入a系统，假设第一次登录的信息还没过期，不需要登录：</p>
+<p>图片站位</p>
+<ol>
+<li><p>用户第二次在浏览器输入<a href="https://a.xx.com，访问a系统对应的a服务器" target="_blank" rel="noopener">https://a.xx.com，访问a系统对应的a服务器</a></p>
+</li>
+<li><p>a服务器验证用户登录信息，用户有a服务器的session，判断用户是登陆状态</p>
+</li>
+<li><p>返回请求内容</p>
+</li>
+</ol>
+<p>用户第一次进入b系统，因为在进入a系统的时候已经在CAS中央认证服务登录过了，所以也不需要登陆：</p>
+<p>图片站位</p>
+<ol>
+<li><p>用户第一次在浏览器输入b系统的网址:b.xx.com，访问b系统对应的b服务器</p>
+</li>
+<li><p>b服务器验证用户并没有登录，重定向到CAS服务器的登录页面，并且在重定向的地址后面携带登录成功后要返回的b系统的页面url，通常像这样子：<a href="https://ex-cas.com/login?service=https://b.xx.com" target="_blank" rel="noopener">https://ex-cas.com/login?service=https://b.xx.com</a></p>
+</li>
+<li><p>用户访问<a href="https://ex-cas.com/login?service=https://b.xx.com，通过cookie携带CAS服务器的session" target="_blank" rel="noopener">https://ex-cas.com/login?service=https://b.xx.com，通过cookie携带CAS服务器的session</a></p>
+</li>
+<li><p>CAS服务器验证CAS的session，验证用户已经登陆过了，不需要重新登陆，直接携带ticket，重定向到<a href="https://b.xx.com?ticket=123456" target="_blank" rel="noopener">https://b.xx.com?ticket=123456</a></p>
+</li>
+<li><p>用户访问<a href="https://b.xx.com?ticket=123456，b服务器拿ticket去向CAS服务器验证，验证成功之后，CAS服务器会返回验证成功的消息和一些必要的信息" target="_blank" rel="noopener">https://b.xx.com?ticket=123456，b服务器拿ticket去向CAS服务器验证，验证成功之后，CAS服务器会返回验证成功的消息和一些必要的信息</a></p>
+</li>
+<li><p>b服务器通过set-cookie设置自己的session，然后重定向到<a href="https://b.xx.com，去掉后面的ticket" target="_blank" rel="noopener">https://b.xx.com，去掉后面的ticket</a></p>
+</li>
+<li><p>然后用户访问<a href="https://a.xx.com，a服务器验证用户是否登录，返回请求内容" target="_blank" rel="noopener">https://a.xx.com，a服务器验证用户是否登录，返回请求内容</a></p>
+</li>
+</ol>
+<h3 id="LocalStorage-跨域"><a href="#LocalStorage-跨域" class="headerlink" title="LocalStorage 跨域"></a>LocalStorage 跨域</h3><p>这种方案呢，用的人比较少，我也只是简单的了解了一下原理</p>
+<p>假设我们有两个相互信任的系统a.xx.com和b.xx.com要实现单点登录，大概的思路：</p>
+<p>在a.xx.com/login的页面里面通过内嵌一个iframe页面，在这个iframe里面通过storage把用户的登陆session放入iframe父级下面存储起来。</p>
+<p>通过这种方式实现登录状态的共享</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='/music/夜的钢琴曲(五).mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='/music/S.E.N.S. (神思者)-伽罗 (Kyara).mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是单点登录"><span class="toc-number">2.</span> <span class="toc-text">什么是单点登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现原理"><span class="toc-number">3.</span> <span class="toc-text">实现原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单个系统实现登陆"><span class="toc-number">3.1.</span> <span class="toc-text">单个系统实现登陆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多个系统实现单点登陆"><span class="toc-number">3.2.</span> <span class="toc-text">多个系统实现单点登陆</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现单点登录的三种方法"><span class="toc-number">4.</span> <span class="toc-text">实现单点登录的三种方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#cookie提升"><span class="toc-number">4.1.</span> <span class="toc-text">cookie提升</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CAS"><span class="toc-number">4.2.</span> <span class="toc-text">CAS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LocalStorage-跨域"><span class="toc-number">4.3.</span> <span class="toc-text">LocalStorage 跨域</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
