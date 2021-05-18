@@ -1,38 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>函数内部this指向问题</title>
-    <url>/2019/04/13/202004this/</url>
-    <content><![CDATA[<p>this是一个对象，是在函数运行的时候基于函数的运行环境绑定的</p>
-<p>关于this指向的问题，可以简单的概括一句话：谁调用我，我就指向谁</p>
-<h2 id="this指向问题"><a href="#this指向问题" class="headerlink" title="this指向问题"></a>this指向问题</h2><p>在不同的场景下this的指向会不太一样，例如：</p>
-<h3 id="普通函数内部this指向window"><a href="#普通函数内部this指向window" class="headerlink" title="普通函数内部this指向window"></a>普通函数内部this指向window</h3><p>严格模式下this指向undefined，在函数内部执行：console.log(this)，控制台会输出undefined</p>
-<p>非严格模式下，this指向window，就是在window下调用了这个函数</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 普通函数中，this指向window</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// Window &#123;window: Window, self: Window, document: document, name: "", location: Location, …&#125;</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">aa</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// Window &#123;window: Window, self: Window, document: document, name: "", location: Location …&#125;</span></span><br><span class="line">  &#125;</span><br><span class="line">  aa()</span><br><span class="line">&#125;</span><br><span class="line">a();</span><br></pre></td></tr></table></figure>
-<h3 id="在对象的方法中this指向这个对象"><a href="#在对象的方法中this指向这个对象" class="headerlink" title="在对象的方法中this指向这个对象"></a>在对象的方法中this指向这个对象</h3><p>通过对象成员访问‘.’的方式调用，this指向这个对象，也就是这个对象调用了这个方法，所以这个方法的this指向这个对象</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  sayHi:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 在对象的方法中，指向sayHi对象</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);  <span class="comment">// window，this指向window，是因为这个函数是一个普通的函数，并不少某个对象的方法</span></span><br><span class="line">    &#125;</span><br><span class="line">    fn1();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 闭包window</span></span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.sayHi();</span><br></pre></td></tr></table></figure>
-<h3 id="在定时器中指向window"><a href="#在定时器中指向window" class="headerlink" title="在定时器中指向window"></a>在定时器中指向window</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// window</span></span><br><span class="line">&#125;,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<h3 id="在构造函数中"><a href="#在构造函数中" class="headerlink" title="在构造函数中"></a>在构造函数中</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 指向实例对象：Person&#123;&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> Person();</span><br></pre></td></tr></table></figure>
-<h3 id="在事件处理函数中指向"><a href="#在事件处理函数中指向" class="headerlink" title="在事件处理函数中指向"></a>在事件处理函数中指向</h3><p>指向绑定事件的对象</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">input.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 绑定事件对象</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="在匿名函数中指向window"><a href="#在匿名函数中指向window" class="headerlink" title="在匿名函数中指向window"></a>在匿名函数中指向window</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">//window</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
-<h2 id="改变this的指向"><a href="#改变this的指向" class="headerlink" title="改变this的指向"></a>改变this的指向</h2><h3 id="call"><a href="#call" class="headerlink" title="call"></a>call</h3><p><code>func.call(调用者，参数1，参数2)</code></p>
-<p>调用的时候函数会被立即执行，函数体内的this指向调用者</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">b.call(obj, <span class="string">'lll'</span>); <span class="comment">// this指向调用者：obj</span></span><br></pre></td></tr></table></figure>
-<h3 id="apply"><a href="#apply" class="headerlink" title="apply"></a>apply</h3><p><code>func.apply(调用者, [参数1，...])</code></p>
-<p>调用的时候函数会被立即执行，函数体内的this指向调用者</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">b.call(obj, [<span class="string">'111'</span>]); <span class="comment">// this指向调用者：obj</span></span><br></pre></td></tr></table></figure>
-<h3 id="bind方法"><a href="#bind方法" class="headerlink" title="bind方法"></a>bind方法</h3><p><code>func.bind(调用者，参数1，参数2)</code></p>
-<p>调用的时候函数不会被立即执行，返回一个新的函数，函数体内的this指向调用者，需要手动调用新的函数</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> bb = b.bind(obj, <span class="string">'lll'</span>); <span class="comment">//this指向obj</span></span><br><span class="line">bb();</span><br></pre></td></tr></table></figure>
-<h2 id="为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢"><a href="#为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢" class="headerlink" title="为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢"></a>为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  sayHi:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 在对象的方法中，指向sayHi对象</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);  <span class="comment">// window</span></span><br><span class="line">    &#125;</span><br><span class="line">    fn1();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 闭包window</span></span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.sayHi();</span><br></pre></td></tr></table></figure>
-<p>在函数被调用的时候，会自动获取两个特殊的对象：arguments和this，内部函数在搜索这两个变量的时候，只会搜索到其活动对象位置，因此永远不能访问外部函数中的这两个对象。</p>
-]]></content>
+    <title>跨域问题的解决方案</title>
+    <url>/2017/04/14/201904CO/</url>
+    <content><![CDATA[<h2 id="为什么会产生跨域"><a href="#为什么会产生跨域" class="headerlink" title="为什么会产生跨域"></a>为什么会产生跨域</h2><p>前后端分离，前端的代码和服务端的代码分别部署在不同的域名下，导致的跨域问题</p>
+<p>协议，域名端，口号不一样都是跨域</p>
+<h2 id="跨域资源共享CORS"><a href="#跨域资源共享CORS" class="headerlink" title="跨域资源共享CORS"></a>跨域资源共享CORS</h2><p>定义在访问跨域资源的时候，浏览器与服务端如何沟通</p>
+<p>使用自定义的HTTP头部让浏览器与服务器进行沟通，例如：</p>
+<p>Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
+<p>如果浏览器可以处理请求，就在Access-Control-Allow-Origin头部中返回相同的源信息，例如</p>
+<p>Access-Control-Allow-Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
+<h2 id="其他的跨域方案"><a href="#其他的跨域方案" class="headerlink" title="其他的跨域方案"></a>其他的跨域方案</h2><h3 id="jsonp"><a href="#jsonp" class="headerlink" title="jsonp"></a>jsonp</h3><p>动态创建script标签， src赋值为要请求的地址，仅支持get请求</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">  function func(data) &#123;&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'http://xx.com/list/callback=func'</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>jsonp存在的问题：不安全、有缓存、传递的信息有限制、需要服务器处理</p>
+<h3 id="服务端允许跨域"><a href="#服务端允许跨域" class="headerlink" title="服务端允许跨域"></a>服务端允许跨域</h3><p>设置一个允许跨域访问的源：Access-Control-Allow-Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
+<h3 id="webpack-proxy"><a href="#webpack-proxy" class="headerlink" title="webpack proxy"></a>webpack proxy</h3><figure class="highlight"><table><tr><td class="code"><pre><span class="line">"proxy": "代里地址"</span><br></pre></td></tr></table></figure>
+<h3 id="nginx反向代理"><a href="#nginx反向代理" class="headerlink" title="nginx反向代理"></a>nginx反向代理</h3>]]></content>
       <categories>
-        <category>javascript</category>
+        <category>前端</category>
       </categories>
       <tags>
-        <tag>javascript</tag>
+        <tag>前端</tag>
       </tags>
   </entry>
   <entry>
@@ -110,26 +98,38 @@
       </tags>
   </entry>
   <entry>
-    <title>跨域问题的解决方案</title>
-    <url>/2017/04/14/201904CO/</url>
-    <content><![CDATA[<h2 id="为什么会产生跨域"><a href="#为什么会产生跨域" class="headerlink" title="为什么会产生跨域"></a>为什么会产生跨域</h2><p>前后端分离，前端的代码和服务端的代码分别部署在不同的域名下，导致的跨域问题</p>
-<p>协议，域名端，口号不一样都是跨域</p>
-<h2 id="跨域资源共享CORS"><a href="#跨域资源共享CORS" class="headerlink" title="跨域资源共享CORS"></a>跨域资源共享CORS</h2><p>定义在访问跨域资源的时候，浏览器与服务端如何沟通</p>
-<p>使用自定义的HTTP头部让浏览器与服务器进行沟通，例如：</p>
-<p>Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
-<p>如果浏览器可以处理请求，就在Access-Control-Allow-Origin头部中返回相同的源信息，例如</p>
-<p>Access-Control-Allow-Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
-<h2 id="其他的跨域方案"><a href="#其他的跨域方案" class="headerlink" title="其他的跨域方案"></a>其他的跨域方案</h2><h3 id="jsonp"><a href="#jsonp" class="headerlink" title="jsonp"></a>jsonp</h3><p>动态创建script标签， src赋值为要请求的地址，仅支持get请求</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  <span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params">data</span>) </span>&#123;&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'http://xx.com/list/callback=func'</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>jsonp存在的问题：不安全、有缓存、传递的信息有限制、需要服务器处理</p>
-<h3 id="服务端允许跨域"><a href="#服务端允许跨域" class="headerlink" title="服务端允许跨域"></a>服务端允许跨域</h3><p>设置一个允许跨域访问的源：Access-Control-Allow-Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
-<h3 id="webpack-proxy"><a href="#webpack-proxy" class="headerlink" title="webpack proxy"></a>webpack proxy</h3><figure class="highlight"><table><tr><td class="code"><pre><span class="line">"proxy": "代里地址"</span><br></pre></td></tr></table></figure>
-<h3 id="nginx反向代理"><a href="#nginx反向代理" class="headerlink" title="nginx反向代理"></a>nginx反向代理</h3>]]></content>
+    <title>函数内部this指向问题</title>
+    <url>/2019/04/13/202004this/</url>
+    <content><![CDATA[<p>this是一个对象，是在函数运行的时候基于函数的运行环境绑定的</p>
+<p>关于this指向的问题，可以简单的概括一句话：谁调用我，我就指向谁</p>
+<h2 id="this指向问题"><a href="#this指向问题" class="headerlink" title="this指向问题"></a>this指向问题</h2><p>在不同的场景下this的指向会不太一样，例如：</p>
+<h3 id="普通函数内部this指向window"><a href="#普通函数内部this指向window" class="headerlink" title="普通函数内部this指向window"></a>普通函数内部this指向window</h3><p>严格模式下this指向undefined，在函数内部执行：console.log(this)，控制台会输出undefined</p>
+<p>非严格模式下，this指向window，就是在window下调用了这个函数</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 普通函数中，this指向window</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// Window &#123;window: Window, self: Window, document: document, name: "", location: Location, …&#125;</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">aa</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// Window &#123;window: Window, self: Window, document: document, name: "", location: Location …&#125;</span></span><br><span class="line">  &#125;</span><br><span class="line">  aa()</span><br><span class="line">&#125;</span><br><span class="line">a();</span><br></pre></td></tr></table></figure>
+<h3 id="在对象的方法中this指向这个对象"><a href="#在对象的方法中this指向这个对象" class="headerlink" title="在对象的方法中this指向这个对象"></a>在对象的方法中this指向这个对象</h3><p>通过对象成员访问‘.’的方式调用，this指向这个对象，也就是这个对象调用了这个方法，所以这个方法的this指向这个对象</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  sayHi:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 在对象的方法中，指向sayHi对象</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);  <span class="comment">// window，this指向window，是因为这个函数是一个普通的函数，并不少某个对象的方法</span></span><br><span class="line">    &#125;</span><br><span class="line">    fn1();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 闭包window</span></span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.sayHi();</span><br></pre></td></tr></table></figure>
+<h3 id="在定时器中指向window"><a href="#在定时器中指向window" class="headerlink" title="在定时器中指向window"></a>在定时器中指向window</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// window</span></span><br><span class="line">&#125;,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="在构造函数中"><a href="#在构造函数中" class="headerlink" title="在构造函数中"></a>在构造函数中</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 指向实例对象：Person&#123;&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> Person();</span><br></pre></td></tr></table></figure>
+<h3 id="在事件处理函数中指向"><a href="#在事件处理函数中指向" class="headerlink" title="在事件处理函数中指向"></a>在事件处理函数中指向</h3><p>指向绑定事件的对象</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">input.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 绑定事件对象</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="在匿名函数中指向window"><a href="#在匿名函数中指向window" class="headerlink" title="在匿名函数中指向window"></a>在匿名函数中指向window</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">//window</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<h2 id="改变this的指向"><a href="#改变this的指向" class="headerlink" title="改变this的指向"></a>改变this的指向</h2><h3 id="call"><a href="#call" class="headerlink" title="call"></a>call</h3><p><code>func.call(调用者，参数1，参数2)</code></p>
+<p>调用的时候函数会被立即执行，函数体内的this指向调用者</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">b.call(obj, <span class="string">'lll'</span>); <span class="comment">// this指向调用者：obj</span></span><br></pre></td></tr></table></figure>
+<h3 id="apply"><a href="#apply" class="headerlink" title="apply"></a>apply</h3><p><code>func.apply(调用者, [参数1，...])</code></p>
+<p>调用的时候函数会被立即执行，函数体内的this指向调用者</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">b.call(obj, [<span class="string">'111'</span>]); <span class="comment">// this指向调用者：obj</span></span><br></pre></td></tr></table></figure>
+<h3 id="bind方法"><a href="#bind方法" class="headerlink" title="bind方法"></a>bind方法</h3><p><code>func.bind(调用者，参数1，参数2)</code></p>
+<p>调用的时候函数不会被立即执行，返回一个新的函数，函数体内的this指向调用者，需要手动调用新的函数</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> bb = b.bind(obj, <span class="string">'lll'</span>); <span class="comment">//this指向obj</span></span><br><span class="line">bb();</span><br></pre></td></tr></table></figure>
+<h2 id="为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢"><a href="#为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢" class="headerlink" title="为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢"></a>为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  sayHi:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 在对象的方法中，指向sayHi对象</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);  <span class="comment">// window</span></span><br><span class="line">    &#125;</span><br><span class="line">    fn1();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 闭包window</span></span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.sayHi();</span><br></pre></td></tr></table></figure>
+<p>在函数被调用的时候，会自动获取两个特殊的对象：arguments和this，内部函数在搜索这两个变量的时候，只会搜索到其活动对象位置，因此永远不能访问外部函数中的这两个对象。</p>
+]]></content>
       <categories>
-        <category>前端</category>
+        <category>javascript</category>
       </categories>
       <tags>
-        <tag>前端</tag>
+        <tag>javascript</tag>
       </tags>
   </entry>
   <entry>
@@ -223,6 +223,117 @@
       </categories>
       <tags>
         <tag>数据结构与算饭</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>web前端的单点登录-三种实现方案</title>
+    <url>/2021/04/29/SSO/</url>
+    <content><![CDATA[<p><a href="https://zcy-cdn.oss-cn-shanghai.aliyuncs.com/f2e-assets/ebf178b6-0950-482b-8031-5bb70b4888d5.png?x-oss-process=image/quality,Q_75/format,jpg" target="_blank" rel="noopener">https://zcy-cdn.oss-cn-shanghai.aliyuncs.com/f2e-assets/ebf178b6-0950-482b-8031-5bb70b4888d5.png?x-oss-process=image/quality,Q_75/format,jpg</a></p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>公司的统一登陆平台，也就是单点登录系统，因为某些地方不合理，需要重构，当我着手开始重构项目的时候意外的发现，单点登陆大概有三种实现的方案，所以详细的调研学习了一下三种实现的方案，并简单的对比了一下。</p>
+<h2 id="什么是单点登录"><a href="#什么是单点登录" class="headerlink" title="什么是单点登录"></a>什么是单点登录</h2><p>单点登陆，又叫做SSO（Single Sign On）</p>
+<p>我从网上抄了一段话来解释一下点单登陆的作用：是目前比较流行的企业业务整合的解决方案之一。SSO的定义是在多个应用系统中，用户只需要登录一次就可以访问所有相互信任的应用系统。</p>
+<p>例如百度公司下的百度地图和百度贴吧，用户只要登录一次，就能访问百度公司下的所有应用</p>
+<p>所以简单来说SSO的目的就是多个相互信任的系统之间共享登陆的状态</p>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><h3 id="单个系统实现登陆"><a href="#单个系统实现登陆" class="headerlink" title="单个系统实现登陆"></a>单个系统实现登陆</h3><p>实现单个系统的登陆的时候，我们通常使用浏览器的cookie来存储用户的登陆信息，</p>
+<p>首先会正常的请求接口，然后判断是否登陆，如果没有登陆则直接跳转登录的页面，用户输入用户名和密码登录，后端验证过登陆信息后，返回登录成功的状态，并且返回一个用户登录状态的token，把token存在浏览器的cookie里面，下次访问接口的时候把这个token带上，只要token在有效期之内，服务端就会通过验证，不需要再次登录</p>
+<h3 id="多个系统实现单点登陆"><a href="#多个系统实现单点登陆" class="headerlink" title="多个系统实现单点登陆"></a>多个系统实现单点登陆</h3><p>单点登录的本质就是要在多个系统中共享登录状态，也就是token，那么如何让多个系统共享一个登录状态呢？</p>
+<h2 id="实现单点登录的三种方法"><a href="#实现单点登录的三种方法" class="headerlink" title="实现单点登录的三种方法"></a>实现单点登录的三种方法</h2><p>我是前端，所以这里只讨论前端的实现</p>
+<h3 id="cookie提升"><a href="#cookie提升" class="headerlink" title="cookie提升"></a>cookie提升</h3><p>简单了解一下cookie的机制：</p>
+<ol>
+<li><p>cookie是存储在用户浏览器本地的一种方案，可以由服务器响应报文Set-Cookie的首部字段信息或者客户端 document.cookie来设置，并随着每次请求发送到服务器。</p>
+</li>
+<li><p>cookie是有域的限制的，不同的域名之间的cookie是不能共享的，但是子域名可以获取父级域名 Cookie。这是关cookie实现单点登录的关键</p>
+</li>
+</ol>
+<p>cookie的设置：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie = <span class="string">"cookieName=mader; expires=Fri, 31 Dec 2017 15:59:59 GMT; path=/mydir; domain=cnblogs.com; max-age=3600; secure=true"</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>cookieName=mader ：name=value，cookie的名称和值</p>
+</li>
+<li><p>expires=Fri, 31 Dec 2017 15:59:59 GMT： expires，cookie过期的日期，如果没有定义，cookie会在对话结束时过期。日期格式为 new Date().toUTCString()</p>
+</li>
+<li><p>path=/mydir: path=path (例如 ‘/‘, ‘/mydir’) 如果没有定义，默认为当前文档位置的路径。</p>
+</li>
+<li><p>domain=xxx.com： 指定域, 如果没有定义，默认为当前文档位置的路径的域名部分。</p>
+</li>
+<li><p>max-age=3600： 文档被查看后cookie过期时间，单位为秒</p>
+</li>
+<li><p>secure=true： cookie只会被https传输 ，即加密的https链接传输</p>
+</li>
+</ul>
+<p>浏览器会将domain和path都相同的cookie保存在一个文件里，cookie间用*隔开</p>
+<p>一般我们公司要实现单点登录只需要做自己公司的不同系统之间的登录状态共享，一般会有一个主域名，然后在主域名下申请二级域名给不同的系统部署，例如:百度的主域名是’baidu.com‘，而百度贴吧和百度地图的域名就是在主域名下面的二级域名：‘tieba.baidu.com’和‘map.baidu.com’</p>
+<p>利用cookie子域可以获取父域的特点，可是设置cookie的domain属性为最外的一级域名，path属性设置为‘/’，子域就可以获取父域的cookie了</p>
+<p>所有的域名都能共享一个token，传给服务端的时候服务端就会判断我们那已经登录过了</p>
+<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS（Central Authentication Service），即中央认证服务，也可以叫做认证中心，是 Yale 大学发起的一个开源项目，目的是为 Web 应用系统提供一种可靠的单点登录方法。</p>
+<p>中央认证，就是专门负责登录请求的web服务。认证中心是单点登陆的标准做法，支持跨域且扩展性好，但是实现起来稍微麻烦</p>
+<p>假设我们有两个相互信任的系统：a.xx.com 和 b.xx.com，这两个系统要实现单点登录，所以需要一个独立部署的中央认证登陆系统，例如：login.xx.com。</p>
+<p>因为中央认证服务是需要单独部署的一个应用，所以除了我们当前开发的项目的服务器，还另外需要一个中央认证的服务器，也就是CAS服务器</p>
+<p>首先是用户第一次进入a系统，需要登录：</p>
+<p>图片站位</p>
+<ol>
+<li><p>用户在浏览器输入a系统的网址：a.xx.com，访问a系统对应的a服务器</p>
+</li>
+<li><p>a服务器验证用户并没有登录，重定向到CAS服务器的登录页面，并且在重定向的地址后面携带登录成功后要返回的a系统的页面url，通常像这样子：<a href="https://ex-cas.com/login?service=https://a.xx.com" target="_blank" rel="noopener">https://ex-cas.com/login?service=https://a.xx.com</a></p>
+</li>
+<li><p>用户访问CAS的登录系统，CAS判断用户是否有CAS的session，也就是判断浏览器是否存有CAS的session</p>
+</li>
+<li><p>CAS判断用户并没有CAS的session，返回CAS的登录页面</p>
+</li>
+<li><p>用户输入：用户名和密码点击提交，提交到CAS服务器</p>
+</li>
+<li><p>CAS服务器验证用户信息，创建CAS的session，通过set-cookie写入用户的浏览器，</p>
+</li>
+<li><p>然后重定向到a.xx.com，并且在重定向的时候CAS服务器会在a.xx.com后面拼上CAS的一个ticket字段，例如：<a href="https://a.xx.com?ticket=123456" target="_blank" rel="noopener">https://a.xx.com?ticket=123456</a></p>
+</li>
+<li><p>这个就可以正常的访问a系统的应用了，然后a.xx.com会访问a系统对应的a服务器，a服务器会获取url后面的ticket，</p>
+</li>
+<li><p>a服务器拿ticket去向CAS服务器验证，验证成功之后，CAS服务器会返回验证成功的消息和一些必要的信息</p>
+</li>
+<li><p>a服务器通过set-cookie设置自己的session，然后重定向到<a href="https://a.xx.com，去掉后面的ticket" target="_blank" rel="noopener">https://a.xx.com，去掉后面的ticket</a></p>
+</li>
+<li><p>然后用户访问<a href="https://a.xx.com，a服务器验证用户是否登录，返回请求内容" target="_blank" rel="noopener">https://a.xx.com，a服务器验证用户是否登录，返回请求内容</a></p>
+</li>
+</ol>
+<p>整个过程有三次重定向，两次cookie的写入，还是比较耗费资源的</p>
+<p>然后用户第二次进入a系统，假设第一次登录的信息还没过期，不需要登录：</p>
+<p>图片站位</p>
+<ol>
+<li><p>用户第二次在浏览器输入<a href="https://a.xx.com，访问a系统对应的a服务器" target="_blank" rel="noopener">https://a.xx.com，访问a系统对应的a服务器</a></p>
+</li>
+<li><p>a服务器验证用户登录信息，用户有a服务器的session，判断用户是登陆状态</p>
+</li>
+<li><p>返回请求内容</p>
+</li>
+</ol>
+<p>用户第一次进入b系统，因为在进入a系统的时候已经在CAS中央认证服务登录过了，所以也不需要登陆：</p>
+<p>图片站位</p>
+<ol>
+<li><p>用户第一次在浏览器输入b系统的网址:b.xx.com，访问b系统对应的b服务器</p>
+</li>
+<li><p>b服务器验证用户并没有登录，重定向到CAS服务器的登录页面，并且在重定向的地址后面携带登录成功后要返回的b系统的页面url，通常像这样子：<a href="https://ex-cas.com/login?service=https://b.xx.com" target="_blank" rel="noopener">https://ex-cas.com/login?service=https://b.xx.com</a></p>
+</li>
+<li><p>用户访问<a href="https://ex-cas.com/login?service=https://b.xx.com，通过cookie携带CAS服务器的session" target="_blank" rel="noopener">https://ex-cas.com/login?service=https://b.xx.com，通过cookie携带CAS服务器的session</a></p>
+</li>
+<li><p>CAS服务器验证CAS的session，验证用户已经登陆过了，不需要重新登陆，直接携带ticket，重定向到<a href="https://b.xx.com?ticket=123456" target="_blank" rel="noopener">https://b.xx.com?ticket=123456</a></p>
+</li>
+<li><p>用户访问<a href="https://b.xx.com?ticket=123456，b服务器拿ticket去向CAS服务器验证，验证成功之后，CAS服务器会返回验证成功的消息和一些必要的信息" target="_blank" rel="noopener">https://b.xx.com?ticket=123456，b服务器拿ticket去向CAS服务器验证，验证成功之后，CAS服务器会返回验证成功的消息和一些必要的信息</a></p>
+</li>
+<li><p>b服务器通过set-cookie设置自己的session，然后重定向到<a href="https://b.xx.com，去掉后面的ticket" target="_blank" rel="noopener">https://b.xx.com，去掉后面的ticket</a></p>
+</li>
+<li><p>然后用户访问<a href="https://a.xx.com，a服务器验证用户是否登录，返回请求内容" target="_blank" rel="noopener">https://a.xx.com，a服务器验证用户是否登录，返回请求内容</a></p>
+</li>
+</ol>
+<h3 id="LocalStorage-跨域"><a href="#LocalStorage-跨域" class="headerlink" title="LocalStorage 跨域"></a>LocalStorage 跨域</h3><p>这种方案呢，用的人比较少，我也只是简单的了解了一下原理</p>
+<p>假设我们有两个相互信任的系统a.xx.com和b.xx.com要实现单点登录，大概的思路：</p>
+<p>在a.xx.com/login的页面里面通过内嵌一个iframe页面，在这个iframe里面通过storage把用户的登陆session放入iframe父级下面存储起来。</p>
+<p>通过这种方式实现登录状态的共享</p>
+]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>前端</tag>
       </tags>
   </entry>
   <entry>
@@ -461,34 +572,6 @@
       </tags>
   </entry>
   <entry>
-    <title>git-rebase</title>
-    <url>/2019/04/08/git-rebase/</url>
-    <content><![CDATA[<p>太多的commit不利于code review，造成分支污染，如果需要回滚代码，发现有很多的commit，难以定位要回滚的版本</p>
-<h2 id="使用场景：合并多次commit"><a href="#使用场景：合并多次commit" class="headerlink" title="使用场景：合并多次commit"></a>使用场景：合并多次commit</h2><p>git rebase -i HEAD~4</p>
-<p>进入vi模式：</p>
-<ul>
-<li><p>p, pick = use commit</p>
-</li>
-<li><p>r, reword = use commit, but edit the commit message</p>
-</li>
-<li><p>e, edit = use commit, but stop for amending（停下来修改）</p>
-</li>
-<li><p>s, squash = use commit, but meld into previous commit（融入先前哪个commit）</p>
-</li>
-<li><p>f, fixup = like “squash”, but discard this commit’s log message（丢弃这个commit的日志信息）</p>
-</li>
-<li><p>x, exec = run command (the rest of the line) using shell（运行命令）</p>
-</li>
-<li><p>d, drop = remove commit</p>
-</li>
-</ul>
-<h2 id="git-pull-–rebase"><a href="#git-pull-–rebase" class="headerlink" title="git pull –rebase"></a>git pull –rebase</h2><p>多个人使用同一个远程分支合作开发，执行git pull之后，远程有新的commit</p>
-<h2 id="git-rebase-–abort"><a href="#git-rebase-–abort" class="headerlink" title="git rebase –abort"></a>git rebase –abort</h2>]]></content>
-      <tags>
-        <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>git操作</title>
     <url>/2017/04/08/git-base/</url>
     <content><![CDATA[<h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><p>新建分支：</p>
@@ -523,6 +606,34 @@
 <h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>git-rebase</title>
+    <url>/2019/04/08/git-rebase/</url>
+    <content><![CDATA[<p>太多的commit不利于code review，造成分支污染，如果需要回滚代码，发现有很多的commit，难以定位要回滚的版本</p>
+<h2 id="使用场景：合并多次commit"><a href="#使用场景：合并多次commit" class="headerlink" title="使用场景：合并多次commit"></a>使用场景：合并多次commit</h2><p>git rebase -i HEAD~4</p>
+<p>进入vi模式：</p>
+<ul>
+<li><p>p, pick = use commit</p>
+</li>
+<li><p>r, reword = use commit, but edit the commit message</p>
+</li>
+<li><p>e, edit = use commit, but stop for amending（停下来修改）</p>
+</li>
+<li><p>s, squash = use commit, but meld into previous commit（融入先前哪个commit）</p>
+</li>
+<li><p>f, fixup = like “squash”, but discard this commit’s log message（丢弃这个commit的日志信息）</p>
+</li>
+<li><p>x, exec = run command (the rest of the line) using shell（运行命令）</p>
+</li>
+<li><p>d, drop = remove commit</p>
+</li>
+</ul>
+<h2 id="git-pull-–rebase"><a href="#git-pull-–rebase" class="headerlink" title="git pull –rebase"></a>git pull –rebase</h2><p>多个人使用同一个远程分支合作开发，执行git pull之后，远程有新的commit</p>
+<h2 id="git-rebase-–abort"><a href="#git-rebase-–abort" class="headerlink" title="git rebase –abort"></a>git rebase –abort</h2>]]></content>
+      <tags>
+        <tag>git</tag>
+      </tags>
   </entry>
   <entry>
     <title>js数组操作</title>
@@ -692,26 +803,6 @@
       </categories>
   </entry>
   <entry>
-    <title>window.print打印设置水印和页头页底</title>
-    <url>/2020/05/08/print/</url>
-    <content><![CDATA[<p>需求：点击打印按钮，打印出两个不同的文件，第一个文件是普通的表格，无特殊要求，第二个是打印一份录用员工的offer，打印offer需要每一页都有水印、带有公司logo的页头和带有公司网站的页底</p>
-<p>每一页的带有公司logo的页头页底，可以使用样式 <code>position: fixed;</code>设置为position: fixed;样式属性的元素，可以在打印的时候每一页纸上都显示在固定位置，样式如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.header</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.footer</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>正文部分设置适当的paddingTop值，使用 <code>pageBreakAfter: &#39;always&#39;</code>在适当的位置强制分页，效果：</p>
-<p><img src="/img/print/test1.jpeg" alt="效果"></p>
-<p>水印部分也要每个页面都有，同样思路使用 <code>position: fixed;</code>定位元素，正文部分要浮在水印的上面，使用<code>z-index</code>让正文部分的值高于水印部分的值：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.text</span> &#123;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">60px</span>;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.watermark</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">z-index</span>: -<span class="number">1</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">scale</span>(10) <span class="built_in">rotate</span>(-45deg);</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#fffffe</span>;</span><br><span class="line">  <span class="attribute">opacity</span>: <span class="number">0.3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/print/test2.png" alt="效果"></p>
-<p>碰到另外一个问题：点击一个按钮同时打印出来的除了offer还有另外一个审批的表格table，这个表格不需要页头页底和水印。</p>
-<p>解决方案：设置一个足够高的白色蒙版，<code>absolute</code>相对于offer定位，遮住不需要的水印和页头页底</p>
-<p>absolute定位的元素不会在每一页都显示，但是会根据相对的父级元素定位，可以用来遮住不想显示的内容</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">&lt;div</span><br><span class="line">  style=&#123;&#123;</span><br><span class="line">    position: <span class="string">'absolute'</span>,</span><br><span class="line">    top: <span class="number">-1199</span>,</span><br><span class="line">    left: <span class="number">0</span>,</span><br><span class="line">    width: <span class="string">'100%'</span>,</span><br><span class="line">    height: <span class="number">1200</span>,</span><br><span class="line">    zIndex: <span class="number">1</span>,</span><br><span class="line">    background: <span class="string">'#fff'</span>,</span><br><span class="line">  &#125;&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>print</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>浏览器在线预览文件（PDF,txt,html,ofd,docx,pptx,jpg,jpeg,png...等）</title>
     <url>/2020/11/09/preview/</url>
     <content><![CDATA[<p>最近做项目，接到一个需求：要求预览上传的文件，大概包括以下格式：PDF,txt,html,ofd,docx,pptx,jpg,jpeg,png…</p>
@@ -768,6 +859,26 @@
 <p>txt文件直接拿到内容就可以展示，最多处理一下换行什么的</p>
 <p>html格式的比较特殊，因为需要保留人家html的样式和布局，所以使用innerHTML的方式把字符串插入到dom中</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>window.print打印设置水印和页头页底</title>
+    <url>/2020/05/08/print/</url>
+    <content><![CDATA[<p>需求：点击打印按钮，打印出两个不同的文件，第一个文件是普通的表格，无特殊要求，第二个是打印一份录用员工的offer，打印offer需要每一页都有水印、带有公司logo的页头和带有公司网站的页底</p>
+<p>每一页的带有公司logo的页头页底，可以使用样式 <code>position: fixed;</code>设置为position: fixed;样式属性的元素，可以在打印的时候每一页纸上都显示在固定位置，样式如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.header</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.footer</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>正文部分设置适当的paddingTop值，使用 <code>pageBreakAfter: &#39;always&#39;</code>在适当的位置强制分页，效果：</p>
+<p><img src="/img/print/test1.jpeg" alt="效果"></p>
+<p>水印部分也要每个页面都有，同样思路使用 <code>position: fixed;</code>定位元素，正文部分要浮在水印的上面，使用<code>z-index</code>让正文部分的值高于水印部分的值：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.text</span> &#123;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">60px</span>;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.watermark</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">z-index</span>: -<span class="number">1</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">scale</span>(10) <span class="built_in">rotate</span>(-45deg);</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#fffffe</span>;</span><br><span class="line">  <span class="attribute">opacity</span>: <span class="number">0.3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/img/print/test2.png" alt="效果"></p>
+<p>碰到另外一个问题：点击一个按钮同时打印出来的除了offer还有另外一个审批的表格table，这个表格不需要页头页底和水印。</p>
+<p>解决方案：设置一个足够高的白色蒙版，<code>absolute</code>相对于offer定位，遮住不需要的水印和页头页底</p>
+<p>absolute定位的元素不会在每一页都显示，但是会根据相对的父级元素定位，可以用来遮住不想显示的内容</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">&lt;div</span><br><span class="line">  style=&#123;&#123;</span><br><span class="line">    position: <span class="string">'absolute'</span>,</span><br><span class="line">    top: <span class="number">-1199</span>,</span><br><span class="line">    left: <span class="number">0</span>,</span><br><span class="line">    width: <span class="string">'100%'</span>,</span><br><span class="line">    height: <span class="number">1200</span>,</span><br><span class="line">    zIndex: <span class="number">1</span>,</span><br><span class="line">    background: <span class="string">'#fff'</span>,</span><br><span class="line">  &#125;&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>print</tag>
+      </tags>
   </entry>
   <entry>
     <title>react/context</title>
@@ -843,68 +954,6 @@
       </tags>
   </entry>
   <entry>
-    <title>react/refs</title>
-    <url>/2018/02/15/react-refs/</url>
-    <content><![CDATA[<p>官网文档的搬运者</p>
-<h2 id="何时使用-refs"><a href="#何时使用-refs" class="headerlink" title="何时使用 refs"></a>何时使用 refs</h2><ol>
-<li><p>管理焦点，文本选择或媒体播放</p>
-</li>
-<li><p>触发强制动画。</p>
-</li>
-<li><p>集成第三方 DOM 库。</p>
-</li>
-</ol>
-<h2 id="创建-ref"><a href="#创建-ref" class="headerlink" title="创建 ref"></a>创建 ref</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyComponent</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="keyword">super</span>(props);</span><br><span class="line">    <span class="comment">// 创建ref</span></span><br><span class="line">    <span class="keyword">this</span>.myRef = React.createRef();</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&#123;this.myRef&#125;</span> /&gt;</span>;</span></span><br><span class="line"><span class="xml">  &#125;</span></span><br><span class="line"><span class="xml">&#125;</span></span><br></pre></td></tr></table></figure>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> node = <span class="keyword">this</span>.myRef.current;</span><br></pre></td></tr></table></figure>
-<h3 id="ref-的值根据节点的类型而有所不同："><a href="#ref-的值根据节点的类型而有所不同：" class="headerlink" title="ref 的值根据节点的类型而有所不同："></a>ref 的值根据节点的类型而有所不同：</h3><ul>
-<li><p>当 ref 属性用于 HTML 元素时，构造函数中使用 React.createRef() 创建的 ref 接收底层 DOM 元素作为其 current 属性。</p>
-</li>
-<li><p>当 ref 属性用于自定义 class 组件时，ref 对象接收组件的挂载实例作为其 current 属性。</p>
-</li>
-<li><p>你不能在函数组件上使用 ref 属性，因为他们没有实例。</p>
-</li>
-</ul>
-<h2 id="回调-Refs"><a href="#回调-Refs" class="headerlink" title="回调 Refs"></a>回调 Refs</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CustomTextInput</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="keyword">super</span>(props);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.textInput = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.setTextInputRef = <span class="function"><span class="params">element</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">this</span>.textInput = element;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.focusTextInput = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// 使用原生 DOM API 使 text 输入框获得焦点</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>.textInput) <span class="keyword">this</span>.textInput.focus();</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  componentDidMount() &#123;</span><br><span class="line">    <span class="comment">// 组件挂载后，让文本框自动获得焦点</span></span><br><span class="line">    <span class="keyword">this</span>.focusTextInput();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="comment">// 使用 `ref` 的回调函数将 text 输入框 DOM 节点的引用存储到 React</span></span><br><span class="line">    <span class="comment">// 实例上（比如 this.textInput）</span></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;input type=<span class="string">"text"</span> ref=&#123;<span class="keyword">this</span>.setTextInputRef&#125; /&gt;</span><br><span class="line">        &lt;input</span><br><span class="line">          type=<span class="string">"button"</span></span><br><span class="line">          value=<span class="string">"Focus the text input"</span></span><br><span class="line">          onClick=&#123;<span class="keyword">this</span>.focusTextInput&#125;</span><br><span class="line">        /&gt;</span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
-<p>可以在组件间传递回调形式的 refs，就像你可以传递通过 React.createRef() 创建的对象 refs 一样。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CustomTextInput</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;input ref=&#123;props.inputRef&#125; /&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">class Parent extends React.Component &#123;</span></span><br><span class="line"><span class="regexp">  render() &#123;</span></span><br><span class="line"><span class="regexp">    return &lt;CustomTextInput inputRef=&#123;el =&gt; (this.inputElement = el)&#125; /</span>&gt;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="转发-refs-到-DOM-组件"><a href="#转发-refs-到-DOM-组件" class="headerlink" title="转发 refs 到 DOM 组件"></a>转发 refs 到 DOM 组件</h2><p>Ref 转发是一个可选特性，其允许某些组件接收 ref，并将其向下传递（换句话说，“转发”它）给子组件。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> FancyButton = React.forwardRef(<span class="function">(<span class="params">props, ref</span>) =&gt;</span> (</span><br><span class="line">  <span class="comment">// 当 ref 挂载完成，ref.current 将指向 &lt;button&gt; DOM 节点。</span></span><br><span class="line">  &lt;button ref=&#123;ref&#125; className=<span class="string">"FancyButton"</span>&gt;</span><br><span class="line">    &#123;props.children&#125;</span><br><span class="line">  &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">));</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ 你可以直接获取 DOM button 的 ref：</span></span><br><span class="line"><span class="regexp">const ref = React.createRef();</span></span><br><span class="line"><span class="regexp">&lt;FancyButton ref=&#123;ref&#125;&gt;Click me!&lt;/</span>FancyButton&gt;;</span><br></pre></td></tr></table></figure>
-<h2 id="在高阶组件-HOC-中转发-refs"><a href="#在高阶组件-HOC-中转发-refs" class="headerlink" title="在高阶组件(HOC)中转发 refs"></a>在高阶组件(HOC)中转发 refs</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">logProps</span>(<span class="params">WrappedComponent</span>) </span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">LogProps</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    componentDidUpdate(prevProps) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"old props:"</span>, prevProps);</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"new props:"</span>, <span class="keyword">this</span>.props);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">WrappedComponent</span> &#123;<span class="attr">...this.props</span>&#125; /&gt;</span>;</span></span><br><span class="line"><span class="xml">    &#125;</span></span><br><span class="line"><span class="xml">  &#125;</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">  return LogProps;</span></span><br><span class="line"><span class="xml">&#125;</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">class FancyButton extends React.Component &#123;</span></span><br><span class="line"><span class="xml">  focus() &#123;&#125;</span></span><br><span class="line"><span class="xml">&#125;</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">export default logProps(FancyButton);</span></span><br></pre></td></tr></table></figure>
-<p>调用高阶组件：logProps组件，并且传递props时，高阶组件会透传props到他的包裹组件，但refs不会传递，因为 ref 不是 prop 属性。就像 key 一样，其被 React 进行了特殊处理。如果你对 HOC 添加 ref，该 ref 将引用最外层的容器组件，而不是被包裹的组件。</p>
-<h3 id="使用React-forwardRef在高阶组件中传递refs"><a href="#使用React-forwardRef在高阶组件中传递refs" class="headerlink" title="使用React.forwardRef在高阶组件中传递refs"></a>使用React.forwardRef在高阶组件中传递refs</h3><p>重写上面的高阶组件：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">logProps</span>(<span class="params">WrappedComponent</span>) </span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">LogProps</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    componentDidUpdate(prevProps) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"old props:"</span>, prevProps);</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"new props:"</span>, <span class="keyword">this</span>.props);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="keyword">const</span> &#123; forwardedRef, ...rest &#125; = <span class="keyword">this</span>.props;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">WrappedComponent</span> <span class="attr">ref</span>=<span class="string">&#123;forwardedRef&#125;</span> &#123;<span class="attr">...rest</span>&#125; /&gt;</span>;</span></span><br><span class="line"><span class="xml">    &#125;</span></span><br><span class="line"><span class="xml">  &#125;</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">  // return LogProps;</span></span><br><span class="line"><span class="xml">  return React.forwardRef((props, ref) =&gt; &#123;</span></span><br><span class="line">    return &lt;LogProps &#123;...props&#125; forwardedRef=&#123;ref&#125; /&gt;;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>react</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>react/renderProps</title>
-    <url>/2017/12/08/react-renderProps/</url>
-    <content><![CDATA[<p>具有reader prop的组件，接受一个函数，该函数返回一个react元素，并调用它，而不是事先自己的渲染逻辑</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;DataProvider render=&#123;data =&gt; (</span><br><span class="line">  &lt;h1&gt;Hello &#123;data.target&#125;&lt;<span class="regexp">/h1&gt;</span></span><br><span class="line"><span class="regexp">)&#125;/</span>&gt;</span><br></pre></td></tr></table></figure>
-<p>如何分享一个组件封装到其他需要相同state组件的状态或行为并不是很容易</p>
-<p>render prop是一个用于告知组件需要渲染什么内容的函数prop</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import React from &quot;react&quot;;</span><br><span class="line"></span><br><span class="line">class Cat extends React.Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    const mouse = this.props.mouse;</span><br><span class="line">    return (</span><br><span class="line">      &lt;p style=&#123;&#123; position: &quot;absolute&quot;, left: mouse.x, top: mouse.y &#125;&#125;&gt;猫咪&lt;/p&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Mouse extends React.Component &#123;</span><br><span class="line">  constructor(props) &#123;</span><br><span class="line">    super(props);</span><br><span class="line">    this.handelMouseMove = this.handelMouseMove.bind(this);</span><br><span class="line">    this.state = &#123; x: 0, y: 0 &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  handelMouseMove(event) &#123;</span><br><span class="line">    this.setState(&#123;</span><br><span class="line">      x: event.clientX,</span><br><span class="line">      y: event.clientY</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div style=&#123;&#123; height: &quot;100%&quot; &#125;&#125; onMouseMove=&#123;this.handelMouseMove&#125;&gt;</span><br><span class="line">        &#123;this.props.render(this.state)&#125;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MouseTracker extends React.Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;h1&gt;移动鼠标！&lt;/h1&gt;</span><br><span class="line">        &lt;Mouse render=&#123;mouse =&gt; &lt;Cat mouse=&#123;mouse&#125; /&gt;&#125; /&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default MouseTracker;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>react</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>网站收藏</title>
-    <url>/2018/07/10/site/</url>
-    <content><![CDATA[<p><a href="https://www.phodal.com/" target="_blank" rel="noopener">phodal博客</a></p>
-<p><a href="http://www.ruanyifeng.com/blog/" target="_blank" rel="noopener">阮一峰的网络日志</a></p>
-<p><a href="https://github.com/happyrui/nestTodoList/tree/develop" target="_blank" rel="noopener">赵芮(微盟同事)的github</a></p>
-<p><a href="https://blog.csdn.net/zr15829039341" target="_blank" rel="noopener">赵芮(微盟同事)的博客</a></p>
-<p><a href="https://martindelophy.github.io/blog/" target="_blank" rel="noopener">杨海鑫（同事）的博客</a></p>
-]]></content>
-      <tags>
-        <tag>收藏</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>React 使用 Redux</title>
     <url>/2018/10/27/react-redux/</url>
     <content><![CDATA[<p>Redux 和 React 之间没有关系。Redux 支持 React、Angular、Ember、jQuery 甚至纯 JavaScript。</p>
@@ -971,6 +1020,159 @@
       </categories>
       <tags>
         <tag>react-redux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>react/refs</title>
+    <url>/2018/02/15/react-refs/</url>
+    <content><![CDATA[<p>官网文档的搬运者</p>
+<h2 id="何时使用-refs"><a href="#何时使用-refs" class="headerlink" title="何时使用 refs"></a>何时使用 refs</h2><ol>
+<li><p>管理焦点，文本选择或媒体播放</p>
+</li>
+<li><p>触发强制动画。</p>
+</li>
+<li><p>集成第三方 DOM 库。</p>
+</li>
+</ol>
+<h2 id="创建-ref"><a href="#创建-ref" class="headerlink" title="创建 ref"></a>创建 ref</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyComponent</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="keyword">super</span>(props);</span><br><span class="line">    <span class="comment">// 创建ref</span></span><br><span class="line">    <span class="keyword">this</span>.myRef = React.createRef();</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&#123;this.myRef&#125;</span> /&gt;</span>;</span></span><br><span class="line"><span class="xml">  &#125;</span></span><br><span class="line"><span class="xml">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> node = <span class="keyword">this</span>.myRef.current;</span><br></pre></td></tr></table></figure>
+<h3 id="ref-的值根据节点的类型而有所不同："><a href="#ref-的值根据节点的类型而有所不同：" class="headerlink" title="ref 的值根据节点的类型而有所不同："></a>ref 的值根据节点的类型而有所不同：</h3><ul>
+<li><p>当 ref 属性用于 HTML 元素时，构造函数中使用 React.createRef() 创建的 ref 接收底层 DOM 元素作为其 current 属性。</p>
+</li>
+<li><p>当 ref 属性用于自定义 class 组件时，ref 对象接收组件的挂载实例作为其 current 属性。</p>
+</li>
+<li><p>你不能在函数组件上使用 ref 属性，因为他们没有实例。</p>
+</li>
+</ul>
+<h2 id="回调-Refs"><a href="#回调-Refs" class="headerlink" title="回调 Refs"></a>回调 Refs</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CustomTextInput</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="keyword">super</span>(props);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.textInput = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.setTextInputRef = <span class="function"><span class="params">element</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">this</span>.textInput = element;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.focusTextInput = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// 使用原生 DOM API 使 text 输入框获得焦点</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>.textInput) <span class="keyword">this</span>.textInput.focus();</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  componentDidMount() &#123;</span><br><span class="line">    <span class="comment">// 组件挂载后，让文本框自动获得焦点</span></span><br><span class="line">    <span class="keyword">this</span>.focusTextInput();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="comment">// 使用 `ref` 的回调函数将 text 输入框 DOM 节点的引用存储到 React</span></span><br><span class="line">    <span class="comment">// 实例上（比如 this.textInput）</span></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;input type=<span class="string">"text"</span> ref=&#123;<span class="keyword">this</span>.setTextInputRef&#125; /&gt;</span><br><span class="line">        &lt;input</span><br><span class="line">          type=<span class="string">"button"</span></span><br><span class="line">          value=<span class="string">"Focus the text input"</span></span><br><span class="line">          onClick=&#123;<span class="keyword">this</span>.focusTextInput&#125;</span><br><span class="line">        /&gt;</span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>可以在组件间传递回调形式的 refs，就像你可以传递通过 React.createRef() 创建的对象 refs 一样。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CustomTextInput</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;input ref=&#123;props.inputRef&#125; /&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">class Parent extends React.Component &#123;</span></span><br><span class="line"><span class="regexp">  render() &#123;</span></span><br><span class="line"><span class="regexp">    return &lt;CustomTextInput inputRef=&#123;el =&gt; (this.inputElement = el)&#125; /</span>&gt;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="转发-refs-到-DOM-组件"><a href="#转发-refs-到-DOM-组件" class="headerlink" title="转发 refs 到 DOM 组件"></a>转发 refs 到 DOM 组件</h2><p>Ref 转发是一个可选特性，其允许某些组件接收 ref，并将其向下传递（换句话说，“转发”它）给子组件。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> FancyButton = React.forwardRef(<span class="function">(<span class="params">props, ref</span>) =&gt;</span> (</span><br><span class="line">  <span class="comment">// 当 ref 挂载完成，ref.current 将指向 &lt;button&gt; DOM 节点。</span></span><br><span class="line">  &lt;button ref=&#123;ref&#125; className=<span class="string">"FancyButton"</span>&gt;</span><br><span class="line">    &#123;props.children&#125;</span><br><span class="line">  &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">));</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ 你可以直接获取 DOM button 的 ref：</span></span><br><span class="line"><span class="regexp">const ref = React.createRef();</span></span><br><span class="line"><span class="regexp">&lt;FancyButton ref=&#123;ref&#125;&gt;Click me!&lt;/</span>FancyButton&gt;;</span><br></pre></td></tr></table></figure>
+<h2 id="在高阶组件-HOC-中转发-refs"><a href="#在高阶组件-HOC-中转发-refs" class="headerlink" title="在高阶组件(HOC)中转发 refs"></a>在高阶组件(HOC)中转发 refs</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">logProps</span>(<span class="params">WrappedComponent</span>) </span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">LogProps</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    componentDidUpdate(prevProps) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"old props:"</span>, prevProps);</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"new props:"</span>, <span class="keyword">this</span>.props);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">WrappedComponent</span> &#123;<span class="attr">...this.props</span>&#125; /&gt;</span>;</span></span><br><span class="line"><span class="xml">    &#125;</span></span><br><span class="line"><span class="xml">  &#125;</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">  return LogProps;</span></span><br><span class="line"><span class="xml">&#125;</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">class FancyButton extends React.Component &#123;</span></span><br><span class="line"><span class="xml">  focus() &#123;&#125;</span></span><br><span class="line"><span class="xml">&#125;</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">export default logProps(FancyButton);</span></span><br></pre></td></tr></table></figure>
+<p>调用高阶组件：logProps组件，并且传递props时，高阶组件会透传props到他的包裹组件，但refs不会传递，因为 ref 不是 prop 属性。就像 key 一样，其被 React 进行了特殊处理。如果你对 HOC 添加 ref，该 ref 将引用最外层的容器组件，而不是被包裹的组件。</p>
+<h3 id="使用React-forwardRef在高阶组件中传递refs"><a href="#使用React-forwardRef在高阶组件中传递refs" class="headerlink" title="使用React.forwardRef在高阶组件中传递refs"></a>使用React.forwardRef在高阶组件中传递refs</h3><p>重写上面的高阶组件：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">logProps</span>(<span class="params">WrappedComponent</span>) </span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">LogProps</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    componentDidUpdate(prevProps) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"old props:"</span>, prevProps);</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"new props:"</span>, <span class="keyword">this</span>.props);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="keyword">const</span> &#123; forwardedRef, ...rest &#125; = <span class="keyword">this</span>.props;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">WrappedComponent</span> <span class="attr">ref</span>=<span class="string">&#123;forwardedRef&#125;</span> &#123;<span class="attr">...rest</span>&#125; /&gt;</span>;</span></span><br><span class="line"><span class="xml">    &#125;</span></span><br><span class="line"><span class="xml">  &#125;</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">  // return LogProps;</span></span><br><span class="line"><span class="xml">  return React.forwardRef((props, ref) =&gt; &#123;</span></span><br><span class="line">    return &lt;LogProps &#123;...props&#125; forwardedRef=&#123;ref&#125; /&gt;;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>react</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>react/renderProps</title>
+    <url>/2017/12/08/react-renderProps/</url>
+    <content><![CDATA[<p>具有reader prop的组件，接受一个函数，该函数返回一个react元素，并调用它，而不是事先自己的渲染逻辑</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;DataProvider render=&#123;data =&gt; (</span><br><span class="line">  &lt;h1&gt;Hello &#123;data.target&#125;&lt;<span class="regexp">/h1&gt;</span></span><br><span class="line"><span class="regexp">)&#125;/</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>如何分享一个组件封装到其他需要相同state组件的状态或行为并不是很容易</p>
+<p>render prop是一个用于告知组件需要渲染什么内容的函数prop</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import React from &quot;react&quot;;</span><br><span class="line"></span><br><span class="line">class Cat extends React.Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    const mouse = this.props.mouse;</span><br><span class="line">    return (</span><br><span class="line">      &lt;p style=&#123;&#123; position: &quot;absolute&quot;, left: mouse.x, top: mouse.y &#125;&#125;&gt;猫咪&lt;/p&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Mouse extends React.Component &#123;</span><br><span class="line">  constructor(props) &#123;</span><br><span class="line">    super(props);</span><br><span class="line">    this.handelMouseMove = this.handelMouseMove.bind(this);</span><br><span class="line">    this.state = &#123; x: 0, y: 0 &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  handelMouseMove(event) &#123;</span><br><span class="line">    this.setState(&#123;</span><br><span class="line">      x: event.clientX,</span><br><span class="line">      y: event.clientY</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div style=&#123;&#123; height: &quot;100%&quot; &#125;&#125; onMouseMove=&#123;this.handelMouseMove&#125;&gt;</span><br><span class="line">        &#123;this.props.render(this.state)&#125;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MouseTracker extends React.Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;h1&gt;移动鼠标！&lt;/h1&gt;</span><br><span class="line">        &lt;Mouse render=&#123;mouse =&gt; &lt;Cat mouse=&#123;mouse&#125; /&gt;&#125; /&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default MouseTracker;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>react</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>网站收藏</title>
+    <url>/2018/07/10/site/</url>
+    <content><![CDATA[<p><a href="https://www.phodal.com/" target="_blank" rel="noopener">phodal博客</a></p>
+<p><a href="http://www.ruanyifeng.com/blog/" target="_blank" rel="noopener">阮一峰的网络日志</a></p>
+<p><a href="https://github.com/happyrui/nestTodoList/tree/develop" target="_blank" rel="noopener">赵芮(微盟同事)的github</a></p>
+<p><a href="https://blog.csdn.net/zr15829039341" target="_blank" rel="noopener">赵芮(微盟同事)的博客</a></p>
+<p><a href="https://martindelophy.github.io/blog/" target="_blank" rel="noopener">杨海鑫（同事）的博客</a></p>
+]]></content>
+      <tags>
+        <tag>收藏</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>package-lock.json</title>
+    <url>/2018/03/20/201803package-lock.json/</url>
+    <content><![CDATA[<p>什么是package-lock.json，为什么会出现这个文件，使用的时候的注意事项</p>
+<h2 id="什么是package-lock-json"><a href="#什么是package-lock-json" class="headerlink" title="什么是package-lock.json"></a>什么是package-lock.json</h2><p>npm5之后执行npm install会自动生成一个文件package-lock.json，打开这个文件，可能长这样子：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"ad-portal2.0"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"0.1.0"</span>,</span><br><span class="line">  <span class="attr">"lockfileVersion"</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">"requires"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"@ant-design/colors"</span>: &#123;</span><br><span class="line">      <span class="attr">"version"</span>: <span class="string">"6.0.0"</span>,</span><br><span class="line">      <span class="attr">"resolved"</span>: <span class="string">"https://registry.npm.taobao.org/@ant-design/colors/download/@ant-design/colors-6.0.0.tgz"</span>,</span><br><span class="line">      <span class="attr">"integrity"</span>: <span class="string">"sha1-m5NmJXz/zEfbQrnQIDu1ksE8Apg="</span>,</span><br><span class="line">      <span class="attr">"requires"</span>: &#123;</span><br><span class="line">        <span class="attr">"@ctrl/tinycolor"</span>: <span class="string">"^3.4.0"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>官方给出的解释：package-lock.json is automatically generated for any operations where npm modifies either the node_modules tree, or package.json. It describes the exact tree that was generated, such that subsequent installs are able to generate identical trees, regardless of intermediate dependency updates.</p>
+<p>翻译一下：package-lock.json是当npm改变的时候自动生成的一个文件，不论是改变node_modules树还是package.json，它描述了确切的生成的一颗树，以至于保证后续的install能够生成相同的树，不考虑中间依赖项更新</p>
+<p>简单来说，package-lock.json就是锁定安装时的包的版本号，以保证其他人在npm install时大家的依赖能保持一致。它甚至还记录了包下载的地址</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="package-json"><a href="#package-json" class="headerlink" title="package.json"></a>package.json</h3><p>先从package.json说起：package.json就是管理 npm 包的文件，包含了项目所依赖的 npm 包、项目的配置信息。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"test"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"0.1.0"</span>,</span><br><span class="line">  <span class="attr">"private"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"react"</span>: <span class="string">"^17.0.2"</span>,</span><br><span class="line">    <span class="attr">"react-dom"</span>: <span class="string">"^17.0.2"</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"babel-plugin-import"</span>: <span class="string">"^1.13.3"</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;&#125;,</span><br><span class="line">  <span class="attr">"eslintConfig"</span>: &#123;&#125;,</span><br><span class="line">  <span class="attr">"browserslist"</span>: &#123;&#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们执行 npm istall xxx的时候就会在dependencies或者devDependencies中增加一个包的名字加版本号的记录</p>
+<h3 id="semver语义化的版本号"><a href="#semver语义化的版本号" class="headerlink" title="semver语义化的版本号"></a>semver语义化的版本号</h3><p>上面的package.json中每一个包都有自己的版本号，是我们安装时候的版本号，使用的是semver语义化的版本号规则，他是npm包管理的精髓。</p>
+<p>什么是semver语义化的版本号？</p>
+<p><code>&quot;react&quot;: &quot;^17.0.2&quot;,</code>比如这个包的版本号</p>
+<p>版本号主要包含：版本符号（^），主版本号（X），次版本号（Y），补丁更新（Z）</p>
+<ul>
+<li><p>补丁更新：当前版本下的bug修复，补丁更新的数字加1</p>
+</li>
+<li><p>次版本号：增加新功能，且不破坏原有的功能，次版本号的数字加1</p>
+</li>
+<li><p>主版本号：重大修改，可能不兼容旧的功能，主版本号加1</p>
+</li>
+</ul>
+<p>版本符号，用来做版本的控制：</p>
+<ul>
+<li><p>^：默认，使用npm install安装包的时候，会自动在版本号前面加这个符号，表示保护主版本号不变</p>
+</li>
+<li><p>~：可以手动的修改^为~，表示保护次版本号不变</p>
+</li>
+<li><blockquote>
+<p>：主要是用来指定可以安装beta版本</p>
+</blockquote>
+</li>
+</ul>
+<p>例如：</p>
+<p><code>&quot;react&quot;: &quot;^17.0.2&quot;</code>，当我们执行npm install的时候，只能在保证主版本号不变的情况下安装最新版本的包。</p>
+<p><code>&quot;react&quot;: &quot;~17.0.2&quot;</code>，当我们执行npm install的时候，只能在保证次版本号不变的情况下安装最新版本的包。</p>
+<h3 id="package-json的问题"><a href="#package-json的问题" class="headerlink" title="package.json的问题"></a>package.json的问题</h3><p>一般的开发过程，我们是不会把node_modules这个文件提交到代码仓库，而是通过package.json来存储包的依赖，然后当在另外一台电脑上想要运行项目的时候，就会从git仓库把代码拉下来，本地执行npm install，重新安装包。这个时候就会出现问题</p>
+<p>例如我们在安装的时候react的版本是17.0.2，我们的package.json中react的版本号是<code>&quot;react&quot;: &quot;^17.0.2&quot;</code>，然后在另外一台电脑上install的时候会默认在保持17这个主版本号不变的情况下下载最新的版本的包，正好这个时候react从17.0.2升级到了17.1.1，然后17.1.1或许会有bug，然后在新的电脑上运行项目就会报错了。</p>
+<p>虽然我们可以手动改变react的版本号，但当我们的依赖变的很多的而且有嵌套关系的时候，手动修改就会变的很麻烦，package-lock.json的出现就是为了解决这个问题，因为它会锁定安装时候的版本号，保证所有的人在install的时候都能安装到相同的包</p>
+<h2 id="锁版本号"><a href="#锁版本号" class="headerlink" title="锁版本号"></a>锁版本号</h2><p>有了package-lock.json，我们需要把它提交到代码仓库，这样子就保证了在每一台电脑上install的时候都能安装到相同版本的包，那么该如何使用呢？</p>
+<p>搭建一个demo项目来尝试一下：</p>
+<ol>
+<li><p>新建空的目录 package-test</p>
+</li>
+<li><p>命令终端进入这个目录，输入命令<code>npm init -y</code>会车，生成package.json文件，如下</p>
+</li>
+<li><p>安装一个包来测试，<code>npm install react@15.0.0</code>，安装一个react的指定版本15.0.0</p>
+</li>
+</ol>
+<p>安装完react的15版本之后，package.json会增加一个包的信息，版本的符号是默认的^</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"dependencies": &#123;</span><br><span class="line">  "react": "^15.0.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>并且根目录下自动出现了package-lock.json文件，react版本</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"react": &#123;</span><br><span class="line">  "version": "15.0.0",</span><br><span class="line">  "resolved": "https://registry.npmjs.org/react/-/react-15.0.0.tgz",</span><br><span class="line">  "integrity": "sha1-PH4WUx1jDhXBpQqUfxS6YXRq+Kc=",</span><br><span class="line">  "requires": &#123;</span><br><span class="line">    "fbjs": "^0.8.0",</span><br><span class="line">    "loose-envify": "^1.1.0",</span><br><span class="line">    "object-assign": "^4.0.1"</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>根目录下还生成了一个node_modules文件夹，里面的react也是15.0.0版本</p>
+<p>这个项目主要是测试package.json和package-lock.json的功能，不用来运行，简单一下就好</p>
+<h3 id="不使用package-lock-json"><a href="#不使用package-lock-json" class="headerlink" title="不使用package-lock.json"></a>不使用package-lock.json</h3><p>手动的删除package-lock.json文件夹，以禁用package-lock.json</p>
+<p>手动删除node_modules文件夹，假装是在另一台电脑上重新install，执行 npm install，发现根目录再次自动生成了package-lock.json，</p>
+<p>查看package.json，里面的react的包的版本号不变还是15.0.0</p>
+<p>查看package-lock.json，里面的react的包的版本号变成了15.7.0，node_modules文件夹，里面的react也是15.7.0版本，</p>
+<p>因为package.json里面react的版本符号是^，所以在执行install的时候能够保证主版本号不变，npm会为我们安装当前主版本号下面最新的包，也就是15.7.0，而这不是我们想要的</p>
+<h3 id="使用package-lock-json"><a href="#使用package-lock-json" class="headerlink" title="使用package-lock.json"></a>使用package-lock.json</h3><p>使用上面的方法再次搭建一个新的demo项目，这次不删除package-lock.json，</p>
+<p>手动删除node_modules文件夹，假装是在另一台电脑上重新install，重新执行 npm install</p>
+<p>查看package.json，里面的react的包的版本号不变还是15.0.0，</p>
+<p>查看package-lock.json，里面的react的包的版本号还是15.0.0，node_modules文件夹，里面的react也是15.0.0版本，</p>
+<p>这似乎达到了我们的想要的目的</p>
+<h3 id="手动修改package-json"><a href="#手动修改package-json" class="headerlink" title="手动修改package.json"></a>手动修改package.json</h3><p>我们想要升级一个npm包，直接修改package.json里面的版本号，然后执行npm install，</p>
+<p>比如我现在把package.json里面的react的版本号直接改成16.0.0</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"dependencies": &#123;</span><br><span class="line">  "react": "^16.0.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而package-lock.json，里面的react的包的版本号还是15.0.0，</p>
+<p>这个情况是package-lock.json和package.json里面的版本号不一样了，执行npm install之后会出现什么情况呢？</p>
+<p>手动删掉node_modules文件夹，假装是在另一台电脑上重新install，重新执行 npm install，</p>
+<p>查看package.json，里面的react的包的版本号不变还是16.0.0，</p>
+<p>查看package-lock.json，里面的react的包的版本号还是16.14.0，node_modules文件夹，里面的react也是16.14.0版本，</p>
+<p>由此可以看出，当我们执行npm install 的时候，npm会首先查看package-lock.json里面的依赖版本，然后查看package.json里面的版本，如果两者一致则按照package-lock.json的版本安装，如果两者冲突会以package.json为主，并且更新package-lock.json里面的版本号</p>
+<h3 id="如何锁版本号"><a href="#如何锁版本号" class="headerlink" title="如何锁版本号"></a>如何锁版本号</h3><p>为了避免出现无意的更新package-lock.json，我们可以不使用版本符号，锁定版本：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"dependencies": &#123;</span><br><span class="line">  "react": "16.0.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重新执行 npm install，</p>
+<p>查看package.json，里面的react的包的版本号不变还是16.0.0，</p>
+<p>查看package-lock.json，里面的react的包的版本号还是16.0.0，node_modules文件夹，里面的react也是16.0.0版本</p>
+<p>当我们想要使用某个包的最新的版本的代码的时候可以手动执行 <code>npm update xxx@版本号</code>来安装最新的版本或者安装指定版本的包</p>
+<p>这个操作会重写package-lock.json文件</p>
+]]></content>
+      <categories>
+        <category>webpack</category>
+      </categories>
+      <tags>
+        <tag>webpack</tag>
       </tags>
   </entry>
   <entry>
@@ -1062,7 +1264,9 @@
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Queue</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">this</span>.items = [];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 入队</span></span><br><span class="line">  enqueue(ele) &#123;</span><br><span class="line">    <span class="keyword">this</span>.items.push(ele);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 出队</span></span><br><span class="line">  dequeue() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items.shift();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 查看队头</span></span><br><span class="line">  front() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items[<span class="number">0</span>]</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 查看队尾</span></span><br><span class="line">  rear() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items[<span class="keyword">this</span>.items.length<span class="number">-1</span>]</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 是否为空</span></span><br><span class="line">  isEmpty() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items.length === <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 获取长度</span></span><br><span class="line">  size() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items.length;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 清空队列</span></span><br><span class="line">  clear() &#123;</span><br><span class="line">    <span class="keyword">this</span>.items.length = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>队列这种数据结构，一般用于排队去一个一个的解决问题</p>
 <p>那么队列这种数据结构和我们前端有什么关系呢？</p>
-<h4 id="理解js的任务队列"><a href="#理解js的任务队列" class="headerlink" title="理解js的任务队列"></a>理解js的任务队列</h4><p>js在浏览器中运行是单线程的</p>
+<h4 id="理解js的任务队列"><a href="#理解js的任务队列" class="headerlink" title="理解js的任务队列"></a>理解js的任务队列</h4><p>js在浏览器中运行是单线程的，在js程序运行的时候会，所有的代码都是依次执行，不同的是：有的代码会立即执行，而有的代码则需要等待一定的时间才可以执行，比较常见的就是请求一个接口，等待接口有返回内容之后再去执行相应的代码</p>
+<p>立即执行的代码叫做同步任务，需要等待执行的代码叫做异步任务，同步任务立即执行，但是也需要在主线程排队依次执行，</p>
+<p>为了避免异步任务阻塞后面的同步任务的执行，js有一个异步任务队列，在执行到异步任务的时候，会把异步任务先放进异步任务队列，等待执行</p>
 <h3 id="树"><a href="#树" class="headerlink" title="树"></a>树</h3>]]></content>
       <categories>
         <category>数据结构与算饭</category>
@@ -2034,208 +2238,6 @@
 ]]></content>
       <tags>
         <tag>webpack</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>package-lock.json</title>
-    <url>/2018/03/20/201803package-lock.json/</url>
-    <content><![CDATA[<p>什么是package-lock.json，为什么会出现这个文件，使用的时候的注意事项</p>
-<h2 id="什么是package-lock-json"><a href="#什么是package-lock-json" class="headerlink" title="什么是package-lock.json"></a>什么是package-lock.json</h2><p>npm5之后执行npm install会自动生成一个文件package-lock.json，打开这个文件，可能长这样子：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"ad-portal2.0"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"0.1.0"</span>,</span><br><span class="line">  <span class="attr">"lockfileVersion"</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">"requires"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"@ant-design/colors"</span>: &#123;</span><br><span class="line">      <span class="attr">"version"</span>: <span class="string">"6.0.0"</span>,</span><br><span class="line">      <span class="attr">"resolved"</span>: <span class="string">"https://registry.npm.taobao.org/@ant-design/colors/download/@ant-design/colors-6.0.0.tgz"</span>,</span><br><span class="line">      <span class="attr">"integrity"</span>: <span class="string">"sha1-m5NmJXz/zEfbQrnQIDu1ksE8Apg="</span>,</span><br><span class="line">      <span class="attr">"requires"</span>: &#123;</span><br><span class="line">        <span class="attr">"@ctrl/tinycolor"</span>: <span class="string">"^3.4.0"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>官方给出的解释：package-lock.json is automatically generated for any operations where npm modifies either the node_modules tree, or package.json. It describes the exact tree that was generated, such that subsequent installs are able to generate identical trees, regardless of intermediate dependency updates.</p>
-<p>翻译一下：package-lock.json是当npm改变的时候自动生成的一个文件，不论是改变node_modules树还是package.json，它描述了确切的生成的一颗树，以至于保证后续的install能够生成相同的树，不考虑中间依赖项更新</p>
-<p>简单来说，package-lock.json就是锁定安装时的包的版本号，以保证其他人在npm install时大家的依赖能保持一致。它甚至还记录了包下载的地址</p>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="package-json"><a href="#package-json" class="headerlink" title="package.json"></a>package.json</h3><p>先从package.json说起：package.json就是管理 npm 包的文件，包含了项目所依赖的 npm 包、项目的配置信息。</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"test"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"0.1.0"</span>,</span><br><span class="line">  <span class="attr">"private"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"react"</span>: <span class="string">"^17.0.2"</span>,</span><br><span class="line">    <span class="attr">"react-dom"</span>: <span class="string">"^17.0.2"</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"babel-plugin-import"</span>: <span class="string">"^1.13.3"</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;&#125;,</span><br><span class="line">  <span class="attr">"eslintConfig"</span>: &#123;&#125;,</span><br><span class="line">  <span class="attr">"browserslist"</span>: &#123;&#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当我们执行 npm istall xxx的时候就会在dependencies或者devDependencies中增加一个包的名字加版本号的记录</p>
-<h3 id="semver语义化的版本号"><a href="#semver语义化的版本号" class="headerlink" title="semver语义化的版本号"></a>semver语义化的版本号</h3><p>上面的package.json中每一个包都有自己的版本号，是我们安装时候的版本号，使用的是semver语义化的版本号规则，他是npm包管理的精髓。</p>
-<p>什么是semver语义化的版本号？</p>
-<p><code>&quot;react&quot;: &quot;^17.0.2&quot;,</code>比如这个包的版本号</p>
-<p>版本号主要包含：版本符号（^），主版本号（X），次版本号（Y），补丁更新（Z）</p>
-<ul>
-<li><p>补丁更新：当前版本下的bug修复，补丁更新的数字加1</p>
-</li>
-<li><p>次版本号：增加新功能，且不破坏原有的功能，次版本号的数字加1</p>
-</li>
-<li><p>主版本号：重大修改，可能不兼容旧的功能，主版本号加1</p>
-</li>
-</ul>
-<p>版本符号，用来做版本的控制：</p>
-<ul>
-<li><p>^：默认，使用npm install安装包的时候，会自动在版本号前面加这个符号，表示保护主版本号不变</p>
-</li>
-<li><p>~：可以手动的修改^为~，表示保护次版本号不变</p>
-</li>
-<li><blockquote>
-<p>：主要是用来指定可以安装beta版本</p>
-</blockquote>
-</li>
-</ul>
-<p>例如：</p>
-<p><code>&quot;react&quot;: &quot;^17.0.2&quot;</code>，当我们执行npm install的时候，只能在保证主版本号不变的情况下安装最新版本的包。</p>
-<p><code>&quot;react&quot;: &quot;~17.0.2&quot;</code>，当我们执行npm install的时候，只能在保证次版本号不变的情况下安装最新版本的包。</p>
-<h3 id="package-json的问题"><a href="#package-json的问题" class="headerlink" title="package.json的问题"></a>package.json的问题</h3><p>一般的开发过程，我们是不会把node_modules这个文件提交到代码仓库，而是通过package.json来存储包的依赖，然后当在另外一台电脑上想要运行项目的时候，就会从git仓库把代码拉下来，本地执行npm install，重新安装包。这个时候就会出现问题</p>
-<p>例如我们在安装的时候react的版本是17.0.2，我们的package.json中react的版本号是<code>&quot;react&quot;: &quot;^17.0.2&quot;</code>，然后在另外一台电脑上install的时候会默认在保持17这个主版本号不变的情况下下载最新的版本的包，正好这个时候react从17.0.2升级到了17.1.1，然后17.1.1或许会有bug，然后在新的电脑上运行项目就会报错了。</p>
-<p>虽然我们可以手动改变react的版本号，但当我们的依赖变的很多的而且有嵌套关系的时候，手动修改就会变的很麻烦，package-lock.json的出现就是为了解决这个问题，因为它会锁定安装时候的版本号，保证所有的人在install的时候都能安装到相同的包</p>
-<h2 id="锁版本号"><a href="#锁版本号" class="headerlink" title="锁版本号"></a>锁版本号</h2><p>有了package-lock.json，我们需要把它提交到代码仓库，这样子就保证了在每一台电脑上install的时候都能安装到相同版本的包，那么该如何使用呢？</p>
-<p>搭建一个demo项目来尝试一下：</p>
-<ol>
-<li><p>新建空的目录 package-test</p>
-</li>
-<li><p>命令终端进入这个目录，输入命令<code>npm init -y</code>会车，生成package.json文件，如下</p>
-</li>
-<li><p>安装一个包来测试，<code>npm install react@15.0.0</code>，安装一个react的指定版本15.0.0</p>
-</li>
-</ol>
-<p>安装完react的15版本之后，package.json会增加一个包的信息，版本的符号是默认的^</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"dependencies": &#123;</span><br><span class="line">  "react": "^15.0.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>并且根目录下自动出现了package-lock.json文件，react版本</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"react": &#123;</span><br><span class="line">  "version": "15.0.0",</span><br><span class="line">  "resolved": "https://registry.npmjs.org/react/-/react-15.0.0.tgz",</span><br><span class="line">  "integrity": "sha1-PH4WUx1jDhXBpQqUfxS6YXRq+Kc=",</span><br><span class="line">  "requires": &#123;</span><br><span class="line">    "fbjs": "^0.8.0",</span><br><span class="line">    "loose-envify": "^1.1.0",</span><br><span class="line">    "object-assign": "^4.0.1"</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-<p>根目录下还生成了一个node_modules文件夹，里面的react也是15.0.0版本</p>
-<p>这个项目主要是测试package.json和package-lock.json的功能，不用来运行，简单一下就好</p>
-<h3 id="不使用package-lock-json"><a href="#不使用package-lock-json" class="headerlink" title="不使用package-lock.json"></a>不使用package-lock.json</h3><p>手动的删除package-lock.json文件夹，以禁用package-lock.json</p>
-<p>手动删除node_modules文件夹，假装是在另一台电脑上重新install，执行 npm install，发现根目录再次自动生成了package-lock.json，</p>
-<p>查看package.json，里面的react的包的版本号不变还是15.0.0</p>
-<p>查看package-lock.json，里面的react的包的版本号变成了15.7.0，node_modules文件夹，里面的react也是15.7.0版本，</p>
-<p>因为package.json里面react的版本符号是^，所以在执行install的时候能够保证主版本号不变，npm会为我们安装当前主版本号下面最新的包，也就是15.7.0，而这不是我们想要的</p>
-<h3 id="使用package-lock-json"><a href="#使用package-lock-json" class="headerlink" title="使用package-lock.json"></a>使用package-lock.json</h3><p>使用上面的方法再次搭建一个新的demo项目，这次不删除package-lock.json，</p>
-<p>手动删除node_modules文件夹，假装是在另一台电脑上重新install，重新执行 npm install</p>
-<p>查看package.json，里面的react的包的版本号不变还是15.0.0，</p>
-<p>查看package-lock.json，里面的react的包的版本号还是15.0.0，node_modules文件夹，里面的react也是15.0.0版本，</p>
-<p>这似乎达到了我们的想要的目的</p>
-<h3 id="手动修改package-json"><a href="#手动修改package-json" class="headerlink" title="手动修改package.json"></a>手动修改package.json</h3><p>我们想要升级一个npm包，直接修改package.json里面的版本号，然后执行npm install，</p>
-<p>比如我现在把package.json里面的react的版本号直接改成16.0.0</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"dependencies": &#123;</span><br><span class="line">  "react": "^16.0.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>而package-lock.json，里面的react的包的版本号还是15.0.0，</p>
-<p>这个情况是package-lock.json和package.json里面的版本号不一样了，执行npm install之后会出现什么情况呢？</p>
-<p>手动删掉node_modules文件夹，假装是在另一台电脑上重新install，重新执行 npm install，</p>
-<p>查看package.json，里面的react的包的版本号不变还是16.0.0，</p>
-<p>查看package-lock.json，里面的react的包的版本号还是16.14.0，node_modules文件夹，里面的react也是16.14.0版本，</p>
-<p>由此可以看出，当我们执行npm install 的时候，npm会首先查看package-lock.json里面的依赖版本，然后查看package.json里面的版本，如果两者一致则按照package-lock.json的版本安装，如果两者冲突会以package.json为主，并且更新package-lock.json里面的版本号</p>
-<h3 id="如何锁版本号"><a href="#如何锁版本号" class="headerlink" title="如何锁版本号"></a>如何锁版本号</h3><p>为了避免出现无意的更新package-lock.json，我们可以不使用版本符号，锁定版本：</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"dependencies": &#123;</span><br><span class="line">  "react": "16.0.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>重新执行 npm install，</p>
-<p>查看package.json，里面的react的包的版本号不变还是16.0.0，</p>
-<p>查看package-lock.json，里面的react的包的版本号还是16.0.0，node_modules文件夹，里面的react也是16.0.0版本</p>
-<p>当我们想要使用某个包的最新的版本的代码的时候可以手动执行 <code>npm update xxx@版本号</code>来安装最新的版本或者安装指定版本的包</p>
-<p>这个操作会重写package-lock.json文件</p>
-]]></content>
-      <categories>
-        <category>webpack</category>
-      </categories>
-      <tags>
-        <tag>webpack</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>web前端的单点登录-三种实现方案</title>
-    <url>/2021/04/29/SSO/</url>
-    <content><![CDATA[<p><a href="https://zcy-cdn.oss-cn-shanghai.aliyuncs.com/f2e-assets/ebf178b6-0950-482b-8031-5bb70b4888d5.png?x-oss-process=image/quality,Q_75/format,jpg" target="_blank" rel="noopener">https://zcy-cdn.oss-cn-shanghai.aliyuncs.com/f2e-assets/ebf178b6-0950-482b-8031-5bb70b4888d5.png?x-oss-process=image/quality,Q_75/format,jpg</a></p>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>公司的统一登陆平台，也就是单点登录系统，因为某些地方不合理，需要重构，当我着手开始重构项目的时候意外的发现，单点登陆大概有三种实现的方案，所以详细的调研学习了一下三种实现的方案，并简单的对比了一下。</p>
-<h2 id="什么是单点登录"><a href="#什么是单点登录" class="headerlink" title="什么是单点登录"></a>什么是单点登录</h2><p>单点登陆，又叫做SSO（Single Sign On）</p>
-<p>我从网上抄了一段话来解释一下点单登陆的作用：是目前比较流行的企业业务整合的解决方案之一。SSO的定义是在多个应用系统中，用户只需要登录一次就可以访问所有相互信任的应用系统。</p>
-<p>例如百度公司下的百度地图和百度贴吧，用户只要登录一次，就能访问百度公司下的所有应用</p>
-<p>所以简单来说SSO的目的就是多个相互信任的系统之间共享登陆的状态</p>
-<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><h3 id="单个系统实现登陆"><a href="#单个系统实现登陆" class="headerlink" title="单个系统实现登陆"></a>单个系统实现登陆</h3><p>实现单个系统的登陆的时候，我们通常使用浏览器的cookie来存储用户的登陆信息，</p>
-<p>首先会正常的请求接口，然后判断是否登陆，如果没有登陆则直接跳转登录的页面，用户输入用户名和密码登录，后端验证过登陆信息后，返回登录成功的状态，并且返回一个用户登录状态的token，把token存在浏览器的cookie里面，下次访问接口的时候把这个token带上，只要token在有效期之内，服务端就会通过验证，不需要再次登录</p>
-<h3 id="多个系统实现单点登陆"><a href="#多个系统实现单点登陆" class="headerlink" title="多个系统实现单点登陆"></a>多个系统实现单点登陆</h3><p>单点登录的本质就是要在多个系统中共享登录状态，也就是token，那么如何让多个系统共享一个登录状态呢？</p>
-<h2 id="实现单点登录的三种方法"><a href="#实现单点登录的三种方法" class="headerlink" title="实现单点登录的三种方法"></a>实现单点登录的三种方法</h2><p>我是前端，所以这里只讨论前端的实现</p>
-<h3 id="cookie提升"><a href="#cookie提升" class="headerlink" title="cookie提升"></a>cookie提升</h3><p>简单了解一下cookie的机制：</p>
-<ol>
-<li><p>cookie是存储在用户浏览器本地的一种方案，可以由服务器响应报文Set-Cookie的首部字段信息或者客户端 document.cookie来设置，并随着每次请求发送到服务器。</p>
-</li>
-<li><p>cookie是有域的限制的，不同的域名之间的cookie是不能共享的，但是子域名可以获取父级域名 Cookie。这是关cookie实现单点登录的关键</p>
-</li>
-</ol>
-<p>cookie的设置：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie = <span class="string">"cookieName=mader; expires=Fri, 31 Dec 2017 15:59:59 GMT; path=/mydir; domain=cnblogs.com; max-age=3600; secure=true"</span>;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>cookieName=mader ：name=value，cookie的名称和值</p>
-</li>
-<li><p>expires=Fri, 31 Dec 2017 15:59:59 GMT： expires，cookie过期的日期，如果没有定义，cookie会在对话结束时过期。日期格式为 new Date().toUTCString()</p>
-</li>
-<li><p>path=/mydir: path=path (例如 ‘/‘, ‘/mydir’) 如果没有定义，默认为当前文档位置的路径。</p>
-</li>
-<li><p>domain=xxx.com： 指定域, 如果没有定义，默认为当前文档位置的路径的域名部分。</p>
-</li>
-<li><p>max-age=3600： 文档被查看后cookie过期时间，单位为秒</p>
-</li>
-<li><p>secure=true： cookie只会被https传输 ，即加密的https链接传输</p>
-</li>
-</ul>
-<p>浏览器会将domain和path都相同的cookie保存在一个文件里，cookie间用*隔开</p>
-<p>一般我们公司要实现单点登录只需要做自己公司的不同系统之间的登录状态共享，一般会有一个主域名，然后在主域名下申请二级域名给不同的系统部署，例如:百度的主域名是’baidu.com‘，而百度贴吧和百度地图的域名就是在主域名下面的二级域名：‘tieba.baidu.com’和‘map.baidu.com’</p>
-<p>利用cookie子域可以获取父域的特点，可是设置cookie的domain属性为最外的一级域名，path属性设置为‘/’，子域就可以获取父域的cookie了</p>
-<p>所有的域名都能共享一个token，传给服务端的时候服务端就会判断我们那已经登录过了</p>
-<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS（Central Authentication Service），即中央认证服务，也可以叫做认证中心，是 Yale 大学发起的一个开源项目，目的是为 Web 应用系统提供一种可靠的单点登录方法。</p>
-<p>中央认证，就是专门负责登录请求的web服务。认证中心是单点登陆的标准做法，支持跨域且扩展性好，但是实现起来稍微麻烦</p>
-<p>假设我们有两个相互信任的系统：a.xx.com 和 b.xx.com，这两个系统要实现单点登录，所以需要一个独立部署的中央认证登陆系统，例如：login.xx.com。</p>
-<p>因为中央认证服务是需要单独部署的一个应用，所以除了我们当前开发的项目的服务器，还另外需要一个中央认证的服务器，也就是CAS服务器</p>
-<p>首先是用户第一次进入a系统，需要登录：</p>
-<p>图片站位</p>
-<ol>
-<li><p>用户在浏览器输入a系统的网址：a.xx.com，访问a系统对应的a服务器</p>
-</li>
-<li><p>a服务器验证用户并没有登录，重定向到CAS服务器的登录页面，并且在重定向的地址后面携带登录成功后要返回的a系统的页面url，通常像这样子：<a href="https://ex-cas.com/login?service=https://a.xx.com" target="_blank" rel="noopener">https://ex-cas.com/login?service=https://a.xx.com</a></p>
-</li>
-<li><p>用户访问CAS的登录系统，CAS判断用户是否有CAS的session，也就是判断浏览器是否存有CAS的session</p>
-</li>
-<li><p>CAS判断用户并没有CAS的session，返回CAS的登录页面</p>
-</li>
-<li><p>用户输入：用户名和密码点击提交，提交到CAS服务器</p>
-</li>
-<li><p>CAS服务器验证用户信息，创建CAS的session，通过set-cookie写入用户的浏览器，</p>
-</li>
-<li><p>然后重定向到a.xx.com，并且在重定向的时候CAS服务器会在a.xx.com后面拼上CAS的一个ticket字段，例如：<a href="https://a.xx.com?ticket=123456" target="_blank" rel="noopener">https://a.xx.com?ticket=123456</a></p>
-</li>
-<li><p>这个就可以正常的访问a系统的应用了，然后a.xx.com会访问a系统对应的a服务器，a服务器会获取url后面的ticket，</p>
-</li>
-<li><p>a服务器拿ticket去向CAS服务器验证，验证成功之后，CAS服务器会返回验证成功的消息和一些必要的信息</p>
-</li>
-<li><p>a服务器通过set-cookie设置自己的session，然后重定向到<a href="https://a.xx.com，去掉后面的ticket" target="_blank" rel="noopener">https://a.xx.com，去掉后面的ticket</a></p>
-</li>
-<li><p>然后用户访问<a href="https://a.xx.com，a服务器验证用户是否登录，返回请求内容" target="_blank" rel="noopener">https://a.xx.com，a服务器验证用户是否登录，返回请求内容</a></p>
-</li>
-</ol>
-<p>整个过程有三次重定向，两次cookie的写入，还是比较耗费资源的</p>
-<p>然后用户第二次进入a系统，假设第一次登录的信息还没过期，不需要登录：</p>
-<p>图片站位</p>
-<ol>
-<li><p>用户第二次在浏览器输入<a href="https://a.xx.com，访问a系统对应的a服务器" target="_blank" rel="noopener">https://a.xx.com，访问a系统对应的a服务器</a></p>
-</li>
-<li><p>a服务器验证用户登录信息，用户有a服务器的session，判断用户是登陆状态</p>
-</li>
-<li><p>返回请求内容</p>
-</li>
-</ol>
-<p>用户第一次进入b系统，因为在进入a系统的时候已经在CAS中央认证服务登录过了，所以也不需要登陆：</p>
-<p>图片站位</p>
-<ol>
-<li><p>用户第一次在浏览器输入b系统的网址:b.xx.com，访问b系统对应的b服务器</p>
-</li>
-<li><p>b服务器验证用户并没有登录，重定向到CAS服务器的登录页面，并且在重定向的地址后面携带登录成功后要返回的b系统的页面url，通常像这样子：<a href="https://ex-cas.com/login?service=https://b.xx.com" target="_blank" rel="noopener">https://ex-cas.com/login?service=https://b.xx.com</a></p>
-</li>
-<li><p>用户访问<a href="https://ex-cas.com/login?service=https://b.xx.com，通过cookie携带CAS服务器的session" target="_blank" rel="noopener">https://ex-cas.com/login?service=https://b.xx.com，通过cookie携带CAS服务器的session</a></p>
-</li>
-<li><p>CAS服务器验证CAS的session，验证用户已经登陆过了，不需要重新登陆，直接携带ticket，重定向到<a href="https://b.xx.com?ticket=123456" target="_blank" rel="noopener">https://b.xx.com?ticket=123456</a></p>
-</li>
-<li><p>用户访问<a href="https://b.xx.com?ticket=123456，b服务器拿ticket去向CAS服务器验证，验证成功之后，CAS服务器会返回验证成功的消息和一些必要的信息" target="_blank" rel="noopener">https://b.xx.com?ticket=123456，b服务器拿ticket去向CAS服务器验证，验证成功之后，CAS服务器会返回验证成功的消息和一些必要的信息</a></p>
-</li>
-<li><p>b服务器通过set-cookie设置自己的session，然后重定向到<a href="https://b.xx.com，去掉后面的ticket" target="_blank" rel="noopener">https://b.xx.com，去掉后面的ticket</a></p>
-</li>
-<li><p>然后用户访问<a href="https://a.xx.com，a服务器验证用户是否登录，返回请求内容" target="_blank" rel="noopener">https://a.xx.com，a服务器验证用户是否登录，返回请求内容</a></p>
-</li>
-</ol>
-<h3 id="LocalStorage-跨域"><a href="#LocalStorage-跨域" class="headerlink" title="LocalStorage 跨域"></a>LocalStorage 跨域</h3><p>这种方案呢，用的人比较少，我也只是简单的了解了一下原理</p>
-<p>假设我们有两个相互信任的系统a.xx.com和b.xx.com要实现单点登录，大概的思路：</p>
-<p>在a.xx.com/login的页面里面通过内嵌一个iframe页面，在这个iframe里面通过storage把用户的登陆session放入iframe父级下面存储起来。</p>
-<p>通过这种方式实现登录状态的共享</p>
-]]></content>
-      <categories>
-        <category>前端</category>
-      </categories>
-      <tags>
-        <tag>前端</tag>
       </tags>
   </entry>
 </search>
