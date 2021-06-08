@@ -316,3 +316,131 @@ js是单线程语言，浏览器只会分配一个主线程给js，用来执行�
 微任务：promise.then catch finally process.nextTick async await
 
 ### 链表
+
+前面说过数组，数组是最常见的数据结构，数组的优点就是查询比较快速，但是当我们对数组进行插入和删除的时候就比较麻烦。
+
+那么为了解决数组的插入和删除比较麻烦的这个事情，链表就可以很好的解决数组的这个痛点，链表可以很方便快速的进行插入和删除
+
+#### 链表的定义
+
+1. 链表在物理内存上是链式存储，相邻元素不一定是连续的物理空间
+
+2. 链表的每一个元素包含元素本身和一个指向下一个元素的引用，或者早有些语言里面叫做指针
+
+#### 链表和数组的比较
+
+1. 插入、删除操作，链表速度快性能好
+
+2. 查询、修改操作，数组的性能好
+
+3. 链表没有大小的限制，支持动态的扩容，js的数组是支持动态改变长度的，但是在很多其他的语言中，数组的大小是不能动态修改的
+
+4. 因为链表需要存储指向下一个元素的指针，在内存上的消耗也比数组来的大，就是翻倍的内存
+
+#### 用js语言实现一个链表
+
+```javascript
+class Node {
+        constructor(element) {
+          this.element = element;
+          this.next = null
+        }
+      }
+      class LinkedList {
+        constructor() {
+          // 链表的长度
+          this.head = null;
+          // 链表的长度
+          this.length = 0;
+        }
+        // 在链表的尾部追加元素
+        append(element) {
+          let node = new Node(element);
+          if(this.length === 0) {
+            this.head = node
+          }else {
+            let current = this.head;
+            while(current.next) {
+              current = current.next;
+            }
+            current.next = node;
+          }
+          this.length += 1;
+        }
+        // 获取链表的头
+        getHead() {
+          return this.head;
+        }
+        toString() {
+          let current = this.head;
+          let linkString = '';
+          while(current){
+            linkString += ',' + current.element;
+            current = current.next
+          }
+          return linkString.slice(1);
+        }
+        // 插入元素
+        insert(element, position) {
+          if(position < 0 || position > this.length) {
+            return false;
+          }
+          let index = 0;
+          let current = this.head;
+          // 上一个元素
+          let prev = null;
+          let node = new Node(element);
+          if(position === 0) {
+            node.next = this.head;
+            this.head = node;
+          }else {
+            while(index < position) {
+              prev = current;
+              current = current.next;
+              index++;
+            }
+            node.next = current;
+            prev.next = node;
+          }
+          this.length += 1;
+          return true;
+        }
+        getPosition(position) {
+          if(position < 0 || position > this.length) {
+            return null
+          }
+          let current = this.head;
+          let index = 0;
+          while(index < position) {
+            current = current.next;
+            index++;
+          }
+          return current.element;
+        }
+        removeAt(position) {
+          if(position < 0 || position >= this.length) return null;
+          let current = this.head;
+          let index = 0;
+          let prev = null;
+          if(position === 0) {
+            this.head === this.head.next;
+          }else {
+            while(index < position) {
+              prev = current
+              current = current.next;
+              index++;
+            }
+            prev.next = current.next;
+          }
+          this.length--;
+          return current.element;
+        }
+      }
+
+      const linkedList = new LinkedList();
+      linkedList.append(1)
+      linkedList.append(2)
+      linkedList.append(3)
+      console.log(linkedList);
+      console.log(linkedList.removeAt(2))
+```
