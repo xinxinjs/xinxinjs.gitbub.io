@@ -444,3 +444,112 @@ class Node {
       console.log(linkedList);
       console.log(linkedList.removeAt(2))
 ```
+
+我们在控制台打印出来长这样子：
+
+![十进制转二进制](/img/data/lianbiao.jpeg)
+
+由图可见，每个元素里面都有一个指向下一个元素的引用
+
+#### 链表分类
+
+1. 单项链表
+
+2. 双向链表
+
+#### 从链表的角度理解js的原型链
+
+众所周知，javascript这门语言是基于对象的开发的，在面向对象的语言里面实现继承有两种方式：接口继承和实现继承
+
+js语言无法实现接口继承，只支持实现继承，而js的实现继承主要是依靠的js的原型链机制
+
+首先要记住两个：
+
+1. 所有的函数都有一个`prototype`属性，该属性是一个普通的对象，一个隐式的对象
+
+2. 所有的引用类型，都有一个`__proto__`属性是一个普通的对象，显示对象
+
+例如我们写一个构造函数，构造函数也是函数，所有构造函数会有一个prototype属性，是一个隐式的对象,我们通常叫做原型对象，包含由特定类型的实例共享的属性和方法
+
+```javascript
+function SuperType() {
+  this.name = 'name';
+}
+SuperType.prototype.getName = function () {
+  return this.name;
+}
+console.log(SuperType)
+/**
+ * 因为prototype属性是隐式的对象，所以打印出来的是函数体
+ SuperType() {
+  this.name = 'name';
+ }
+ */
+//  我们可以手动的打印一下prototype属性
+console.log(SuperType.prototype)
+```
+
+第二个console，我们手动的打印了prototype属性，打印出来的是构造函数的方法和一个原型对象，我们可以看到原型对象，如下图:
+
+![图片](/img/data/yuanxing.jpeg)
+
+从图中可以看出来构造函数的prototype是一个对象，所以包含一个`__proto__`属性和一个`constructor`属性，这个`constructor`指向这个原型对象的构造函数，也就是SuperType
+
+还包含原型对象上的方法
+
+然后我们实例化SuperType，返回一个对象
+
+```javascript
+console.log(new SuperType())
+```
+
+![图片](/img/data/shilihua.jpeg)
+
+从上图可以看出，通过new关键字实例化返回的是一个对象，这个对象包含构造函数上的方法和属性，同时和其他普通对象一样，包含一个`__proto__`属性，这个`__proto__`属性包含构造函数的原型上的属性和方法。还有一个`constructor`属性，指向这个实例的构造函数
+
+画个图表示一下
+
+![图片](/img/data/gouzaohanshu.svg)
+
+而我们是如何通过原型链实现j的继承呢？简单的说一下就是让第二个原型对象等于另一个对象的实例，
+
+先从代码的角度看一下
+
+```javascript
+// 父级函数
+function SuperType() {
+  this.name = 'name';
+}
+SuperType.prototype.getName = function () {
+  return this.name;
+}
+// 子级函数
+function SubType() {
+  this.age = 100;
+}
+// 子级的原型对象等于父级的实例
+SubType.prototype = new SuperType();
+SubType.prototype.getAge = function () {
+  return this.age;
+}
+console.log(SubType.prototype);
+```
+
+我们先打印一下SubType.prototype，发现和我们刚才打印`console.log(new SuperType())`打印出来的是一样的，因为SubType的prototype就是Supertype的实例，但是也不是一摸一样，因为这还包含了SubType自己的原型上的方法
+
+然后我们实例化一个这个新的构造函数，在打印一下
+
+```javascript
+var a = new SubType();
+console.log(a);
+```
+
+![图片](/img/data/jicheng.svg)
+
+从控制台可看出来，实例化返回一个新的对象，这个对象和其他实例化的对象一样，首先包含它构造函数上的属性和方法，然后包含一个`__proto__`属性，这个`__proto__`属性包含它的构造函数的原型上的属性和方法。而Subtype的原型又是SuperType的实例，所以同时包含了SuperType原型上的方法和属性，
+
+再有第三个构造函数要实现继承也是如此实现，语言太啰嗦不清晰，画图表示一下
+
+![图片](/img/data/jichenglianbiao.svg)
+
+从图中可以看出来，原型链的继承的数据结构是链表的结构实现的，而所有的对象最终的继承都是Object
