@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>数据结构基本知识与常见的数据结构二：哈希表 - 小心心的笔记</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="所念皆星河，星河不及你,什么是哈希在学习哈希表之前要先了解一下什么叫哈希
+hash，一般翻译为散列，是把任意长度的输入，通过哈希算法变成固定长度的输出，输出的值就叫做散列
+通过md5算法来了解一下哈希
+12345678im,"> 
+    <meta name="author" content="小心心"> 
+    <link rel="alternative" href="atom.xml" title="小心心的笔记" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    <link rel="stylesheet" href="/css/diaspora.css">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">小心心的笔记</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://xinxinjs.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">数据结构基本知识与常见的数据结构二：哈希表</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">数据结构基本知识与常见的数据结构二：哈希表</h1>
+        <div class="stuff">
+            <span>四月 26, 2019</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/数据结构与算法/">数据结构与算法</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h2 id="什么是哈希"><a href="#什么是哈希" class="headerlink" title="什么是哈希"></a>什么是哈希</h2><p>在学习哈希表之前要先了解一下什么叫哈希</p>
+<p>hash，一般翻译为散列，是把任意长度的输入，通过哈希算法变成固定长度的输出，输出的值就叫做散列</p>
+<p>通过md5算法来了解一下哈希</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> md5 <span class="keyword">from</span> <span class="string">'md5-node'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> a = <span class="string">'123456'</span>;</span><br><span class="line"><span class="keyword">const</span> b = <span class="string">'lalalalalala'</span>;</span><br><span class="line"><span class="keyword">const</span> c = <span class="string">'测试测试宝贝'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(md5(a));</span><br><span class="line"><span class="built_in">console</span>.log(md5(b));</span><br><span class="line"><span class="built_in">console</span>.log(md5(c));</span><br></pre></td></tr></table></figure>
+<p>在浏览器的控制台查看结果：</p>
+<p>e10adc3949ba59abbe56e057f20f883e</p>
+<p>3f9b6dcc758a64770bb28ae8c4e5b3ea</p>
+<p>a66ae9c7ac9801c50cc5fcdda02e6e10</p>
+<p>从console的结果可看出来，一开始的三个变量长度并不一样，最后经过md5算法都输出成一样长度的，输出的这一串就是散列值</p>
+<p>这个过程通过md5算法转换的过程叫做哈希转换，这种转换是一种压缩映射，映射表达的是一一对应的关系</p>
+<h3 id="哈希的特性"><a href="#哈希的特性" class="headerlink" title="哈希的特性"></a>哈希的特性</h3><ul>
+<li><p>哈希算法不能从结果推算输入，哈希算法是不可逆的</p>
+</li>
+<li><p>计算非常快</p>
+</li>
+</ul>
+<h3 id="哈希的用途"><a href="#哈希的用途" class="headerlink" title="哈希的用途"></a>哈希的用途</h3><ol>
+<li><p>密码存储、校验</p>
+<p>通常情况下，我们在各种系统里面提交的登陆密码在数据库里面都是经过哈希算法转换过之后的哈希值去存储的，</p>
+<p>那么哈希算法转换之后的结果是不可逆的，所以通过数据库的管理员并不知道我们的明文密码是什么，</p>
+<p>然后每次登陆的时候，提交密码，都要先经过同样的哈希算法转换一下，和数据库存储的密码的哈希值进行比较，就可以得出两个密码是不是一样的</p>
+</li>
+<li><p>文件完整校验</p>
+<p>当文件的内容修改过之后，经过哈希转换之后的哈希值也是会变化的，通过比较这两个哈希值，可以检测文件有没有改变</p>
+</li>
+</ol>
+<h2 id="哈希表"><a href="#哈希表" class="headerlink" title="哈希表"></a>哈希表</h2><p>我们知道数组在查询数据的时候是比较快速的，但是这个快速是基于我们能够确定我们需要查询的数据的索引值，简单的通过arr[index]索引就可以查询</p>
+<p>如果我们不知道我们要查询的数据的索引，而是基于内容是查找，就需要遍历整个数组，然后比较，才能拿到想要的数据</p>
+<p>思考：如果我们能够将我们查询的内容的值作为索引，是不是知道了内容就能够查询到相关的数据呢？</p>
+<p>这个实现就是哈希表，哈希表是基于数组实现的，但是它在插入和删除的操作比数组要快</p>
+<p>哈希表的结构就是数组，与数组不相同的是，它的索引是经过哈希转换的</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='/music/夜的钢琴曲(五).mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='/music/S.E.N.S. (神思者)-伽罗 (Kyara).mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是哈希"><span class="toc-number">1.</span> <span class="toc-text">什么是哈希</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#哈希的特性"><span class="toc-number">1.1.</span> <span class="toc-text">哈希的特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#哈希的用途"><span class="toc-number">1.2.</span> <span class="toc-text">哈希的用途</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#哈希表"><span class="toc-number">2.</span> <span class="toc-text">哈希表</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

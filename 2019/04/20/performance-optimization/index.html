@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>前端性能优化 - 小心心的笔记</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="所念皆星河，星河不及你,原理什么是前端性能？
+想要做前端的性能优化，首先要知道什么是前端的性能，
+前端性能，就是评估一个网站做的好还是不好，可以从多个方面去评估：页面流畅度，响应速度，用户交互是否友好等
+浏览器是如何工作的,"> 
+    <meta name="author" content="小心心"> 
+    <link rel="alternative" href="atom.xml" title="小心心的笔记" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    <link rel="stylesheet" href="/css/diaspora.css">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">小心心的笔记</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://xinxinjs.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">前端性能优化</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">前端性能优化</h1>
+        <div class="stuff">
+            <span>四月 20, 2019</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/前端/">前端</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>什么是前端性能？</p>
+<p>想要做前端的性能优化，首先要知道什么是前端的性能，</p>
+<p>前端性能，就是评估一个网站做的好还是不好，可以从多个方面去评估：页面流畅度，响应速度，用户交互是否友好等</p>
+<h3 id="浏览器是如何工作的"><a href="#浏览器是如何工作的" class="headerlink" title="浏览器是如何工作的"></a>浏览器是如何工作的</h3><p>前端项目是离不开浏览器的，在浏览器输入一个URL地址，到在浏览器视窗中显示出这个网址所对应的页面，以及用户的一些交互操作过程。</p>
+<p>所以，了解浏览器是如何工作的对于了解前端性能是个至关重要的事情。</p>
+<p>那么从在浏览器中输入一个网址，到浏览器把这个页面展示出来，这中间都经历了哪些事情呢？</p>
+<ol>
+<li><p>域名解析，把域名解析成对应的IP地址，这一步是由DNS服务器来完成的</p>
+</li>
+<li><p>建立TCP链接</p>
+</li>
+<li><p>发送HTTP请求</p>
+</li>
+<li><p>服务器会处理请求</p>
+</li>
+<li><p>返回响应的结果</p>
+</li>
+<li><p>关闭TCP链接</p>
+</li>
+<li><p>浏览器解析html生成DOM树。解析css，生成css规则树。生成渲染树</p>
+</li>
+<li><p>浏览器进行布局渲染</p>
+</li>
+</ol>
+<h3 id="影响前端性能的因素"><a href="#影响前端性能的因素" class="headerlink" title="影响前端性能的因素"></a>影响前端性能的因素</h3><p>从以上浏览器的工作原理可以分析出来，有哪些因素会影响前端的性能：</p>
+<ol>
+<li><p>延迟/RTT</p>
+<p> 从发起一个请求到服务器返回中间等待的时间称作延迟</p>
+</li>
+<li><p>带宽</p>
+<p> 我们从服务器下载一个文件的时间 = 文件的大小 / 带宽。</p>
+<p> 而我们的浏览器或者操作系统，有一套复杂的方法来控制允许使用的实际带宽大小</p>
+</li>
+<li><p>静态资源</p>
+<p> 图片、视频、css、js文件，这些文件下载和解析的时间</p>
+</li>
+<li><p>DNS解析</p>
+<p> 域名解析耗费的时间</p>
+</li>
+<li><p>TCP握手</p>
+<p> 三次握手，四次握手耗费的时间</p>
+</li>
+<li><p>SSL握手时间</p>
+</li>
+</ol>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><p>合理的使用工具可以帮助我们做前端的性能优化</p>
+<h3 id="性能检测工具"><a href="#性能检测工具" class="headerlink" title="性能检测工具"></a>性能检测工具</h3><p>首先要知道网站的性能瓶颈或突破口在哪里，找到问题，才能找到解决方法</p>
+<ol>
+<li><p>PageSpeed Insights，专注于线上环境</p>
+</li>
+<li><p>Chrome User Experience Report，专注于线上用户的使用数据</p>
+</li>
+<li><p>chrome search console Speed Report (beta)</p>
+</li>
+<li><p>Fireperf</p>
+</li>
+</ol>
+<h3 id="确定性能优化的方向"><a href="#确定性能优化的方向" class="headerlink" title="确定性能优化的方向"></a>确定性能优化的方向</h3><ol>
+<li><p>audit panel </p>
+<p> 给开发者使用的，对网站的项目进行一个跑分，在Chrome浏览器的工具面板里面，执行之后会生成一个报告，包含网站的一些运行情况，帮组定位网站有哪些性能优化的点</p>
+</li>
+<li><p>performance budget</p>
+<p> 可以和webpack或者lighthouth一起使用</p>
+</li>
+<li><p>profile panel</p>
+<p> 给开发者使用的，在Chrome浏览器的工具面板里面</p>
+</li>
+<li><p>持续监控</p>
+</li>
+</ol>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>优化性能方法都是围绕着，上面的影响性能的因素来解决的</p>
+<h3 id="CDN优化"><a href="#CDN优化" class="headerlink" title="CDN优化"></a>CDN优化</h3><h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>合理使用浏览器的缓存策略</p>
+<h3 id="优化带宽的使用"><a href="#优化带宽的使用" class="headerlink" title="优化带宽的使用"></a>优化带宽的使用</h3><ol>
+<li><p>延迟加载</p>
+<p> 懒加载：图片懒加载</p>
+</li>
+<li><p>提前加载</p>
+<p> 提前加载一些关键的资源，这些资源的加载情况直接影响到网页能否使用。</p>
+<p> preload提前加载资源、prefetch可以让浏览器在空闲时间提前加载后面要用到的资源</p>
+</li>
+<li><p>不加载</p>
+<p> 利用缓存，减少二次下载</p>
+</li>
+</ol>
+<h3 id="资源文件"><a href="#资源文件" class="headerlink" title="资源文件"></a>资源文件</h3><p>通过减少资源文件的体积，来进行资源文件的请求返回速度。</p>
+<ol>
+<li><p>broti压缩</p>
+</li>
+<li><p>http2.0头文件压缩</p>
+</li>
+<li><p>minification 牺牲代码的可读性，减少体积</p>
+</li>
+<li><p>tree shaking 摇树优化</p>
+</li>
+<li><p>移除一些体积非常大，但是很少使用到的库</p>
+</li>
+<li><p>webpack 有一些构建的时候可以使用的压缩工具</p>
+</li>
+</ol>
+<h3 id="DNS优化"><a href="#DNS优化" class="headerlink" title="DNS优化"></a>DNS优化</h3><ol>
+<li><p>减少domain数量，减少DNS解析的数量</p>
+</li>
+<li><p>DNS prefetch 在浏览器空闲的时候去解析一下这个DNS</p>
+</li>
+</ol>
+<h3 id="减少TCP开销"><a href="#减少TCP开销" class="headerlink" title="减少TCP开销"></a>减少TCP开销</h3><ol>
+<li><p>减少多次重定向，页面的重定向是非常昂贵的</p>
+<p> 使用SPA减少重定向</p>
+</li>
+<li><p>使用CDN</p>
+</li>
+</ol>
+<h3 id="使用HTTP2-0"><a href="#使用HTTP2-0" class="headerlink" title="使用HTTP2.0"></a>使用HTTP2.0</h3>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='/music/夜的钢琴曲(五).mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='/music/S.E.N.S. (神思者)-伽罗 (Kyara).mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">1.</span> <span class="toc-text">原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#浏览器是如何工作的"><span class="toc-number">1.1.</span> <span class="toc-text">浏览器是如何工作的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#影响前端性能的因素"><span class="toc-number">1.2.</span> <span class="toc-text">影响前端性能的因素</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工具"><span class="toc-number">2.</span> <span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#性能检测工具"><span class="toc-number">2.1.</span> <span class="toc-text">性能检测工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#确定性能优化的方向"><span class="toc-number">2.2.</span> <span class="toc-text">确定性能优化的方向</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法"><span class="toc-number">3.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CDN优化"><span class="toc-number">3.1.</span> <span class="toc-text">CDN优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缓存"><span class="toc-number">3.2.</span> <span class="toc-text">缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优化带宽的使用"><span class="toc-number">3.3.</span> <span class="toc-text">优化带宽的使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#资源文件"><span class="toc-number">3.4.</span> <span class="toc-text">资源文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS优化"><span class="toc-number">3.5.</span> <span class="toc-text">DNS优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#减少TCP开销"><span class="toc-number">3.6.</span> <span class="toc-text">减少TCP开销</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用HTTP2-0"><span class="toc-number">3.7.</span> <span class="toc-text">使用HTTP2.0</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
