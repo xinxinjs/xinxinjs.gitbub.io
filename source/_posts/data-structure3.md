@@ -245,10 +245,153 @@ console.log(bst)
 
 遍历二叉搜索树有三种遍历方式：先序遍历，中序遍历，后序遍历
 
-先序遍历：首先遍历根节点，然后左子树，右子树
-
 下面这张图，我们分别使用三种遍历方式进行遍历
 
 ![二叉树](/img/data/erchasousuoshu2.jpg)
 
-先序遍历结果：10，5，3，6，15，12，16
+#### 先序遍历
+
+先序遍历：首先遍历根节点，然后遍历左子树，遍历右子树
+
+当前二叉搜索树的节点比较少，按照先序遍历的规则，我们可以用眼睛看一下就知道先序遍历结果应该是这样：10，5，3，6，15，12，16
+
+我们来写一个先序遍历的算法，实现一下先序遍历，基于我们刚才写的二叉搜索树，已经具备插入节点的方法，接着给这个二叉搜索树增加先序遍历方法
+
+```javascript
+...
+
+class BST {
+  ...
+
+  preOrder() {
+    const arr = [];
+    this.preOrderNode(this.root, arr);
+    return arr;
+  }
+
+  preOrderNode(node, arr) {
+    if(node === null) return;
+    arr.push(node.value);
+    const left = node.left;
+    const right = node.right;
+    if(left) this.preOrderNode(left, arr);
+    if(right) this.preOrderNode(right, arr);
+  }
+}
+
+const bst = new BST();
+bst.insert(10);
+bst.insert(5);
+bst.insert(15);
+bst.insert(3);
+bst.insert(6);
+bst.insert(12);
+bst.insert(16);
+const preOrderList = bst.preOrder()
+console.log(preOrderList) // [10, 5, 3, 6, 15, 12, 16]
+```
+
+如上面的代码，我们新增来先序遍历的方法：preOrder，然后按照上面图中的节点依次插入节点，然后调用先序遍历的方法，并在控制台打印这个遍历的结果，和上面的用眼睛看出来的结果是一样的
+
+#### 中序遍历
+
+从根节点开始，先递归遍历其左子树，然后从最后一个节点存入数组，然后回溯遍历双亲节点，然后是右子树
+
+我们同样使用js实现一个二叉搜索树的中序遍历
+
+```javascript
+
+class BST {
+  inOrder() {
+    const arr = [];
+    this.inOrderNode(this.root, arr);
+    return arr;
+  }
+
+  inOrderNode(node, arr) {
+    if(node === null) return;
+    const left = node.left;
+    const right = node.right;
+    if(left) this.inOrderNode(left, arr);
+    arr.push(node.value);
+    if(right) this.inOrderNode(right, arr);
+  }
+}
+
+const bst = new BST();
+bst.insert(10);
+bst.insert(5);
+bst.insert(15);
+bst.insert(3);
+bst.insert(6);
+bst.insert(12);
+bst.insert(16);
+const inOrderList = bst.inOrder()
+console.log(inOrderList) // [3, 5, 6, 10, 12, 15, 16]
+```
+
+#### 后续遍历
+
+先遍历其左子树，在遍历其右子树，最后遍历根节点
+
+同样，我们使用js代码来实现一些上面二叉搜索树的后续遍历
+
+```javascript
+...
+class BST 
+  ...
+  postOrder() {
+    const arr = [];
+    this.postOrderNode(this.root, arr);
+    return arr;
+  }
+
+  postOrderNode(node, arr){
+    if(node === null) return;
+    const left = node.left;
+    const right = node.right;
+    
+    if(left) this.postOrderNode(left, arr);
+    if(right) this.postOrderNode(right, arr);
+    arr.push(node.value);
+  }
+}
+
+const bst = new BST();
+bst.insert(10);
+bst.insert(5);
+bst.insert(15);
+bst.insert(3);
+bst.insert(6);
+bst.insert(12);
+bst.insert(16);
+
+const postOrderList = bst.postOrder();
+console.log(postOrderList) // [3, 6, 5, 12, 16, 15, 10]
+```
+
+### 二叉搜索树的其他
+
+我们已经实现了二叉搜索树的插入和三种遍历的方法，由于二叉搜索树的特殊性：小值在左边，大值在右边，我们可以利用这个特性，快速的找到树中的最大值和最小值。
+
+让我们来写一段代码实现查找二叉搜索树中最大值和最小值的方法
+
+```javascript
+max() {
+  let node = this.root;
+  while(node.right !== null) {
+    node = node.right;
+  }
+  return node.value
+}
+min() {
+  let node = this.root;
+  while(node.left !== null) {
+    node = node.left;
+  }
+  return node.value
+}
+
+console.log(bst.max()) // 16
+console.log(bst.min()) // 3
+```
