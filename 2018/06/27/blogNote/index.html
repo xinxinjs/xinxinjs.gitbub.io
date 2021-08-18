@@ -111,6 +111,8 @@ Hexo博客的跨设备同步
 <h2 id="如果再换电脑（MAC）"><a href="#如果再换电脑（MAC）" class="headerlink" title="如果再换电脑（MAC）"></a>如果再换电脑（MAC）</h2><ul>
 <li><p>使用git clone克隆整个仓库，然后themes/next存在，是空的</p>
 </li>
+<li><p>git checkout hexo,切换到hexo分支,执行npm install或者yarn，安装依赖</p>
+</li>
 <li><p>生成添加密钥: 执行命令 ssh-keygen -t rsa -C “Github 的注册邮箱地址”，一路回车，待秘钥生成完毕，会得到两个文件 id_rsa 和 id_rsa.pub，用带格式的记事本打开 id_rsa.pub，Ctrl + a 复制里面的所有内容，然后进入<a href="https://github.com/settings/keys" target="_blank" rel="noopener">https://github.com/settings/keys</a></p>
 </li>
 <li><p>执行git submodule init命令来初始化本地的配置文件</p>
