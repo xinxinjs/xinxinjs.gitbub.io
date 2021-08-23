@@ -395,3 +395,252 @@ min() {
 console.log(bst.max()) // 16
 console.log(bst.min()) // 3
 ```
+
+寻找特定的值
+
+```javascript
+search(val) {
+  let node = this.root;
+  while (node !== null) {
+    if(node.value > val){
+      node = node.left
+    } else if (node.value < val) {
+      node = node.right
+    } else {
+      return true;
+    }
+  }
+  return false;
+}
+
+console.log(bst.search(25)) // false
+console.log(bst.search(15)) // true
+```
+
+### 删除
+
+删除二叉搜索树中的节点，可以分为三种情况：
+
+1. 被删除的节点，没有子树，那么可以直接把这个节点删除掉
+
+2. 被删除的节点，仅有一颗子树，删除掉该节点之后，直接把他的子节点放到被删除的节点的位置
+
+3. 被删除的节点，有两颗子树，我们需要保证删除该节点之后他的中序遍历的顺序不变
+
+### 二叉搜索树的优缺点
+
+优点
+
+1. 快速查找
+
+2. 快速的插入和删除
+
+缺点：同样的一组数据，插入的顺序不同，最后导致的二叉搜索树的结果可能也会不一样
+
+比如，我要在二叉搜索树中插入：1、2、3、4、5、6、7这样子的一组数据，如果我先插入的是4，理想的状态下，最后二叉树的结构如下
+
+![二叉树](/img/data/erchasousuoshu3.jpg)
+
+我们理想的情况下，二叉搜索树的结构是左右分布均匀的，如上图那样，叫做平衡二叉搜索树，这种树结构的查询速度通常比较快
+
+但是如果我先插入的是1这个最小的数据，那么在极端情况下，二叉搜索树的结构可能就会变成一颗完全的右斜树，如下图，看起来像链表
+
+![二叉树](/img/data/erchasousuoshu4.jpg)
+
+在这种情况下，会影响二叉搜索树的查询速度，也叫做非平衡的二叉搜索树
+
+所以为了保证我们的查询速度，我们要尽量保证我们的二叉搜索树是左右平衡的，这种树叫做平衡二叉搜索树
+
+### 平衡二叉搜索树
+
+我们先来了解一个概念：平衡因子
+
+在二叉树中每个节点的左子树的高度减去右子树高度，取绝对值，就是这个节点的平衡因子
+
+在平衡树中，我们要求每个节点的平衡因子的值不超过1，也就是说平衡因子的值只能是0，或者1，由此可以保证我们的二叉搜索树是一颗平衡树
+
+例如，下面这棵二叉搜索树，目前来看是平衡的二叉搜索树，因为他的每个节点的平衡因子都没有超过1
+
+![二叉树](/img/data/pinghengshu.jpg)
+
+当我们想要在这个树中插入一个节点，比如，插入一个节点的值是3，那么插入之后这个二叉树就会变成下面这个样子，变成了一颗非平衡树，因为节点7的平衡因子，变成了2
+
+![二叉树](/img/data/feipinghengshu.jpg)
+
+为了保证二叉搜索树的平衡，我们需要对节点进行调整，那么红黑树就是可以自平衡的二叉搜索树，我们对一个二叉搜索树执行插入的时候，可以自动对节点的平衡因子进行调整
+
+## 红黑树
+
+也叫R-B Tree,
+
+红黑树的特点：
+
+1. 在设计红黑树的时候需要给节点增加一个属性，也就是节点的颜色属性，红色或者是黑色
+
+```javascript
+class BSTNode {
+  constructor(value) {
+    this.value = value;
+    this.left = null;
+    this.right = null;
+    this.color = 'black'; // 新增的节点颜色属性
+  }
+}
+```
+
+2. 根节点是黑色
+
+3. 叶子节点都是黑色，且为null
+
+4. 连接红色节点的两个子节点都是黑色，红色节点的父节点都是黑色
+
+5. 从任意的节点出发，到其每个叶子节点的路径中，包含相同的数量的黑色节点
+
+例如下面这个红黑树,就满足上面所说的特点
+
+![红黑树](/img/data/rbtree.jpg)
+
+新插入的节点都是红色，在我们往红黑树中插入节点的时候，必须遵守红黑树的这五个特点
+
+在插入节点的时候，会先去遍历当前要插入的节点，应该在哪个位置，因为新插入的节点都是红色的，为了保证红黑树的性质，还需要看是否需要调整节点的颜色属性
+
+## 代码
+
+### 二叉搜索树的完整代码
+
+```javascript
+class BSTNode {
+  constructor(value) {
+    this.value = value;
+    this.left = null;
+    this.right = null
+  }
+}
+
+class BST {
+  constructor () {
+    this.root = null
+  }
+
+  insertNode(node, newNode) {
+    if(newNode.value > node.value) {
+      if(node.right === null) {
+        node.right = newNode
+      }else {
+        this.insertNode(node.right, newNode)
+      }
+    }else if(newNode.value < node.value) {
+      if(node.left === null) {
+        node.left = newNode
+      }else {
+        this.insertNode(node.left, newNode)
+      }
+    }
+  }
+
+  insert(value) {
+    const newNode = new BSTNode(value);
+    if(this.root === null) {
+      this.root = newNode;
+    }else {
+      this.insertNode(this.root, newNode)
+    }
+  }
+
+  preOrder() {
+    const arr = [];
+    this.preOrderNode(this.root, arr);
+    return arr;
+  }
+
+  preOrderNode(node, arr) {
+    if(node === null) return;
+    arr.push(node.value);
+    const left = node.left;
+    const right = node.right;
+    if(left) this.preOrderNode(left, arr);
+    if(right) this.preOrderNode(right, arr);
+  }
+
+  inOrder() {
+    const arr = [];
+    this.inOrderNode(this.root, arr);
+    return arr;
+  }
+
+  inOrderNode(node, arr) {
+    if(node === null) return;
+    const left = node.left;
+    const right = node.right;
+    if(left) this.inOrderNode(left, arr);
+    arr.push(node.value);
+    if(right) this.inOrderNode(right, arr);
+  }
+
+  postOrder() {
+    const arr = [];
+    this.postOrderNode(this.root, arr);
+    return arr;
+  }
+
+  postOrderNode(node, arr){
+    if(node === null) return;
+    const left = node.left;
+    const right = node.right;
+    if(left) this.postOrderNode(left, arr);
+    if(right) this.postOrderNode(right, arr);
+    
+    arr.push(node.value);
+  }
+
+  max() {
+    let node = this.root;
+    while(node.right !== null) {
+      node = node.right;
+    }
+    return node.value
+  }
+
+  min() {
+    let node = this.root;
+    while(node.left !== null) {
+      node = node.left;
+    }
+    return node.value
+  }
+
+  search(val) {
+    let node = this.root;
+    while (node !== null) {
+      if(node.value > val){
+        node = node.left
+      } else if (node.value < val) {
+        node = node.right
+      } else {
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
+const bst = new BST();
+bst.insert(10);
+bst.insert(5);
+bst.insert(15);
+bst.insert(3);
+bst.insert(6);
+bst.insert(12);
+bst.insert(16);
+const inOrderList = bst.inOrder()
+console.log(inOrderList) // [3, 5, 6, 10, 12, 15, 16]
+
+const postOrderList = bst.postOrder();
+console.log(postOrderList) // [3, 6, 5, 12, 16, 15, 10]
+
+console.log(bst.max()) // 16
+console.log(bst.min()) // 3
+
+console.log(bst.search(25)) // false
+console.log(bst.search(15)) // true
+```
