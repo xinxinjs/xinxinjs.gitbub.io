@@ -11,59 +11,78 @@
 <p>这个方法的缺点就是对象的key都是字符串，如果数组的值为number或者其他类型的时候，就会转换成字符串，在某些场景下不适用</p>
 ]]></content>
       <categories>
-        <category>数据结构与算饭</category>
+        <category>数据结构与算法</category>
       </categories>
       <tags>
-        <tag>数据结构与算饭</tag>
+        <tag>数据结构与算法</tag>
       </tags>
   </entry>
   <entry>
-    <title>从性能优化的角度看缓存</title>
-    <url>/2019/03/30/cache/</url>
-    <content><![CDATA[<h2 id="缓存的作用"><a href="#缓存的作用" class="headerlink" title="缓存的作用"></a>缓存的作用</h2><p>重复利用已经获取的资源，减少延迟和网络阻塞，</p>
-<h2 id="缓存分类"><a href="#缓存分类" class="headerlink" title="缓存分类"></a>缓存分类</h2><ul>
-<li><p>数据库缓存</p>
+    <title>不容错过的 Babel7 知识</title>
+    <url>/2019/03/31/babel-7start/</url>
+    <content><![CDATA[<p>博客原文地址：<a href="https://juejin.im/post/5ddff3abe51d4502d56bd143" target="_blank" rel="noopener">不容错过的 Babel7 知识</a></p>
+<p>简单了解Babel</p>
+<h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><p>Babel 是一个 JS 编译器。</p>
+<p>Babel 是一个工具链，主要用于将 ECMAScript 2015+ 版本的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。</p>
+<h2 id="做什么"><a href="#做什么" class="headerlink" title="做什么"></a>做什么</h2><ul>
+<li><p>语法转换</p>
 </li>
-<li><p>服务器缓存</p>
-<p>代理服务器缓存</p>
-<p>cdn缓存</p>
+<li><p>通过 Polyfill 方式在目标环境中添加缺失的特性(@babel/polyfill模块)</p>
 </li>
-<li><p>浏览器缓存</p>
-<p>http缓存</p>
-<p>数据缓存</p>
-<p>应用离线缓存 PWA</p>
+<li><p>源码转换(codemods)</p>
 </li>
 </ul>
-<h2 id="浏览器缓存-强缓存和协商缓存"><a href="#浏览器缓存-强缓存和协商缓存" class="headerlink" title="浏览器缓存-强缓存和协商缓存"></a>浏览器缓存-强缓存和协商缓存</h2><p>浏览器命中缓存原理</p>
-<ol>
-<li><p>浏览器在请求资源的时候，根据请求头部的expires 和cache-control判断是否命中强缓存，如果命中强缓存，就直接从浏览器获取缓存，而不会发送请求到服务器</p>
+<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><h3 id="核心库-babel-core"><a href="#核心库-babel-core" class="headerlink" title="核心库 @babel/core"></a>核心库 @babel/core</h3><p>不安装 @babel/core，无法使用 babel 进行编译。</p>
+<p>npm install –save-dev @babel/core</p>
+<h3 id="CLI命令行工具-babel-cli"><a href="#CLI命令行工具-babel-cli" class="headerlink" title="CLI命令行工具 @babel/cli"></a>CLI命令行工具 @babel/cli</h3><p>babel 提供的命令行工具，主要是提供 babel 这个命令，适合安装在项目里。</p>
+<p>@babel/node 提供了 babel-node 命令，但是 @babel/node 更适合全局安装，不适合安装在项目里。</p>
+<p>npm install –save-dev @babel/cli</p>
+<p>将命令配置在 package.json 文件的 scripts 字段中:</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "compiler": "babel src --out-dir lib --watch"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h3><p>配置在.babelrc文件中</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123;</span><br><span class="line">    "plugins": ["@babel/plugin-transform-arrow-functions"], //插件发布在 npm 上，可以直接填写插件的名称，</span><br><span class="line">    "plugins": ["./node_modules/@babel/plugin-transform-arrow-functions"], //也可以指定插件的相对/绝对路径</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="预设"><a href="#预设" class="headerlink" title="预设"></a>预设</h3><p>通过使用或创建一个 preset 即可轻松使用一组插件。</p>
+<p>@babel/preset-env 主要作用是对我们所使用的并且目标浏览器中缺失的功能进行代码转换和加载 polyfill，在不进行任何配置的情况下，@babel/preset-env 所包含的插件将支持所有最新的JS特性(ES2015,ES2016等，不包含 stage 阶段)，将其转换成ES5代码。例如，如果你的代码中使用了可选链(目前，仍在 stage 阶段)，那么只配置 @babel/preset-env，转换时会抛出错误，需要另外安装相应的插件。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"presets"</span>: [<span class="string">"@babel/preset-env"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="polyfill"><a href="#polyfill" class="headerlink" title="polyfill"></a>polyfill</h3><p>垫片就是垫平不同浏览器或者不同环境下的差异，让新的内置函数、实例方法等在低版本浏览器中也可以使用。</p>
+<p>@babel/polyfill 模块包括 core-js 和一个自定义的 regenerator runtime 模块，可以模拟完整的 ES2015+ 环境（不包含第4阶段前的提议）。</p>
+<p>安装 @babel/polyfill 依赖: npm install –save @babel/polyfill</p>
+<p>注意：不使用 –save-dev，因为这是一个需要在源码之前运行的垫片。</p>
+<p>我们需要将完整的 polyfill 在代码之前加载，</p>
+<p>@babel/polyfill 需要在其它代码之前引入，我们也可以在 webpack 中进行配置。</p>
+<p>例如:</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">entry: [</span><br><span class="line">    require.resolve('./polyfills'),</span><br><span class="line">    path.resolve('./index')</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>@babel/preset-env 提供了一个 useBuiltIns 参数，设置值为 usage 时，就只会包含代码需要的 polyfill 。有一点需要注意：配置此参数的值为 usage ，必须要同时设置 corejs (如果不设置，会给出警告，默认使用的是”corejs”: 2) ，注意: 这里仍然需要安装 @babel/polyfill(当前 @babel/polyfill 版本默认会安装 “corejs”: 2):</p>
+<p>npm install –save core-js@3</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">//.babelrcconst </span><br><span class="line">presets = [    [        "@babel/env",        &#123;               "useBuiltIns": "usage",            "corejs": 3        &#125;    ]]</span><br></pre></td></tr></table></figure>
+<p>Babel 会检查所有代码，以便查找在目标环境中缺失的功能，然后仅仅把需要的 polyfill 包含进来。</p>
+<p>Babel 会使用很小的辅助函数来实现类似 _createClass 等公共方法。默认情况下，它将被添加(inject)到需要它的每个文件中。</p>
+<h3 id="babel-plugin-transform-runtime"><a href="#babel-plugin-transform-runtime" class="headerlink" title="@babel/plugin-transform-runtime"></a>@babel/plugin-transform-runtime</h3><p>@babel/plugin-transform-runtime 是一个可以重复使用 Babel 注入的帮助程序，以节省代码大小的插件。</p>
+<p>@babel/plugin-transform-runtime 需要和 @babel/runtime 配合使用。</p>
+<p>npm install –save-dev @babel/plugin-transform-runtime</p>
+<p>npm install –save @babel/runtime</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123; <span class="attr">"presets"</span>: [</span><br><span class="line">    [<span class="string">"@babel/preset-env"</span>, &#123;<span class="attr">"useBuiltIns"</span>: <span class="string">"usage"</span>, <span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"plugins"</span>: [[<span class="string">"@babel/plugin-transform-runtime"</span>]]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果我们希望 @babel/plugin-transform-runtime 不仅仅处理帮助函数，同时也能加载 polyfill 的话，我们需要给 @babel/plugin-transform-runtime 增加配置信息。</p>
+<p>新增依赖 @babel/runtime-corejs3: npm install @babel/runtime-corejs3 –save</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123; <span class="attr">"presets"</span>: [</span><br><span class="line">    [<span class="string">"@babel/preset-env"</span>, &#123;<span class="attr">"useBuiltIns"</span>: <span class="string">"usage"</span>, <span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"plugins"</span>: [[<span class="string">"@babel/plugin-transform-runtime"</span>, &#123;<span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="插件-预设补充知识"><a href="#插件-预设补充知识" class="headerlink" title="插件/预设补充知识"></a>插件/预设补充知识</h3><p>如果两个转换插件都将处理“程序（Program）”的某个代码片段，则将根据转换插件或 preset 的排列顺序依次执行。</p>
+<ul>
+<li><p>插件在 Presets 前运行。</p>
 </li>
-<li><p>如果没有命中强缓存，就一定会发送请求到服务器，通过last-modified和Etag判断是否命中协商缓存，如果命中了协商缓存，服务器会返回这个请求，并返回状态码 304 not-modified，但是不会返回这个资源的数据，依然是从缓存获取数据</p>
+<li><p>插件顺序从前往后排列。</p>
 </li>
-<li><p>如果既没有命中强缓存，也没有命中协商缓存，则从服务器获取资源并加载</p>
+<li><p>Preset 顺序是颠倒的（从后往前）。</p>
 </li>
-</ol>
-<h3 id="强缓存"><a href="#强缓存" class="headerlink" title="强缓存"></a>强缓存</h3><p>强缓存通过expires和cache-control两种请求头实现</p>
-<ol>
-<li><p>expires，设置绝对时间，表示资源过期的时间</p>
-</li>
-<li><p>Cache-Control，设置指令短语 max-age，表示相对时间</p>
-</li>
-</ol>
-<p>如果当前的时间在给定的时间之内，就会使用本地的缓存，而不会向服务器再去请求</p>
-<h3 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h3><p>当浏览器对某个资源的请求没有命中强缓存，就会发一个请求到服务器，验证协商缓存是否命中，如果协商缓存命中，请求响应返回的http状态为304并且会显示一个Not Modified的字符串</p>
-<p>实现协商缓存</p>
-<h4 id="last-modified和if-modified-since"><a href="#last-modified和if-modified-since" class="headerlink" title="last-modified和if-modified-since"></a>last-modified和if-modified-since</h4><p>浏览器上一次返回资源在返回头里返回last-modified首部字段，该首部字段表示该资源上次修改的时间，然后浏览器下次请求的时候会在请求头里设置if-modified-since，该首部字段设置为上次last-modified返回的值，</p>
-<p>以这种方式询问服务器这个资源从这个时间之后是否有修改，如果有就会返回新的资源，如果没有则返回304 not-modified状态码</p>
-<p>但是如果在本地打开缓存文件，就会造成 Last-Modified 被修改，所以在 HTTP / 1.1 出现了 ETag</p>
-<h4 id="Etag和if-none-match"><a href="#Etag和if-none-match" class="headerlink" title="Etag和if-none-match"></a>Etag和if-none-match</h4><p>浏览器上一次返回资源在返回头里返回Etag这个首部字段，Etag表示文件指纹，然后浏览器下次请求的时候会在请求头里设置if-none-match，该首部字段设置为上次eTag的值</p>
-<p>以这种方式询问服务器，请求的资源是否有更新，如果有就返回新的资源，如果没有则返回304 not-modified状态码</p>
+</ul>
+<p>插件参数</p>
+<p>插件和 preset 都可以接受参数，参数由插件名和参数对象组成一个数组。preset 设置参数也是这种格式。</p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>Babel 支持多种格式的配置文件。</p>
+<p>所有的 Babel API 参数都可以被配置，但是如果该参数需要使用的 JS 代码，那么可能需要使用 JS 代码版的配置文件。</p>
+<p>如果希望以编程的方式创建配置文件或者希望编译 node_modules 目录下的模块：那么 babel.config.js 可以满足你的需求。</p>
+<p>如果只是需要一个简单的并且中用于单个软件包的配置：那么 .babelrc 即可满足你的需求。</p>
 ]]></content>
-      <categories>
-        <category>缓存</category>
-      </categories>
       <tags>
-        <tag>缓存</tag>
+        <tag>转换器</tag>
       </tags>
   </entry>
   <entry>
@@ -178,80 +197,104 @@
       </tags>
   </entry>
   <entry>
-    <title>不容错过的 Babel7 知识</title>
-    <url>/2019/03/31/babel-7start/</url>
-    <content><![CDATA[<p>博客原文地址：<a href="https://juejin.im/post/5ddff3abe51d4502d56bd143" target="_blank" rel="noopener">不容错过的 Babel7 知识</a></p>
-<p>简单了解Babel</p>
-<h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><p>Babel 是一个 JS 编译器。</p>
-<p>Babel 是一个工具链，主要用于将 ECMAScript 2015+ 版本的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。</p>
-<h2 id="做什么"><a href="#做什么" class="headerlink" title="做什么"></a>做什么</h2><ul>
-<li><p>语法转换</p>
+    <title>从性能优化的角度看缓存</title>
+    <url>/2019/03/30/cache/</url>
+    <content><![CDATA[<h2 id="缓存的作用"><a href="#缓存的作用" class="headerlink" title="缓存的作用"></a>缓存的作用</h2><p>重复利用已经获取的资源，减少延迟和网络阻塞，</p>
+<h2 id="缓存分类"><a href="#缓存分类" class="headerlink" title="缓存分类"></a>缓存分类</h2><ul>
+<li><p>数据库缓存</p>
 </li>
-<li><p>通过 Polyfill 方式在目标环境中添加缺失的特性(@babel/polyfill模块)</p>
+<li><p>服务器缓存</p>
+<p>代理服务器缓存</p>
+<p>cdn缓存</p>
 </li>
-<li><p>源码转换(codemods)</p>
-</li>
-</ul>
-<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><h3 id="核心库-babel-core"><a href="#核心库-babel-core" class="headerlink" title="核心库 @babel/core"></a>核心库 @babel/core</h3><p>不安装 @babel/core，无法使用 babel 进行编译。</p>
-<p>npm install –save-dev @babel/core</p>
-<h3 id="CLI命令行工具-babel-cli"><a href="#CLI命令行工具-babel-cli" class="headerlink" title="CLI命令行工具 @babel/cli"></a>CLI命令行工具 @babel/cli</h3><p>babel 提供的命令行工具，主要是提供 babel 这个命令，适合安装在项目里。</p>
-<p>@babel/node 提供了 babel-node 命令，但是 @babel/node 更适合全局安装，不适合安装在项目里。</p>
-<p>npm install –save-dev @babel/cli</p>
-<p>将命令配置在 package.json 文件的 scripts 字段中:</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "compiler": "babel src --out-dir lib --watch"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h3><p>配置在.babelrc文件中</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123;</span><br><span class="line">    "plugins": ["@babel/plugin-transform-arrow-functions"], //插件发布在 npm 上，可以直接填写插件的名称，</span><br><span class="line">    "plugins": ["./node_modules/@babel/plugin-transform-arrow-functions"], //也可以指定插件的相对/绝对路径</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="预设"><a href="#预设" class="headerlink" title="预设"></a>预设</h3><p>通过使用或创建一个 preset 即可轻松使用一组插件。</p>
-<p>@babel/preset-env 主要作用是对我们所使用的并且目标浏览器中缺失的功能进行代码转换和加载 polyfill，在不进行任何配置的情况下，@babel/preset-env 所包含的插件将支持所有最新的JS特性(ES2015,ES2016等，不包含 stage 阶段)，将其转换成ES5代码。例如，如果你的代码中使用了可选链(目前，仍在 stage 阶段)，那么只配置 @babel/preset-env，转换时会抛出错误，需要另外安装相应的插件。</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"presets"</span>: [<span class="string">"@babel/preset-env"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="polyfill"><a href="#polyfill" class="headerlink" title="polyfill"></a>polyfill</h3><p>垫片就是垫平不同浏览器或者不同环境下的差异，让新的内置函数、实例方法等在低版本浏览器中也可以使用。</p>
-<p>@babel/polyfill 模块包括 core-js 和一个自定义的 regenerator runtime 模块，可以模拟完整的 ES2015+ 环境（不包含第4阶段前的提议）。</p>
-<p>安装 @babel/polyfill 依赖: npm install –save @babel/polyfill</p>
-<p>注意：不使用 –save-dev，因为这是一个需要在源码之前运行的垫片。</p>
-<p>我们需要将完整的 polyfill 在代码之前加载，</p>
-<p>@babel/polyfill 需要在其它代码之前引入，我们也可以在 webpack 中进行配置。</p>
-<p>例如:</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">entry: [</span><br><span class="line">    require.resolve('./polyfills'),</span><br><span class="line">    path.resolve('./index')</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p>@babel/preset-env 提供了一个 useBuiltIns 参数，设置值为 usage 时，就只会包含代码需要的 polyfill 。有一点需要注意：配置此参数的值为 usage ，必须要同时设置 corejs (如果不设置，会给出警告，默认使用的是”corejs”: 2) ，注意: 这里仍然需要安装 @babel/polyfill(当前 @babel/polyfill 版本默认会安装 “corejs”: 2):</p>
-<p>npm install –save core-js@3</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">//.babelrcconst </span><br><span class="line">presets = [    [        "@babel/env",        &#123;               "useBuiltIns": "usage",            "corejs": 3        &#125;    ]]</span><br></pre></td></tr></table></figure>
-<p>Babel 会检查所有代码，以便查找在目标环境中缺失的功能，然后仅仅把需要的 polyfill 包含进来。</p>
-<p>Babel 会使用很小的辅助函数来实现类似 _createClass 等公共方法。默认情况下，它将被添加(inject)到需要它的每个文件中。</p>
-<h3 id="babel-plugin-transform-runtime"><a href="#babel-plugin-transform-runtime" class="headerlink" title="@babel/plugin-transform-runtime"></a>@babel/plugin-transform-runtime</h3><p>@babel/plugin-transform-runtime 是一个可以重复使用 Babel 注入的帮助程序，以节省代码大小的插件。</p>
-<p>@babel/plugin-transform-runtime 需要和 @babel/runtime 配合使用。</p>
-<p>npm install –save-dev @babel/plugin-transform-runtime</p>
-<p>npm install –save @babel/runtime</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123; <span class="attr">"presets"</span>: [</span><br><span class="line">    [<span class="string">"@babel/preset-env"</span>, &#123;<span class="attr">"useBuiltIns"</span>: <span class="string">"usage"</span>, <span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"plugins"</span>: [[<span class="string">"@babel/plugin-transform-runtime"</span>]]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果我们希望 @babel/plugin-transform-runtime 不仅仅处理帮助函数，同时也能加载 polyfill 的话，我们需要给 @babel/plugin-transform-runtime 增加配置信息。</p>
-<p>新增依赖 @babel/runtime-corejs3: npm install @babel/runtime-corejs3 –save</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123; <span class="attr">"presets"</span>: [</span><br><span class="line">    [<span class="string">"@babel/preset-env"</span>, &#123;<span class="attr">"useBuiltIns"</span>: <span class="string">"usage"</span>, <span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"plugins"</span>: [[<span class="string">"@babel/plugin-transform-runtime"</span>, &#123;<span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="插件-预设补充知识"><a href="#插件-预设补充知识" class="headerlink" title="插件/预设补充知识"></a>插件/预设补充知识</h3><p>如果两个转换插件都将处理“程序（Program）”的某个代码片段，则将根据转换插件或 preset 的排列顺序依次执行。</p>
-<ul>
-<li><p>插件在 Presets 前运行。</p>
-</li>
-<li><p>插件顺序从前往后排列。</p>
-</li>
-<li><p>Preset 顺序是颠倒的（从后往前）。</p>
+<li><p>浏览器缓存</p>
+<p>http缓存</p>
+<p>数据缓存</p>
+<p>应用离线缓存 PWA</p>
 </li>
 </ul>
-<p>插件参数</p>
-<p>插件和 preset 都可以接受参数，参数由插件名和参数对象组成一个数组。preset 设置参数也是这种格式。</p>
-<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>Babel 支持多种格式的配置文件。</p>
-<p>所有的 Babel API 参数都可以被配置，但是如果该参数需要使用的 JS 代码，那么可能需要使用 JS 代码版的配置文件。</p>
-<p>如果希望以编程的方式创建配置文件或者希望编译 node_modules 目录下的模块：那么 babel.config.js 可以满足你的需求。</p>
-<p>如果只是需要一个简单的并且中用于单个软件包的配置：那么 .babelrc 即可满足你的需求。</p>
+<h2 id="浏览器缓存-强缓存和协商缓存"><a href="#浏览器缓存-强缓存和协商缓存" class="headerlink" title="浏览器缓存-强缓存和协商缓存"></a>浏览器缓存-强缓存和协商缓存</h2><p>浏览器命中缓存原理</p>
+<ol>
+<li><p>浏览器在请求资源的时候，根据请求头部的expires 和cache-control判断是否命中强缓存，如果命中强缓存，就直接从浏览器获取缓存，而不会发送请求到服务器</p>
+</li>
+<li><p>如果没有命中强缓存，就一定会发送请求到服务器，通过last-modified和Etag判断是否命中协商缓存，如果命中了协商缓存，服务器会返回这个请求，并返回状态码 304 not-modified，但是不会返回这个资源的数据，依然是从缓存获取数据</p>
+</li>
+<li><p>如果既没有命中强缓存，也没有命中协商缓存，则从服务器获取资源并加载</p>
+</li>
+</ol>
+<h3 id="强缓存"><a href="#强缓存" class="headerlink" title="强缓存"></a>强缓存</h3><p>强缓存通过expires和cache-control两种请求头实现</p>
+<ol>
+<li><p>expires，设置绝对时间，表示资源过期的时间</p>
+</li>
+<li><p>Cache-Control，设置指令短语 max-age，表示相对时间</p>
+</li>
+</ol>
+<p>如果当前的时间在给定的时间之内，就会使用本地的缓存，而不会向服务器再去请求</p>
+<h3 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h3><p>当浏览器对某个资源的请求没有命中强缓存，就会发一个请求到服务器，验证协商缓存是否命中，如果协商缓存命中，请求响应返回的http状态为304并且会显示一个Not Modified的字符串</p>
+<p>实现协商缓存</p>
+<h4 id="last-modified和if-modified-since"><a href="#last-modified和if-modified-since" class="headerlink" title="last-modified和if-modified-since"></a>last-modified和if-modified-since</h4><p>浏览器上一次返回资源在返回头里返回last-modified首部字段，该首部字段表示该资源上次修改的时间，然后浏览器下次请求的时候会在请求头里设置if-modified-since，该首部字段设置为上次last-modified返回的值，</p>
+<p>以这种方式询问服务器这个资源从这个时间之后是否有修改，如果有就会返回新的资源，如果没有则返回304 not-modified状态码</p>
+<p>但是如果在本地打开缓存文件，就会造成 Last-Modified 被修改，所以在 HTTP / 1.1 出现了 ETag</p>
+<h4 id="Etag和if-none-match"><a href="#Etag和if-none-match" class="headerlink" title="Etag和if-none-match"></a>Etag和if-none-match</h4><p>浏览器上一次返回资源在返回头里返回Etag这个首部字段，Etag表示文件指纹，然后浏览器下次请求的时候会在请求头里设置if-none-match，该首部字段设置为上次eTag的值</p>
+<p>以这种方式询问服务器，请求的资源是否有更新，如果有就返回新的资源，如果没有则返回304 not-modified状态码</p>
 ]]></content>
+      <categories>
+        <category>缓存</category>
+      </categories>
       <tags>
-        <tag>babel</tag>
-        <tag>babel7</tag>
+        <tag>缓存</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据结构基本知识与常见的数据结构二：哈希表、树</title>
+    <url>/2019/04/26/data-structure2/</url>
+    <content><![CDATA[<h2 id="哈希"><a href="#哈希" class="headerlink" title="哈希"></a>哈希</h2><p>在学习哈希表之前要先了解一下什么叫哈希</p>
+<p>hash，一般翻译为散列，是把任意长度的输入，通过哈希算法变成固定长度的输出，输出的值就叫做散列</p>
+<p>通过md5算法来了解一下哈希</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> md5 <span class="keyword">from</span> <span class="string">'md5-node'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> a = <span class="string">'123456'</span>;</span><br><span class="line"><span class="keyword">const</span> b = <span class="string">'lalalalalala'</span>;</span><br><span class="line"><span class="keyword">const</span> c = <span class="string">'测试测试宝贝'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(md5(a));</span><br><span class="line"><span class="built_in">console</span>.log(md5(b));</span><br><span class="line"><span class="built_in">console</span>.log(md5(c));</span><br></pre></td></tr></table></figure>
+<p>在浏览器的控制台查看结果：</p>
+<p>e10adc3949ba59abbe56e057f20f883e</p>
+<p>3f9b6dcc758a64770bb28ae8c4e5b3ea</p>
+<p>a66ae9c7ac9801c50cc5fcdda02e6e10</p>
+<p>从console的结果可看出来，一开始的三个变量长度并不一样，最后经过md5算法都输出成一样长度的，输出的这一串就是散列值</p>
+<p>这个过程通过md5算法转换的过程叫做哈希转换，这种转换是一种压缩映射，映射表达的是一一对应的关系</p>
+<h3 id="哈希的特性"><a href="#哈希的特性" class="headerlink" title="哈希的特性"></a>哈希的特性</h3><ul>
+<li><p>哈希算法不能从结果推算输入，哈希算法是不可逆的</p>
+</li>
+<li><p>计算非常快</p>
+</li>
+</ul>
+<h3 id="哈希的用途"><a href="#哈希的用途" class="headerlink" title="哈希的用途"></a>哈希的用途</h3><ol>
+<li><p>密码存储、校验</p>
+<p>通常情况下，我们在各种系统里面提交的登陆密码在数据库里面都是经过哈希算法转换过之后的哈希值去存储的，</p>
+<p>那么哈希算法转换之后的结果是不可逆的，所以通过数据库的管理员并不知道我们的明文密码是什么，</p>
+<p>然后每次登陆的时候，提交密码，都要先经过同样的哈希算法转换一下，和数据库存储的密码的哈希值进行比较，就可以得出两个密码是不是一样的</p>
+</li>
+<li><p>文件完整校验</p>
+<p>当文件的内容修改过之后，经过哈希转换之后的哈希值也是会变化的，通过比较这两个哈希值，可以检测文件有没有改变</p>
+</li>
+</ol>
+<h3 id="哈希表"><a href="#哈希表" class="headerlink" title="哈希表"></a>哈希表</h3><p>我们知道数组在查询数据的时候是比较快速的，但是这个快速是基于我们能够确定我们需要查询的数据的索引值，简单的通过array[index]索引就可以查询</p>
+<p>如果我们不知道我们要查询的数据的索引，而是基于内容是查找，就需要遍历整个数组，然后比较，才能拿到想要的数据</p>
+<p>思考：如果我们能够将我们查询的内容的值作为索引，是不是知道了内容就能够查询到相关的数据呢？</p>
+<p>这个实现就是哈希表，哈希表是基于数组实现的，但是它在插入和删除的操作比数组要快</p>
+<p>哈希表的结构就是数组，与数组不相同的是，它的索引是经过哈希转换的</p>
+<h2 id="树"><a href="#树" class="headerlink" title="树"></a>树</h2>]]></content>
+      <categories>
+        <category>数据结构与算法</category>
+      </categories>
+      <tags>
+        <tag>数据结构与算法</tag>
       </tags>
   </entry>
   <entry>
     <title>数据结构基本知识与常见的数据结构三：图</title>
     <url>/2019/05/03/data-structure4/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<p>什么是图？</p>
+<p>Graph，是一种数据结构，一种多对多的数据结构</p>
+]]></content>
       <categories>
-        <category>数据结构与算饭</category>
+        <category>数据结构与算法</category>
       </categories>
       <tags>
         <tag>数据结构与算法</tag>
@@ -328,49 +371,29 @@
         <category>每日一题</category>
       </categories>
       <tags>
-        <tag>数据结构与算饭</tag>
+        <tag>数据结构与算法</tag>
       </tags>
   </entry>
   <entry>
-    <title>数据结构基本知识与常见的数据结构二：哈希表、树</title>
-    <url>/2019/04/26/data-structure2/</url>
-    <content><![CDATA[<h2 id="哈希"><a href="#哈希" class="headerlink" title="哈希"></a>哈希</h2><p>在学习哈希表之前要先了解一下什么叫哈希</p>
-<p>hash，一般翻译为散列，是把任意长度的输入，通过哈希算法变成固定长度的输出，输出的值就叫做散列</p>
-<p>通过md5算法来了解一下哈希</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> md5 <span class="keyword">from</span> <span class="string">'md5-node'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> a = <span class="string">'123456'</span>;</span><br><span class="line"><span class="keyword">const</span> b = <span class="string">'lalalalalala'</span>;</span><br><span class="line"><span class="keyword">const</span> c = <span class="string">'测试测试宝贝'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(md5(a));</span><br><span class="line"><span class="built_in">console</span>.log(md5(b));</span><br><span class="line"><span class="built_in">console</span>.log(md5(c));</span><br></pre></td></tr></table></figure>
-<p>在浏览器的控制台查看结果：</p>
-<p>e10adc3949ba59abbe56e057f20f883e</p>
-<p>3f9b6dcc758a64770bb28ae8c4e5b3ea</p>
-<p>a66ae9c7ac9801c50cc5fcdda02e6e10</p>
-<p>从console的结果可看出来，一开始的三个变量长度并不一样，最后经过md5算法都输出成一样长度的，输出的这一串就是散列值</p>
-<p>这个过程通过md5算法转换的过程叫做哈希转换，这种转换是一种压缩映射，映射表达的是一一对应的关系</p>
-<h3 id="哈希的特性"><a href="#哈希的特性" class="headerlink" title="哈希的特性"></a>哈希的特性</h3><ul>
-<li><p>哈希算法不能从结果推算输入，哈希算法是不可逆的</p>
-</li>
-<li><p>计算非常快</p>
-</li>
-</ul>
-<h3 id="哈希的用途"><a href="#哈希的用途" class="headerlink" title="哈希的用途"></a>哈希的用途</h3><ol>
-<li><p>密码存储、校验</p>
-<p>通常情况下，我们在各种系统里面提交的登陆密码在数据库里面都是经过哈希算法转换过之后的哈希值去存储的，</p>
-<p>那么哈希算法转换之后的结果是不可逆的，所以通过数据库的管理员并不知道我们的明文密码是什么，</p>
-<p>然后每次登陆的时候，提交密码，都要先经过同样的哈希算法转换一下，和数据库存储的密码的哈希值进行比较，就可以得出两个密码是不是一样的</p>
-</li>
-<li><p>文件完整校验</p>
-<p>当文件的内容修改过之后，经过哈希转换之后的哈希值也是会变化的，通过比较这两个哈希值，可以检测文件有没有改变</p>
-</li>
-</ol>
-<h3 id="哈希表"><a href="#哈希表" class="headerlink" title="哈希表"></a>哈希表</h3><p>我们知道数组在查询数据的时候是比较快速的，但是这个快速是基于我们能够确定我们需要查询的数据的索引值，简单的通过array[index]索引就可以查询</p>
-<p>如果我们不知道我们要查询的数据的索引，而是基于内容是查找，就需要遍历整个数组，然后比较，才能拿到想要的数据</p>
-<p>思考：如果我们能够将我们查询的内容的值作为索引，是不是知道了内容就能够查询到相关的数据呢？</p>
-<p>这个实现就是哈希表，哈希表是基于数组实现的，但是它在插入和删除的操作比数组要快</p>
-<p>哈希表的结构就是数组，与数组不相同的是，它的索引是经过哈希转换的</p>
-<h2 id="树"><a href="#树" class="headerlink" title="树"></a>树</h2>]]></content>
-      <categories>
-        <category>数据结构与算饭</category>
-      </categories>
+    <title>git操作</title>
+    <url>/2017/04/08/git-base/</url>
+    <content><![CDATA[<h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><p>新建分支：</p>
+<p>git checkout -b [分支]<br>git push –set-upstream origin [分支]</p>
+<p>删除本地分支：先切换到别的分支，然后git branch -d [分支]</p>
+<p>删除远程分支 ：git push origin –delete [分支]</p>
+<p>切换远程仓库的地址：git remote set-url oringin &lt;新的远程仓库URL&gt;</p>
+<p>查看远程仓库的地址：git remote -v</p>
+<h3 id="git-stash"><a href="#git-stash" class="headerlink" title="git stash"></a>git stash</h3><p>git stash 将当前所有修改项(未提交的)暂存，压栈。此时代码回到你上一次的提交，用git status可查看状态。</p>
+<p>git stash list将列出所有暂存项。</p>
+<p>git stash clear 清除所有暂存项。</p>
+<p>git stash apply 将暂存的修改重新应用，使用git status可以看到以前暂存的修改又回来了</p>
+<p>git stash pop 弹出最后一个stash</p>
+<h3 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h3><p>git log 查看提交日志</p>
+<p>git reset HEAD^  撤回上一次的commit提交</p>
+<p>git reset –hard [commit的版本id] ，回滚到某个版本的提交</p>
+]]></content>
       <tags>
-        <tag>数据结构与算法</tag>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -400,77 +423,6 @@
       <tags>
         <tag>git</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>函数内部this指向问题</title>
-    <url>/2019/04/13/js-202004this/</url>
-    <content><![CDATA[<p>this是一个对象，是在函数运行的时候基于函数的运行环境绑定的</p>
-<p>关于this指向的问题，可以简单的概括一句话：谁调用我，我就指向谁</p>
-<h2 id="this指向问题"><a href="#this指向问题" class="headerlink" title="this指向问题"></a>this指向问题</h2><p>在不同的场景下this的指向会不太一样，例如：</p>
-<h3 id="普通函数内部this指向window"><a href="#普通函数内部this指向window" class="headerlink" title="普通函数内部this指向window"></a>普通函数内部this指向window</h3><p>严格模式下this指向undefined，在函数内部执行：console.log(this)，控制台会输出undefined</p>
-<p>非严格模式下，this指向window，就是在window下调用了这个函数</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 普通函数中，this指向window</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// Window &#123;window: Window, self: Window, document: document, name: "", location: Location, …&#125;</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">aa</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// Window &#123;window: Window, self: Window, document: document, name: "", location: Location …&#125;</span></span><br><span class="line">  &#125;</span><br><span class="line">  aa()</span><br><span class="line">&#125;</span><br><span class="line">a();</span><br></pre></td></tr></table></figure>
-<h3 id="在对象的方法中this指向这个对象"><a href="#在对象的方法中this指向这个对象" class="headerlink" title="在对象的方法中this指向这个对象"></a>在对象的方法中this指向这个对象</h3><p>通过对象成员访问‘.’的方式调用，this指向这个对象，也就是这个对象调用了这个方法，所以这个方法的this指向这个对象</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  sayHi:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 在对象的方法中，指向sayHi对象</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);  <span class="comment">// window，this指向window，是因为这个函数是一个普通的函数，并不少某个对象的方法</span></span><br><span class="line">    &#125;</span><br><span class="line">    fn1();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 闭包window</span></span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.sayHi();</span><br></pre></td></tr></table></figure>
-<h3 id="在定时器中指向window"><a href="#在定时器中指向window" class="headerlink" title="在定时器中指向window"></a>在定时器中指向window</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// window</span></span><br><span class="line">&#125;,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<h3 id="在构造函数中"><a href="#在构造函数中" class="headerlink" title="在构造函数中"></a>在构造函数中</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 指向实例对象：Person&#123;&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> Person();</span><br></pre></td></tr></table></figure>
-<h3 id="在事件处理函数中指向"><a href="#在事件处理函数中指向" class="headerlink" title="在事件处理函数中指向"></a>在事件处理函数中指向</h3><p>指向绑定事件的对象</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">input.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 绑定事件对象</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="在匿名函数中指向window"><a href="#在匿名函数中指向window" class="headerlink" title="在匿名函数中指向window"></a>在匿名函数中指向window</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">//window</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
-<h2 id="改变this的指向"><a href="#改变this的指向" class="headerlink" title="改变this的指向"></a>改变this的指向</h2><h3 id="call"><a href="#call" class="headerlink" title="call"></a>call</h3><p><code>func.call(调用者，参数1，参数2)</code></p>
-<p>调用的时候函数会被立即执行，函数体内的this指向调用者</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">b.call(obj, <span class="string">'lll'</span>); <span class="comment">// this指向调用者：obj</span></span><br></pre></td></tr></table></figure>
-<h3 id="apply"><a href="#apply" class="headerlink" title="apply"></a>apply</h3><p><code>func.apply(调用者, [参数1，...])</code></p>
-<p>调用的时候函数会被立即执行，函数体内的this指向调用者</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">b.call(obj, [<span class="string">'111'</span>]); <span class="comment">// this指向调用者：obj</span></span><br></pre></td></tr></table></figure>
-<h3 id="bind方法"><a href="#bind方法" class="headerlink" title="bind方法"></a>bind方法</h3><p><code>func.bind(调用者，参数1，参数2)</code></p>
-<p>调用的时候函数不会被立即执行，返回一个新的函数，函数体内的this指向调用者，需要手动调用新的函数</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> bb = b.bind(obj, <span class="string">'lll'</span>); <span class="comment">//this指向obj</span></span><br><span class="line">bb();</span><br></pre></td></tr></table></figure>
-<h2 id="为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢"><a href="#为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢" class="headerlink" title="为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢"></a>为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  sayHi:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 在对象的方法中，指向sayHi对象</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);  <span class="comment">// window</span></span><br><span class="line">    &#125;</span><br><span class="line">    fn1();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 闭包window</span></span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.sayHi();</span><br></pre></td></tr></table></figure>
-<p>在函数被调用的时候，会自动获取两个特殊的对象：arguments和this，内部函数在搜索这两个变量的时候，只会搜索到其活动对象位置，因此永远不能访问外部函数中的这两个对象。</p>
-]]></content>
-      <categories>
-        <category>javascript</category>
-      </categories>
-      <tags>
-        <tag>javascript</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>git操作</title>
-    <url>/2017/04/08/git-base/</url>
-    <content><![CDATA[<h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><p>新建分支：</p>
-<p>git checkout -b [分支]<br>git push –set-upstream origin [分支]</p>
-<p>删除本地分支：先切换到别的分支，然后git branch -d [分支]</p>
-<p>删除远程分支 ：git push origin –delete [分支]</p>
-<p>切换远程仓库的地址：git remote set-url oringin &lt;新的远程仓库URL&gt;</p>
-<p>查看远程仓库的地址：git remote -v</p>
-<h3 id="git-stash"><a href="#git-stash" class="headerlink" title="git stash"></a>git stash</h3><p>git stash 将当前所有修改项(未提交的)暂存，压栈。此时代码回到你上一次的提交，用git status可查看状态。</p>
-<p>git stash list将列出所有暂存项。</p>
-<p>git stash clear 清除所有暂存项。</p>
-<p>git stash apply 将暂存的修改重新应用，使用git status可以看到以前暂存的修改又回来了</p>
-<p>git stash pop 弹出最后一个stash</p>
-<h3 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h3><p>git log 查看提交日志</p>
-<p>git reset HEAD^  撤回上一次的commit提交</p>
-<p>git reset –hard [commit的版本id] ，回滚到某个版本的提交</p>
-]]></content>
-      <tags>
-        <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2016/07/10/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-]]></content>
   </entry>
   <entry>
     <title>js数组操作</title>
@@ -514,25 +466,20 @@
 <h2 id="类数组转化"><a href="#类数组转化" class="headerlink" title="类数组转化"></a>类数组转化</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> arr = <span class="built_in">Array</span>.from(<span class="built_in">arguments</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> arr = [...arguments]</span><br></pre></td></tr></table></figure>]]></content>
       <tags>
         <tag>javascript</tag>
-        <tag>数组</tag>
       </tags>
   </entry>
   <entry>
-    <title>SMART原则</title>
-    <url>/2020/11/26/note-202011-smartstandard/</url>
-    <content><![CDATA[<p>SMART原则，是一种目标的制定和考核标准，使考核更加科学化、规范化，更能保证考核的公正、公开与公平。</p>
-<h2 id="SMART原则解析"><a href="#SMART原则解析" class="headerlink" title="SMART原则解析"></a>SMART原则解析</h2><ul>
-<li><p>S=Specific、具体的，就是说目标的制定必须是具体的，不能笼统</p>
-</li>
-<li><p>M=Measurable、可衡量的，目标是可以量化或者行为化的，验证指标是否达到标准的数据是可以获得的</p>
-</li>
-<li><p>A=Attainable、可实现的，指标在付出努力的情况下是可以达到的，不能设立的太高或者太低</p>
-</li>
-<li><p>R=Relevant、相关的，指标是与本职工作相关的</p>
-</li>
-<li><p>T=Time-bound、有时限的，指标具体完成的日期或者期限</p>
-</li>
-</ul>
+    <title>Hello World</title>
+    <url>/2016/07/10/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
 ]]></content>
   </entry>
   <entry>
@@ -592,8 +539,61 @@
         <category>产品</category>
       </categories>
       <tags>
-        <tag>用户体验</tag>
+        <tag>产品</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>函数内部this指向问题</title>
+    <url>/2019/04/13/js-202004this/</url>
+    <content><![CDATA[<p>this是一个对象，是在函数运行的时候基于函数的运行环境绑定的</p>
+<p>关于this指向的问题，可以简单的概括一句话：谁调用我，我就指向谁</p>
+<h2 id="this指向问题"><a href="#this指向问题" class="headerlink" title="this指向问题"></a>this指向问题</h2><p>在不同的场景下this的指向会不太一样，例如：</p>
+<h3 id="普通函数内部this指向window"><a href="#普通函数内部this指向window" class="headerlink" title="普通函数内部this指向window"></a>普通函数内部this指向window</h3><p>严格模式下this指向undefined，在函数内部执行：console.log(this)，控制台会输出undefined</p>
+<p>非严格模式下，this指向window，就是在window下调用了这个函数</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 普通函数中，this指向window</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// Window &#123;window: Window, self: Window, document: document, name: "", location: Location, …&#125;</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">aa</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// Window &#123;window: Window, self: Window, document: document, name: "", location: Location …&#125;</span></span><br><span class="line">  &#125;</span><br><span class="line">  aa()</span><br><span class="line">&#125;</span><br><span class="line">a();</span><br></pre></td></tr></table></figure>
+<h3 id="在对象的方法中this指向这个对象"><a href="#在对象的方法中this指向这个对象" class="headerlink" title="在对象的方法中this指向这个对象"></a>在对象的方法中this指向这个对象</h3><p>通过对象成员访问‘.’的方式调用，this指向这个对象，也就是这个对象调用了这个方法，所以这个方法的this指向这个对象</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  sayHi:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 在对象的方法中，指向sayHi对象</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);  <span class="comment">// window，this指向window，是因为这个函数是一个普通的函数，并不少某个对象的方法</span></span><br><span class="line">    &#125;</span><br><span class="line">    fn1();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 闭包window</span></span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.sayHi();</span><br></pre></td></tr></table></figure>
+<h3 id="在定时器中指向window"><a href="#在定时器中指向window" class="headerlink" title="在定时器中指向window"></a>在定时器中指向window</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// window</span></span><br><span class="line">&#125;,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="在构造函数中"><a href="#在构造函数中" class="headerlink" title="在构造函数中"></a>在构造函数中</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 指向实例对象：Person&#123;&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> Person();</span><br></pre></td></tr></table></figure>
+<h3 id="在事件处理函数中指向"><a href="#在事件处理函数中指向" class="headerlink" title="在事件处理函数中指向"></a>在事件处理函数中指向</h3><p>指向绑定事件的对象</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">input.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 绑定事件对象</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="在匿名函数中指向window"><a href="#在匿名函数中指向window" class="headerlink" title="在匿名函数中指向window"></a>在匿名函数中指向window</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">//window</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<h2 id="改变this的指向"><a href="#改变this的指向" class="headerlink" title="改变this的指向"></a>改变this的指向</h2><h3 id="call"><a href="#call" class="headerlink" title="call"></a>call</h3><p><code>func.call(调用者，参数1，参数2)</code></p>
+<p>调用的时候函数会被立即执行，函数体内的this指向调用者</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">b.call(obj, <span class="string">'lll'</span>); <span class="comment">// this指向调用者：obj</span></span><br></pre></td></tr></table></figure>
+<h3 id="apply"><a href="#apply" class="headerlink" title="apply"></a>apply</h3><p><code>func.apply(调用者, [参数1，...])</code></p>
+<p>调用的时候函数会被立即执行，函数体内的this指向调用者</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">b.call(obj, [<span class="string">'111'</span>]); <span class="comment">// this指向调用者：obj</span></span><br></pre></td></tr></table></figure>
+<h3 id="bind方法"><a href="#bind方法" class="headerlink" title="bind方法"></a>bind方法</h3><p><code>func.bind(调用者，参数1，参数2)</code></p>
+<p>调用的时候函数不会被立即执行，返回一个新的函数，函数体内的this指向调用者，需要手动调用新的函数</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> bb = b.bind(obj, <span class="string">'lll'</span>); <span class="comment">//this指向obj</span></span><br><span class="line">bb();</span><br></pre></td></tr></table></figure>
+<h2 id="为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢"><a href="#为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢" class="headerlink" title="为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢"></a>为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  sayHi:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 在对象的方法中，指向sayHi对象</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);  <span class="comment">// window</span></span><br><span class="line">    &#125;</span><br><span class="line">    fn1();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 闭包window</span></span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.sayHi();</span><br></pre></td></tr></table></figure>
+<p>在函数被调用的时候，会自动获取两个特殊的对象：arguments和this，内部函数在搜索这两个变量的时候，只会搜索到其活动对象位置，因此永远不能访问外部函数中的这两个对象。</p>
+]]></content>
+      <categories>
+        <category>javascript</category>
+      </categories>
+      <tags>
+        <tag>javascript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SMART原则</title>
+    <url>/2020/11/26/note-202011-smartstandard/</url>
+    <content><![CDATA[<p>SMART原则，是一种目标的制定和考核标准，使考核更加科学化、规范化，更能保证考核的公正、公开与公平。</p>
+<h2 id="SMART原则解析"><a href="#SMART原则解析" class="headerlink" title="SMART原则解析"></a>SMART原则解析</h2><ul>
+<li><p>S=Specific、具体的，就是说目标的制定必须是具体的，不能笼统</p>
+</li>
+<li><p>M=Measurable、可衡量的，目标是可以量化或者行为化的，验证指标是否达到标准的数据是可以获得的</p>
+</li>
+<li><p>A=Attainable、可实现的，指标在付出努力的情况下是可以达到的，不能设立的太高或者太低</p>
+</li>
+<li><p>R=Relevant、相关的，指标是与本职工作相关的</p>
+</li>
+<li><p>T=Time-bound、有时限的，指标具体完成的日期或者期限</p>
+</li>
+</ul>
+]]></content>
   </entry>
   <entry>
     <title>营销需求管理</title>
@@ -761,10 +761,10 @@
     <content><![CDATA[<p><img src="/img/project/项目风险来源.png" alt="图片"></p>
 ]]></content>
       <categories>
-        <category>产品</category>
+        <category>项目管理</category>
       </categories>
       <tags>
-        <tag>产品</tag>
+        <tag>项目管理</tag>
       </tags>
   </entry>
   <entry>
@@ -949,26 +949,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>window.print打印设置水印和页头页底</title>
-    <url>/2020/05/08/print/</url>
-    <content><![CDATA[<p>需求：点击打印按钮，打印出两个不同的文件，第一个文件是普通的表格，无特殊要求，第二个是打印一份录用员工的offer，打印offer需要每一页都有水印、带有公司logo的页头和带有公司网站的页底</p>
-<p>每一页的带有公司logo的页头页底，可以使用样式 <code>position: fixed;</code>设置为position: fixed;样式属性的元素，可以在打印的时候每一页纸上都显示在固定位置，样式如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.header</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.footer</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>正文部分设置适当的paddingTop值，使用 <code>pageBreakAfter: &#39;always&#39;</code>在适当的位置强制分页，效果：</p>
-<p><img src="/img/print/test1.jpeg" alt="效果"></p>
-<p>水印部分也要每个页面都有，同样思路使用 <code>position: fixed;</code>定位元素，正文部分要浮在水印的上面，使用<code>z-index</code>让正文部分的值高于水印部分的值：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.text</span> &#123;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">60px</span>;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.watermark</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">z-index</span>: -<span class="number">1</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">scale</span>(10) <span class="built_in">rotate</span>(-45deg);</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#fffffe</span>;</span><br><span class="line">  <span class="attribute">opacity</span>: <span class="number">0.3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/print/test2.png" alt="效果"></p>
-<p>碰到另外一个问题：点击一个按钮同时打印出来的除了offer还有另外一个审批的表格table，这个表格不需要页头页底和水印。</p>
-<p>解决方案：设置一个足够高的白色蒙版，<code>absolute</code>相对于offer定位，遮住不需要的水印和页头页底</p>
-<p>absolute定位的元素不会在每一页都显示，但是会根据相对的父级元素定位，可以用来遮住不想显示的内容</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">&lt;div</span><br><span class="line">  style=&#123;&#123;</span><br><span class="line">    position: <span class="string">'absolute'</span>,</span><br><span class="line">    top: <span class="number">-1199</span>,</span><br><span class="line">    left: <span class="number">0</span>,</span><br><span class="line">    width: <span class="string">'100%'</span>,</span><br><span class="line">    height: <span class="number">1200</span>,</span><br><span class="line">    zIndex: <span class="number">1</span>,</span><br><span class="line">    background: <span class="string">'#fff'</span>,</span><br><span class="line">  &#125;&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>print</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>react-fiber 原理介绍</title>
     <url>/2020/12/30/react-fiber/</url>
     <content><![CDATA[<h2 id="为什么会出现react-fiber"><a href="#为什么会出现react-fiber" class="headerlink" title="为什么会出现react-fiber"></a>为什么会出现react-fiber</h2><p>react15的问题：当我们调用setState更新页面的时候，React 会遍历应用的所有节点，计算出差异，然后再更新 UI。整个过程是一气呵成，不能被打断的</p>
@@ -1002,6 +982,26 @@
       </categories>
       <tags>
         <tag>react</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>window.print打印设置水印和页头页底</title>
+    <url>/2020/05/08/print/</url>
+    <content><![CDATA[<p>需求：点击打印按钮，打印出两个不同的文件，第一个文件是普通的表格，无特殊要求，第二个是打印一份录用员工的offer，打印offer需要每一页都有水印、带有公司logo的页头和带有公司网站的页底</p>
+<p>每一页的带有公司logo的页头页底，可以使用样式 <code>position: fixed;</code>设置为position: fixed;样式属性的元素，可以在打印的时候每一页纸上都显示在固定位置，样式如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.header</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.footer</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>正文部分设置适当的paddingTop值，使用 <code>pageBreakAfter: &#39;always&#39;</code>在适当的位置强制分页，效果：</p>
+<p><img src="/img/print/test1.jpeg" alt="效果"></p>
+<p>水印部分也要每个页面都有，同样思路使用 <code>position: fixed;</code>定位元素，正文部分要浮在水印的上面，使用<code>z-index</code>让正文部分的值高于水印部分的值：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.text</span> &#123;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">60px</span>;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.watermark</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">z-index</span>: -<span class="number">1</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">scale</span>(10) <span class="built_in">rotate</span>(-45deg);</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#fffffe</span>;</span><br><span class="line">  <span class="attribute">opacity</span>: <span class="number">0.3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/img/print/test2.png" alt="效果"></p>
+<p>碰到另外一个问题：点击一个按钮同时打印出来的除了offer还有另外一个审批的表格table，这个表格不需要页头页底和水印。</p>
+<p>解决方案：设置一个足够高的白色蒙版，<code>absolute</code>相对于offer定位，遮住不需要的水印和页头页底</p>
+<p>absolute定位的元素不会在每一页都显示，但是会根据相对的父级元素定位，可以用来遮住不想显示的内容</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">&lt;div</span><br><span class="line">  style=&#123;&#123;</span><br><span class="line">    position: <span class="string">'absolute'</span>,</span><br><span class="line">    top: <span class="number">-1199</span>,</span><br><span class="line">    left: <span class="number">0</span>,</span><br><span class="line">    width: <span class="string">'100%'</span>,</span><br><span class="line">    height: <span class="number">1200</span>,</span><br><span class="line">    zIndex: <span class="number">1</span>,</span><br><span class="line">    background: <span class="string">'#fff'</span>,</span><br><span class="line">  &#125;&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>技术方案</tag>
       </tags>
   </entry>
   <entry>
@@ -1156,7 +1156,7 @@
         <category>技术</category>
       </categories>
       <tags>
-        <tag>react-redux</tag>
+        <tag>react</tag>
       </tags>
   </entry>
   <entry>
@@ -1180,6 +1180,19 @@
       </categories>
       <tags>
         <tag>前端</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>网站收藏</title>
+    <url>/2018/07/10/site/</url>
+    <content><![CDATA[<p><a href="https://www.phodal.com/" target="_blank" rel="noopener">phodal博客</a></p>
+<p><a href="http://www.ruanyifeng.com/blog/" target="_blank" rel="noopener">阮一峰的网络日志</a></p>
+<p><a href="https://github.com/happyrui/nestTodoList/tree/develop" target="_blank" rel="noopener">赵芮(微盟同事)的github</a></p>
+<p><a href="https://blog.csdn.net/zr15829039341" target="_blank" rel="noopener">赵芮(微盟同事)的博客</a></p>
+<p><a href="https://martindelophy.github.io/blog/" target="_blank" rel="noopener">杨海鑫（同事）的博客</a></p>
+]]></content>
+      <tags>
+        <tag>笔记</tag>
       </tags>
   </entry>
   <entry>
@@ -1246,20 +1259,7 @@
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">const</span> interval = setInterval(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'setInterval'</span>)</span><br><span class="line">      &#125;, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">      setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;  </span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'setTimeout 1'</span>)</span><br><span class="line">        <span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">          <span class="built_in">console</span>.log(<span class="string">'promise 2'</span>)</span><br><span class="line">        &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">          setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'setTimeout 2'</span>)</span><br><span class="line">            <span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">              <span class="built_in">console</span>.log(<span class="string">'promise 3'</span>)</span><br><span class="line">            &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">                clearInterval(interval)</span><br><span class="line">            &#125;)</span><br><span class="line">          &#125;, <span class="number">0</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">      <span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'promise 1'</span>)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">promise <span class="number">1</span></span><br><span class="line">setInterval</span><br><span class="line">setTimeout <span class="number">1</span></span><br><span class="line">promise <span class="number">2</span></span><br><span class="line">setInterval</span><br><span class="line">setTimeout <span class="number">2</span></span><br><span class="line">promise <span class="number">3</span></span><br></pre></td></tr></table></figure>]]></content>
       <tags>
-        <tag>browser</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>网站收藏</title>
-    <url>/2018/07/10/site/</url>
-    <content><![CDATA[<p><a href="https://www.phodal.com/" target="_blank" rel="noopener">phodal博客</a></p>
-<p><a href="http://www.ruanyifeng.com/blog/" target="_blank" rel="noopener">阮一峰的网络日志</a></p>
-<p><a href="https://github.com/happyrui/nestTodoList/tree/develop" target="_blank" rel="noopener">赵芮(微盟同事)的github</a></p>
-<p><a href="https://blog.csdn.net/zr15829039341" target="_blank" rel="noopener">赵芮(微盟同事)的博客</a></p>
-<p><a href="https://martindelophy.github.io/blog/" target="_blank" rel="noopener">杨海鑫（同事）的博客</a></p>
-]]></content>
-      <tags>
-        <tag>收藏</tag>
+        <tag>开发工具</tag>
       </tags>
   </entry>
   <entry>
@@ -1325,98 +1325,6 @@
 ]]></content>
       <tags>
         <tag>react</tag>
-        <tag>hooks</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>package-lock.json</title>
-    <url>/2018/03/20/webpack-20180320-package-lock.json/</url>
-    <content><![CDATA[<p>什么是package-lock.json，为什么会出现这个文件，使用的时候的注意事项</p>
-<h2 id="什么是package-lock-json"><a href="#什么是package-lock-json" class="headerlink" title="什么是package-lock.json"></a>什么是package-lock.json</h2><p>npm5之后执行npm install会自动生成一个文件package-lock.json，打开这个文件，可能长这样子：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"ad-portal2.0"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"0.1.0"</span>,</span><br><span class="line">  <span class="attr">"lockfileVersion"</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">"requires"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"@ant-design/colors"</span>: &#123;</span><br><span class="line">      <span class="attr">"version"</span>: <span class="string">"6.0.0"</span>,</span><br><span class="line">      <span class="attr">"resolved"</span>: <span class="string">"https://registry.npm.taobao.org/@ant-design/colors/download/@ant-design/colors-6.0.0.tgz"</span>,</span><br><span class="line">      <span class="attr">"integrity"</span>: <span class="string">"sha1-m5NmJXz/zEfbQrnQIDu1ksE8Apg="</span>,</span><br><span class="line">      <span class="attr">"requires"</span>: &#123;</span><br><span class="line">        <span class="attr">"@ctrl/tinycolor"</span>: <span class="string">"^3.4.0"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>官方给出的解释：package-lock.json is automatically generated for any operations where npm modifies either the node_modules tree, or package.json. It describes the exact tree that was generated, such that subsequent installs are able to generate identical trees, regardless of intermediate dependency updates.</p>
-<p>翻译一下：package-lock.json是当npm改变的时候自动生成的一个文件，不论是改变node_modules树还是package.json，它描述了确切的生成的一颗树，以至于保证后续的install能够生成相同的树，不考虑中间依赖项更新</p>
-<p>简单来说，package-lock.json就是锁定安装时的包的版本号，以保证其他人在npm install时大家的依赖能保持一致。它甚至还记录了包下载的地址</p>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="package-json"><a href="#package-json" class="headerlink" title="package.json"></a>package.json</h3><p>先从package.json说起：package.json就是管理 npm 包的文件，包含了项目所依赖的 npm 包、项目的配置信息。</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"test"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"0.1.0"</span>,</span><br><span class="line">  <span class="attr">"private"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"react"</span>: <span class="string">"^17.0.2"</span>,</span><br><span class="line">    <span class="attr">"react-dom"</span>: <span class="string">"^17.0.2"</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"babel-plugin-import"</span>: <span class="string">"^1.13.3"</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;&#125;,</span><br><span class="line">  <span class="attr">"eslintConfig"</span>: &#123;&#125;,</span><br><span class="line">  <span class="attr">"browserslist"</span>: &#123;&#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当我们执行 npm istall xxx的时候就会在dependencies或者devDependencies中增加一个包的名字加版本号的记录</p>
-<h3 id="semver语义化的版本号"><a href="#semver语义化的版本号" class="headerlink" title="semver语义化的版本号"></a>semver语义化的版本号</h3><p>上面的package.json中每一个包都有自己的版本号，是我们安装时候的版本号，使用的是semver语义化的版本号规则，他是npm包管理的精髓。</p>
-<p>什么是semver语义化的版本号？</p>
-<p><code>&quot;react&quot;: &quot;^17.0.2&quot;,</code>比如这个包的版本号</p>
-<p>版本号主要包含：版本符号（^），主版本号（X），次版本号（Y），补丁更新（Z）</p>
-<ul>
-<li><p>补丁更新：当前版本下的bug修复，补丁更新的数字加1</p>
-</li>
-<li><p>次版本号：增加新功能，且不破坏原有的功能，次版本号的数字加1</p>
-</li>
-<li><p>主版本号：重大修改，可能不兼容旧的功能，主版本号加1</p>
-</li>
-</ul>
-<p>版本符号，用来做版本的控制：</p>
-<ul>
-<li><p>^：默认，使用npm install安装包的时候，会自动在版本号前面加这个符号，表示保护主版本号不变</p>
-</li>
-<li><p>~：可以手动的修改^为~，表示保护次版本号不变</p>
-</li>
-<li><blockquote>
-<p>：主要是用来指定可以安装beta版本</p>
-</blockquote>
-</li>
-</ul>
-<p>例如：</p>
-<p><code>&quot;react&quot;: &quot;^17.0.2&quot;</code>，当我们执行npm install的时候，只能在保证主版本号不变的情况下安装最新版本的包。</p>
-<p><code>&quot;react&quot;: &quot;~17.0.2&quot;</code>，当我们执行npm install的时候，只能在保证次版本号不变的情况下安装最新版本的包。</p>
-<h3 id="package-json的问题"><a href="#package-json的问题" class="headerlink" title="package.json的问题"></a>package.json的问题</h3><p>一般的开发过程，我们是不会把node_modules这个文件提交到代码仓库，而是通过package.json来存储包的依赖，然后当在另外一台电脑上想要运行项目的时候，就会从git仓库把代码拉下来，本地执行npm install，重新安装包。这个时候就会出现问题</p>
-<p>例如我们在安装的时候react的版本是17.0.2，我们的package.json中react的版本号是<code>&quot;react&quot;: &quot;^17.0.2&quot;</code>，然后在另外一台电脑上install的时候会默认在保持17这个主版本号不变的情况下下载最新的版本的包，正好这个时候react从17.0.2升级到了17.1.1，然后17.1.1或许会有bug，然后在新的电脑上运行项目就会报错了。</p>
-<p>虽然我们可以手动改变react的版本号，但当我们的依赖变的很多的而且有嵌套关系的时候，手动修改就会变的很麻烦，package-lock.json的出现就是为了解决这个问题，因为它会锁定安装时候的版本号，保证所有的人在install的时候都能安装到相同的包</p>
-<h2 id="锁版本号"><a href="#锁版本号" class="headerlink" title="锁版本号"></a>锁版本号</h2><p>有了package-lock.json，我们需要把它提交到代码仓库，这样子就保证了在每一台电脑上install的时候都能安装到相同版本的包，那么该如何使用呢？</p>
-<p>搭建一个demo项目来尝试一下：</p>
-<ol>
-<li><p>新建空的目录 package-test</p>
-</li>
-<li><p>命令终端进入这个目录，输入命令<code>npm init -y</code>会车，生成package.json文件，如下</p>
-</li>
-<li><p>安装一个包来测试，<code>npm install react@15.0.0</code>，安装一个react的指定版本15.0.0</p>
-</li>
-</ol>
-<p>安装完react的15版本之后，package.json会增加一个包的信息，版本的符号是默认的^</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"dependencies": &#123;</span><br><span class="line">  "react": "^15.0.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>并且根目录下自动出现了package-lock.json文件，react版本</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"react": &#123;</span><br><span class="line">  "version": "15.0.0",</span><br><span class="line">  "resolved": "https://registry.npmjs.org/react/-/react-15.0.0.tgz",</span><br><span class="line">  "integrity": "sha1-PH4WUx1jDhXBpQqUfxS6YXRq+Kc=",</span><br><span class="line">  "requires": &#123;</span><br><span class="line">    "fbjs": "^0.8.0",</span><br><span class="line">    "loose-envify": "^1.1.0",</span><br><span class="line">    "object-assign": "^4.0.1"</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-<p>根目录下还生成了一个node_modules文件夹，里面的react也是15.0.0版本</p>
-<p>这个项目主要是测试package.json和package-lock.json的功能，不用来运行，简单一下就好</p>
-<h3 id="不使用package-lock-json"><a href="#不使用package-lock-json" class="headerlink" title="不使用package-lock.json"></a>不使用package-lock.json</h3><p>手动的删除package-lock.json文件夹，以禁用package-lock.json</p>
-<p>手动删除node_modules文件夹，假装是在另一台电脑上重新install，执行 npm install，发现根目录再次自动生成了package-lock.json，</p>
-<p>查看package.json，里面的react的包的版本号不变还是15.0.0</p>
-<p>查看package-lock.json，里面的react的包的版本号变成了15.7.0，node_modules文件夹，里面的react也是15.7.0版本，</p>
-<p>因为package.json里面react的版本符号是^，所以在执行install的时候能够保证主版本号不变，npm会为我们安装当前主版本号下面最新的包，也就是15.7.0，而这不是我们想要的</p>
-<h3 id="使用package-lock-json"><a href="#使用package-lock-json" class="headerlink" title="使用package-lock.json"></a>使用package-lock.json</h3><p>使用上面的方法再次搭建一个新的demo项目，这次不删除package-lock.json，</p>
-<p>手动删除node_modules文件夹，假装是在另一台电脑上重新install，重新执行 npm install</p>
-<p>查看package.json，里面的react的包的版本号不变还是15.0.0，</p>
-<p>查看package-lock.json，里面的react的包的版本号还是15.0.0，node_modules文件夹，里面的react也是15.0.0版本，</p>
-<p>这似乎达到了我们的想要的目的</p>
-<h3 id="手动修改package-json"><a href="#手动修改package-json" class="headerlink" title="手动修改package.json"></a>手动修改package.json</h3><p>我们想要升级一个npm包，直接修改package.json里面的版本号，然后执行npm install，</p>
-<p>比如我现在把package.json里面的react的版本号直接改成16.0.0</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"dependencies": &#123;</span><br><span class="line">  "react": "^16.0.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>而package-lock.json，里面的react的包的版本号还是15.0.0，</p>
-<p>这个情况是package-lock.json和package.json里面的版本号不一样了，执行npm install之后会出现什么情况呢？</p>
-<p>手动删掉node_modules文件夹，假装是在另一台电脑上重新install，重新执行 npm install，</p>
-<p>查看package.json，里面的react的包的版本号不变还是16.0.0，</p>
-<p>查看package-lock.json，里面的react的包的版本号还是16.14.0，node_modules文件夹，里面的react也是16.14.0版本，</p>
-<p>由此可以看出，当我们执行npm install 的时候，npm会首先查看package-lock.json里面的依赖版本，然后查看package.json里面的版本，如果两者一致则按照package-lock.json的版本安装，如果两者冲突会以package.json为主，并且更新package-lock.json里面的版本号</p>
-<h3 id="如何锁版本号"><a href="#如何锁版本号" class="headerlink" title="如何锁版本号"></a>如何锁版本号</h3><p>为了避免出现无意的更新package-lock.json，我们可以不使用版本符号，锁定版本：</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"dependencies": &#123;</span><br><span class="line">  "react": "16.0.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>重新执行 npm install，</p>
-<p>查看package.json，里面的react的包的版本号不变还是16.0.0，</p>
-<p>查看package-lock.json，里面的react的包的版本号还是16.0.0，node_modules文件夹，里面的react也是16.0.0版本</p>
-<p>当我们想要使用某个包的最新的版本的代码的时候可以手动执行 <code>npm update xxx@版本号</code>来安装最新的版本或者安装指定版本的包</p>
-<p>这个操作会重写package-lock.json文件</p>
-]]></content>
-      <categories>
-        <category>webpack</category>
-      </categories>
-      <tags>
-        <tag>webpack</tag>
       </tags>
   </entry>
   <entry>
@@ -1763,7 +1671,98 @@
 <p><a href="https://juejin.im/post/6856791557035524109#heading-14" target="_blank" rel="noopener">redux教程</a></p>
 ]]></content>
       <tags>
-        <tag>redux</tag>
+        <tag>react</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>package-lock.json</title>
+    <url>/2018/03/20/webpack-20180320-package-lock.json/</url>
+    <content><![CDATA[<p>什么是package-lock.json，为什么会出现这个文件，使用的时候的注意事项</p>
+<h2 id="什么是package-lock-json"><a href="#什么是package-lock-json" class="headerlink" title="什么是package-lock.json"></a>什么是package-lock.json</h2><p>npm5之后执行npm install会自动生成一个文件package-lock.json，打开这个文件，可能长这样子：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"ad-portal2.0"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"0.1.0"</span>,</span><br><span class="line">  <span class="attr">"lockfileVersion"</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">"requires"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"@ant-design/colors"</span>: &#123;</span><br><span class="line">      <span class="attr">"version"</span>: <span class="string">"6.0.0"</span>,</span><br><span class="line">      <span class="attr">"resolved"</span>: <span class="string">"https://registry.npm.taobao.org/@ant-design/colors/download/@ant-design/colors-6.0.0.tgz"</span>,</span><br><span class="line">      <span class="attr">"integrity"</span>: <span class="string">"sha1-m5NmJXz/zEfbQrnQIDu1ksE8Apg="</span>,</span><br><span class="line">      <span class="attr">"requires"</span>: &#123;</span><br><span class="line">        <span class="attr">"@ctrl/tinycolor"</span>: <span class="string">"^3.4.0"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>官方给出的解释：package-lock.json is automatically generated for any operations where npm modifies either the node_modules tree, or package.json. It describes the exact tree that was generated, such that subsequent installs are able to generate identical trees, regardless of intermediate dependency updates.</p>
+<p>翻译一下：package-lock.json是当npm改变的时候自动生成的一个文件，不论是改变node_modules树还是package.json，它描述了确切的生成的一颗树，以至于保证后续的install能够生成相同的树，不考虑中间依赖项更新</p>
+<p>简单来说，package-lock.json就是锁定安装时的包的版本号，以保证其他人在npm install时大家的依赖能保持一致。它甚至还记录了包下载的地址</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="package-json"><a href="#package-json" class="headerlink" title="package.json"></a>package.json</h3><p>先从package.json说起：package.json就是管理 npm 包的文件，包含了项目所依赖的 npm 包、项目的配置信息。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"test"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"0.1.0"</span>,</span><br><span class="line">  <span class="attr">"private"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"react"</span>: <span class="string">"^17.0.2"</span>,</span><br><span class="line">    <span class="attr">"react-dom"</span>: <span class="string">"^17.0.2"</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"babel-plugin-import"</span>: <span class="string">"^1.13.3"</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;&#125;,</span><br><span class="line">  <span class="attr">"eslintConfig"</span>: &#123;&#125;,</span><br><span class="line">  <span class="attr">"browserslist"</span>: &#123;&#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们执行 npm istall xxx的时候就会在dependencies或者devDependencies中增加一个包的名字加版本号的记录</p>
+<h3 id="semver语义化的版本号"><a href="#semver语义化的版本号" class="headerlink" title="semver语义化的版本号"></a>semver语义化的版本号</h3><p>上面的package.json中每一个包都有自己的版本号，是我们安装时候的版本号，使用的是semver语义化的版本号规则，他是npm包管理的精髓。</p>
+<p>什么是semver语义化的版本号？</p>
+<p><code>&quot;react&quot;: &quot;^17.0.2&quot;,</code>比如这个包的版本号</p>
+<p>版本号主要包含：版本符号（^），主版本号（X），次版本号（Y），补丁更新（Z）</p>
+<ul>
+<li><p>补丁更新：当前版本下的bug修复，补丁更新的数字加1</p>
+</li>
+<li><p>次版本号：增加新功能，且不破坏原有的功能，次版本号的数字加1</p>
+</li>
+<li><p>主版本号：重大修改，可能不兼容旧的功能，主版本号加1</p>
+</li>
+</ul>
+<p>版本符号，用来做版本的控制：</p>
+<ul>
+<li><p>^：默认，使用npm install安装包的时候，会自动在版本号前面加这个符号，表示保护主版本号不变</p>
+</li>
+<li><p>~：可以手动的修改^为~，表示保护次版本号不变</p>
+</li>
+<li><blockquote>
+<p>：主要是用来指定可以安装beta版本</p>
+</blockquote>
+</li>
+</ul>
+<p>例如：</p>
+<p><code>&quot;react&quot;: &quot;^17.0.2&quot;</code>，当我们执行npm install的时候，只能在保证主版本号不变的情况下安装最新版本的包。</p>
+<p><code>&quot;react&quot;: &quot;~17.0.2&quot;</code>，当我们执行npm install的时候，只能在保证次版本号不变的情况下安装最新版本的包。</p>
+<h3 id="package-json的问题"><a href="#package-json的问题" class="headerlink" title="package.json的问题"></a>package.json的问题</h3><p>一般的开发过程，我们是不会把node_modules这个文件提交到代码仓库，而是通过package.json来存储包的依赖，然后当在另外一台电脑上想要运行项目的时候，就会从git仓库把代码拉下来，本地执行npm install，重新安装包。这个时候就会出现问题</p>
+<p>例如我们在安装的时候react的版本是17.0.2，我们的package.json中react的版本号是<code>&quot;react&quot;: &quot;^17.0.2&quot;</code>，然后在另外一台电脑上install的时候会默认在保持17这个主版本号不变的情况下下载最新的版本的包，正好这个时候react从17.0.2升级到了17.1.1，然后17.1.1或许会有bug，然后在新的电脑上运行项目就会报错了。</p>
+<p>虽然我们可以手动改变react的版本号，但当我们的依赖变的很多的而且有嵌套关系的时候，手动修改就会变的很麻烦，package-lock.json的出现就是为了解决这个问题，因为它会锁定安装时候的版本号，保证所有的人在install的时候都能安装到相同的包</p>
+<h2 id="锁版本号"><a href="#锁版本号" class="headerlink" title="锁版本号"></a>锁版本号</h2><p>有了package-lock.json，我们需要把它提交到代码仓库，这样子就保证了在每一台电脑上install的时候都能安装到相同版本的包，那么该如何使用呢？</p>
+<p>搭建一个demo项目来尝试一下：</p>
+<ol>
+<li><p>新建空的目录 package-test</p>
+</li>
+<li><p>命令终端进入这个目录，输入命令<code>npm init -y</code>会车，生成package.json文件，如下</p>
+</li>
+<li><p>安装一个包来测试，<code>npm install react@15.0.0</code>，安装一个react的指定版本15.0.0</p>
+</li>
+</ol>
+<p>安装完react的15版本之后，package.json会增加一个包的信息，版本的符号是默认的^</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"dependencies": &#123;</span><br><span class="line">  "react": "^15.0.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>并且根目录下自动出现了package-lock.json文件，react版本</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"react": &#123;</span><br><span class="line">  "version": "15.0.0",</span><br><span class="line">  "resolved": "https://registry.npmjs.org/react/-/react-15.0.0.tgz",</span><br><span class="line">  "integrity": "sha1-PH4WUx1jDhXBpQqUfxS6YXRq+Kc=",</span><br><span class="line">  "requires": &#123;</span><br><span class="line">    "fbjs": "^0.8.0",</span><br><span class="line">    "loose-envify": "^1.1.0",</span><br><span class="line">    "object-assign": "^4.0.1"</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>根目录下还生成了一个node_modules文件夹，里面的react也是15.0.0版本</p>
+<p>这个项目主要是测试package.json和package-lock.json的功能，不用来运行，简单一下就好</p>
+<h3 id="不使用package-lock-json"><a href="#不使用package-lock-json" class="headerlink" title="不使用package-lock.json"></a>不使用package-lock.json</h3><p>手动的删除package-lock.json文件夹，以禁用package-lock.json</p>
+<p>手动删除node_modules文件夹，假装是在另一台电脑上重新install，执行 npm install，发现根目录再次自动生成了package-lock.json，</p>
+<p>查看package.json，里面的react的包的版本号不变还是15.0.0</p>
+<p>查看package-lock.json，里面的react的包的版本号变成了15.7.0，node_modules文件夹，里面的react也是15.7.0版本，</p>
+<p>因为package.json里面react的版本符号是^，所以在执行install的时候能够保证主版本号不变，npm会为我们安装当前主版本号下面最新的包，也就是15.7.0，而这不是我们想要的</p>
+<h3 id="使用package-lock-json"><a href="#使用package-lock-json" class="headerlink" title="使用package-lock.json"></a>使用package-lock.json</h3><p>使用上面的方法再次搭建一个新的demo项目，这次不删除package-lock.json，</p>
+<p>手动删除node_modules文件夹，假装是在另一台电脑上重新install，重新执行 npm install</p>
+<p>查看package.json，里面的react的包的版本号不变还是15.0.0，</p>
+<p>查看package-lock.json，里面的react的包的版本号还是15.0.0，node_modules文件夹，里面的react也是15.0.0版本，</p>
+<p>这似乎达到了我们的想要的目的</p>
+<h3 id="手动修改package-json"><a href="#手动修改package-json" class="headerlink" title="手动修改package.json"></a>手动修改package.json</h3><p>我们想要升级一个npm包，直接修改package.json里面的版本号，然后执行npm install，</p>
+<p>比如我现在把package.json里面的react的版本号直接改成16.0.0</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"dependencies": &#123;</span><br><span class="line">  "react": "^16.0.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而package-lock.json，里面的react的包的版本号还是15.0.0，</p>
+<p>这个情况是package-lock.json和package.json里面的版本号不一样了，执行npm install之后会出现什么情况呢？</p>
+<p>手动删掉node_modules文件夹，假装是在另一台电脑上重新install，重新执行 npm install，</p>
+<p>查看package.json，里面的react的包的版本号不变还是16.0.0，</p>
+<p>查看package-lock.json，里面的react的包的版本号还是16.14.0，node_modules文件夹，里面的react也是16.14.0版本，</p>
+<p>由此可以看出，当我们执行npm install 的时候，npm会首先查看package-lock.json里面的依赖版本，然后查看package.json里面的版本，如果两者一致则按照package-lock.json的版本安装，如果两者冲突会以package.json为主，并且更新package-lock.json里面的版本号</p>
+<h3 id="如何锁版本号"><a href="#如何锁版本号" class="headerlink" title="如何锁版本号"></a>如何锁版本号</h3><p>为了避免出现无意的更新package-lock.json，我们可以不使用版本符号，锁定版本：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"dependencies": &#123;</span><br><span class="line">  "react": "16.0.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重新执行 npm install，</p>
+<p>查看package.json，里面的react的包的版本号不变还是16.0.0，</p>
+<p>查看package-lock.json，里面的react的包的版本号还是16.0.0，node_modules文件夹，里面的react也是16.0.0版本</p>
+<p>当我们想要使用某个包的最新的版本的代码的时候可以手动执行 <code>npm update xxx@版本号</code>来安装最新的版本或者安装指定版本的包</p>
+<p>这个操作会重写package-lock.json文件</p>
+]]></content>
+      <categories>
+        <category>webpack</category>
+      </categories>
+      <tags>
+        <tag>webpack</tag>
       </tags>
   </entry>
   <entry>
@@ -2079,7 +2078,7 @@
 <p>从图中可以看出来，原型链的继承的数据结构是链表的结构实现的，而所有的对象最终的继承都是Object</p>
 ]]></content>
       <categories>
-        <category>数据结构与算饭</category>
+        <category>数据结构与算法</category>
       </categories>
       <tags>
         <tag>数据结构与算法</tag>
@@ -2286,7 +2285,7 @@
 <p>在插入节点的时候，会先去遍历当前要插入的节点，应该在哪个位置，因为新插入的节点都是红色的，为了保证红黑树的性质，还需要看是否需要调整节点的颜色属性</p>
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h3 id="二叉搜索树的完整代码"><a href="#二叉搜索树的完整代码" class="headerlink" title="二叉搜索树的完整代码"></a>二叉搜索树的完整代码</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BSTNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(value) &#123;</span><br><span class="line">    <span class="keyword">this</span>.value = value;</span><br><span class="line">    <span class="keyword">this</span>.left = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">this</span>.right = <span class="literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BST</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span> () &#123;</span><br><span class="line">    <span class="keyword">this</span>.root = <span class="literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  insertNode(node, newNode) &#123;</span><br><span class="line">    <span class="keyword">if</span>(newNode.value &gt; node.value) &#123;</span><br><span class="line">      <span class="keyword">if</span>(node.right === <span class="literal">null</span>) &#123;</span><br><span class="line">        node.right = newNode</span><br><span class="line">      &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.insertNode(node.right, newNode)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(newNode.value &lt; node.value) &#123;</span><br><span class="line">      <span class="keyword">if</span>(node.left === <span class="literal">null</span>) &#123;</span><br><span class="line">        node.left = newNode</span><br><span class="line">      &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.insertNode(node.left, newNode)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  insert(value) &#123;</span><br><span class="line">    <span class="keyword">const</span> newNode = <span class="keyword">new</span> BSTNode(value);</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>.root === <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">this</span>.root = newNode;</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">this</span>.insertNode(<span class="keyword">this</span>.root, newNode)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  preOrder() &#123;</span><br><span class="line">    <span class="keyword">const</span> arr = [];</span><br><span class="line">    <span class="keyword">this</span>.preOrderNode(<span class="keyword">this</span>.root, arr);</span><br><span class="line">    <span class="keyword">return</span> arr;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  preOrderNode(node, arr) &#123;</span><br><span class="line">    <span class="keyword">if</span>(node === <span class="literal">null</span>) <span class="keyword">return</span>;</span><br><span class="line">    arr.push(node.value);</span><br><span class="line">    <span class="keyword">const</span> left = node.left;</span><br><span class="line">    <span class="keyword">const</span> right = node.right;</span><br><span class="line">    <span class="keyword">if</span>(left) <span class="keyword">this</span>.preOrderNode(left, arr);</span><br><span class="line">    <span class="keyword">if</span>(right) <span class="keyword">this</span>.preOrderNode(right, arr);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  inOrder() &#123;</span><br><span class="line">    <span class="keyword">const</span> arr = [];</span><br><span class="line">    <span class="keyword">this</span>.inOrderNode(<span class="keyword">this</span>.root, arr);</span><br><span class="line">    <span class="keyword">return</span> arr;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  inOrderNode(node, arr) &#123;</span><br><span class="line">    <span class="keyword">if</span>(node === <span class="literal">null</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">const</span> left = node.left;</span><br><span class="line">    <span class="keyword">const</span> right = node.right;</span><br><span class="line">    <span class="keyword">if</span>(left) <span class="keyword">this</span>.inOrderNode(left, arr);</span><br><span class="line">    arr.push(node.value);</span><br><span class="line">    <span class="keyword">if</span>(right) <span class="keyword">this</span>.inOrderNode(right, arr);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  postOrder() &#123;</span><br><span class="line">    <span class="keyword">const</span> arr = [];</span><br><span class="line">    <span class="keyword">this</span>.postOrderNode(<span class="keyword">this</span>.root, arr);</span><br><span class="line">    <span class="keyword">return</span> arr;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  postOrderNode(node, arr)&#123;</span><br><span class="line">    <span class="keyword">if</span>(node === <span class="literal">null</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">const</span> left = node.left;</span><br><span class="line">    <span class="keyword">const</span> right = node.right;</span><br><span class="line">    <span class="keyword">if</span>(left) <span class="keyword">this</span>.postOrderNode(left, arr);</span><br><span class="line">    <span class="keyword">if</span>(right) <span class="keyword">this</span>.postOrderNode(right, arr);</span><br><span class="line">    </span><br><span class="line">    arr.push(node.value);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  max() &#123;</span><br><span class="line">    <span class="keyword">let</span> node = <span class="keyword">this</span>.root;</span><br><span class="line">    <span class="keyword">while</span>(node.right !== <span class="literal">null</span>) &#123;</span><br><span class="line">      node = node.right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node.value</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  min() &#123;</span><br><span class="line">    <span class="keyword">let</span> node = <span class="keyword">this</span>.root;</span><br><span class="line">    <span class="keyword">while</span>(node.left !== <span class="literal">null</span>) &#123;</span><br><span class="line">      node = node.left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node.value</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  search(val) &#123;</span><br><span class="line">    <span class="keyword">let</span> node = <span class="keyword">this</span>.root;</span><br><span class="line">    <span class="keyword">while</span> (node !== <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span>(node.value &gt; val)&#123;</span><br><span class="line">        node = node.left</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (node.value &lt; val) &#123;</span><br><span class="line">        node = node.right</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> bst = <span class="keyword">new</span> BST();</span><br><span class="line">bst.insert(<span class="number">10</span>);</span><br><span class="line">bst.insert(<span class="number">5</span>);</span><br><span class="line">bst.insert(<span class="number">15</span>);</span><br><span class="line">bst.insert(<span class="number">3</span>);</span><br><span class="line">bst.insert(<span class="number">6</span>);</span><br><span class="line">bst.insert(<span class="number">12</span>);</span><br><span class="line">bst.insert(<span class="number">16</span>);</span><br><span class="line"><span class="keyword">const</span> inOrderList = bst.inOrder()</span><br><span class="line"><span class="built_in">console</span>.log(inOrderList) <span class="comment">// [3, 5, 6, 10, 12, 15, 16]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> postOrderList = bst.postOrder();</span><br><span class="line"><span class="built_in">console</span>.log(postOrderList) <span class="comment">// [3, 6, 5, 12, 16, 15, 10]</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(bst.max()) <span class="comment">// 16</span></span><br><span class="line"><span class="built_in">console</span>.log(bst.min()) <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(bst.search(<span class="number">25</span>)) <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(bst.search(<span class="number">15</span>)) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>]]></content>
       <categories>
-        <category>数据结构与算饭</category>
+        <category>数据结构与算法</category>
       </categories>
       <tags>
         <tag>数据结构与算法</tag>
@@ -2356,7 +2355,7 @@
 <h2 id="实现Promise-race"><a href="#实现Promise-race" class="headerlink" title="实现Promise.race"></a>实现Promise.race</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  Promise函数对象的race方法</span></span><br><span class="line"><span class="comment">  返回一个promise对象，状态由第一个完成的promise决定</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="built_in">Promise</span>.race = <span class="function"><span class="keyword">function</span>(<span class="params">promises</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve,reject</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">// 遍历promises，获取每个promise的结果</span></span><br><span class="line">    promises.forEach(<span class="function">(<span class="params">p,index</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">Promise</span>.resolve(p).then(</span><br><span class="line">            value =&gt; &#123;</span><br><span class="line">                <span class="comment">// 只要有一个成功，返回的promise的状态九尾resolved</span></span><br><span class="line">                resolve(value)</span><br><span class="line">            &#125;,</span><br><span class="line">            reason =&gt; &#123; <span class="comment">//只要有一个失败，return的promise状态就为reject</span></span><br><span class="line">                reject(reason)</span><br><span class="line">            &#125;</span><br><span class="line">        )</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <tags>
-        <tag>promise</tag>
+        <tag>javascript</tag>
       </tags>
   </entry>
   <entry>
