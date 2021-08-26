@@ -1,7 +1,7 @@
 ---
 title: redux学习
 date: 2018-08-11 16:04:29
-tags: redux
+tags: react
 ---
 
 ## 基础概念

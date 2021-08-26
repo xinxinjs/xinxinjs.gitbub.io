@@ -1,7 +1,7 @@
 ---
 title: 网站收藏
 date: 2018-07-10 15:18:50
-tags: 收藏
+tags: 笔记
 ---
 
 [phodal博客](https://www.phodal.com/)

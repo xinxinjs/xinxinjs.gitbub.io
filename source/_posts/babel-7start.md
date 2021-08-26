@@ -1,7 +1,7 @@
 ---
 title: 不容错过的 Babel7 知识
 date: 2019-03-31 15:41:34
-tags: [babel, babel7]
+tags: [转换器]
 ---
 
 博客原文地址：[不容错过的 Babel7 知识](https://juejin.im/post/5ddff3abe51d4502d56bd143)

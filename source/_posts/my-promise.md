@@ -1,7 +1,7 @@
 ---
 title: 手写一个Promise，了解Promise核心原理
 date: 2019-10-23 11:24:51
-tags: promise
+tags: javascript
 ---
 
 使用promise：

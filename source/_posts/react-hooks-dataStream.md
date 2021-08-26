@@ -1,7 +1,7 @@
 ---
 title: React Hooks 数据流
 date: 2020-08-04 10:56:34
-tags: [react, hooks]
+tags: [react]
 ---
 
 ## 单组件数据流

@@ -1,7 +1,7 @@
 ---
 title: js数组操作
 date: 2017-08-04 10:56:34
-tags: [javascript, 数组]
+tags: [javascript]
 ---
 
 ## 数组随机排序
