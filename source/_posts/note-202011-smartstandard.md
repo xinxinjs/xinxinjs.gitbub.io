@@ -1,8 +1,8 @@
 ---
 title: SMART原则
 date: 2020-11-26 11:05:58
-tags: 
-categories: 
+tags: note
+categories: note
 ---
 
 SMART原则，是一种目标的制定和考核标准，使考核更加科学化、规范化，更能保证考核的公正、公开与公平。
