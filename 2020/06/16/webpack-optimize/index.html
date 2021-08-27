@@ -63,7 +63,7 @@
             <p><img src="/img/webpack/36.png" alt="图片"></p>
 <h2 id="初级分析：构建体积和速度"><a href="#初级分析：构建体积和速度" class="headerlink" title="初级分析：构建体积和速度"></a>初级分析：构建体积和速度</h2><p>基本的分析可以使用webpack内置的stats进行构建的统计分析，例如总共消耗的时间和每个构建资源的大小，使用方法就是在根目录的package.json方法里面添加运行脚本：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "build:stats": "webpack --config webpack.prod.js --json &gt; stats.json"</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
-<p>运行npm run build:stats会在根目录生成一个stats.json文件，里面包含构建资源的信息，是否构架成功，大致用了多少时间构建，但是这个分析只是作为一个基础的分析，颗粒度泰国粗糙</p>
+<p>运行npm run build:stats会在根目录生成一个stats.json文件，里面包含构建资源的信息，是否构架成功，大致用了多少时间构建，但是这个分析只是作为一个基础的分析，颗粒度太过粗糙</p>
 <h2 id="精细分析：构建速度分析"><a href="#精细分析：构建速度分析" class="headerlink" title="精细分析：构建速度分析"></a>精细分析：构建速度分析</h2><p>借助speed-measure-webpack-plugin 插件分析详细的构建速度，可以清晰的看到每个loader和plugin的耗时情况</p>
 <p>安装：<code>npm i speed-measure-webpack-plugin -D</code></p>
 <p>在webpack.prod.js中引入并使用：</p>

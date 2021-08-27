@@ -18,74 +18,6 @@
       </tags>
   </entry>
   <entry>
-    <title>不容错过的 Babel7 知识</title>
-    <url>/2019/03/31/babel-7start/</url>
-    <content><![CDATA[<p>博客原文地址：<a href="https://juejin.im/post/5ddff3abe51d4502d56bd143" target="_blank" rel="noopener">不容错过的 Babel7 知识</a></p>
-<p>简单了解Babel</p>
-<h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><p>Babel 是一个 JS 编译器。</p>
-<p>Babel 是一个工具链，主要用于将 ECMAScript 2015+ 版本的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。</p>
-<h2 id="做什么"><a href="#做什么" class="headerlink" title="做什么"></a>做什么</h2><ul>
-<li><p>语法转换</p>
-</li>
-<li><p>通过 Polyfill 方式在目标环境中添加缺失的特性(@babel/polyfill模块)</p>
-</li>
-<li><p>源码转换(codemods)</p>
-</li>
-</ul>
-<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><h3 id="核心库-babel-core"><a href="#核心库-babel-core" class="headerlink" title="核心库 @babel/core"></a>核心库 @babel/core</h3><p>不安装 @babel/core，无法使用 babel 进行编译。</p>
-<p>npm install –save-dev @babel/core</p>
-<h3 id="CLI命令行工具-babel-cli"><a href="#CLI命令行工具-babel-cli" class="headerlink" title="CLI命令行工具 @babel/cli"></a>CLI命令行工具 @babel/cli</h3><p>babel 提供的命令行工具，主要是提供 babel 这个命令，适合安装在项目里。</p>
-<p>@babel/node 提供了 babel-node 命令，但是 @babel/node 更适合全局安装，不适合安装在项目里。</p>
-<p>npm install –save-dev @babel/cli</p>
-<p>将命令配置在 package.json 文件的 scripts 字段中:</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "compiler": "babel src --out-dir lib --watch"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h3><p>配置在.babelrc文件中</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123;</span><br><span class="line">    "plugins": ["@babel/plugin-transform-arrow-functions"], //插件发布在 npm 上，可以直接填写插件的名称，</span><br><span class="line">    "plugins": ["./node_modules/@babel/plugin-transform-arrow-functions"], //也可以指定插件的相对/绝对路径</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="预设"><a href="#预设" class="headerlink" title="预设"></a>预设</h3><p>通过使用或创建一个 preset 即可轻松使用一组插件。</p>
-<p>@babel/preset-env 主要作用是对我们所使用的并且目标浏览器中缺失的功能进行代码转换和加载 polyfill，在不进行任何配置的情况下，@babel/preset-env 所包含的插件将支持所有最新的JS特性(ES2015,ES2016等，不包含 stage 阶段)，将其转换成ES5代码。例如，如果你的代码中使用了可选链(目前，仍在 stage 阶段)，那么只配置 @babel/preset-env，转换时会抛出错误，需要另外安装相应的插件。</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"presets"</span>: [<span class="string">"@babel/preset-env"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="polyfill"><a href="#polyfill" class="headerlink" title="polyfill"></a>polyfill</h3><p>垫片就是垫平不同浏览器或者不同环境下的差异，让新的内置函数、实例方法等在低版本浏览器中也可以使用。</p>
-<p>@babel/polyfill 模块包括 core-js 和一个自定义的 regenerator runtime 模块，可以模拟完整的 ES2015+ 环境（不包含第4阶段前的提议）。</p>
-<p>安装 @babel/polyfill 依赖: npm install –save @babel/polyfill</p>
-<p>注意：不使用 –save-dev，因为这是一个需要在源码之前运行的垫片。</p>
-<p>我们需要将完整的 polyfill 在代码之前加载，</p>
-<p>@babel/polyfill 需要在其它代码之前引入，我们也可以在 webpack 中进行配置。</p>
-<p>例如:</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">entry: [</span><br><span class="line">    require.resolve('./polyfills'),</span><br><span class="line">    path.resolve('./index')</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p>@babel/preset-env 提供了一个 useBuiltIns 参数，设置值为 usage 时，就只会包含代码需要的 polyfill 。有一点需要注意：配置此参数的值为 usage ，必须要同时设置 corejs (如果不设置，会给出警告，默认使用的是”corejs”: 2) ，注意: 这里仍然需要安装 @babel/polyfill(当前 @babel/polyfill 版本默认会安装 “corejs”: 2):</p>
-<p>npm install –save core-js@3</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">//.babelrcconst </span><br><span class="line">presets = [    [        "@babel/env",        &#123;               "useBuiltIns": "usage",            "corejs": 3        &#125;    ]]</span><br></pre></td></tr></table></figure>
-<p>Babel 会检查所有代码，以便查找在目标环境中缺失的功能，然后仅仅把需要的 polyfill 包含进来。</p>
-<p>Babel 会使用很小的辅助函数来实现类似 _createClass 等公共方法。默认情况下，它将被添加(inject)到需要它的每个文件中。</p>
-<h3 id="babel-plugin-transform-runtime"><a href="#babel-plugin-transform-runtime" class="headerlink" title="@babel/plugin-transform-runtime"></a>@babel/plugin-transform-runtime</h3><p>@babel/plugin-transform-runtime 是一个可以重复使用 Babel 注入的帮助程序，以节省代码大小的插件。</p>
-<p>@babel/plugin-transform-runtime 需要和 @babel/runtime 配合使用。</p>
-<p>npm install –save-dev @babel/plugin-transform-runtime</p>
-<p>npm install –save @babel/runtime</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123; <span class="attr">"presets"</span>: [</span><br><span class="line">    [<span class="string">"@babel/preset-env"</span>, &#123;<span class="attr">"useBuiltIns"</span>: <span class="string">"usage"</span>, <span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"plugins"</span>: [[<span class="string">"@babel/plugin-transform-runtime"</span>]]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果我们希望 @babel/plugin-transform-runtime 不仅仅处理帮助函数，同时也能加载 polyfill 的话，我们需要给 @babel/plugin-transform-runtime 增加配置信息。</p>
-<p>新增依赖 @babel/runtime-corejs3: npm install @babel/runtime-corejs3 –save</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123; <span class="attr">"presets"</span>: [</span><br><span class="line">    [<span class="string">"@babel/preset-env"</span>, &#123;<span class="attr">"useBuiltIns"</span>: <span class="string">"usage"</span>, <span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"plugins"</span>: [[<span class="string">"@babel/plugin-transform-runtime"</span>, &#123;<span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="插件-预设补充知识"><a href="#插件-预设补充知识" class="headerlink" title="插件/预设补充知识"></a>插件/预设补充知识</h3><p>如果两个转换插件都将处理“程序（Program）”的某个代码片段，则将根据转换插件或 preset 的排列顺序依次执行。</p>
-<ul>
-<li><p>插件在 Presets 前运行。</p>
-</li>
-<li><p>插件顺序从前往后排列。</p>
-</li>
-<li><p>Preset 顺序是颠倒的（从后往前）。</p>
-</li>
-</ul>
-<p>插件参数</p>
-<p>插件和 preset 都可以接受参数，参数由插件名和参数对象组成一个数组。preset 设置参数也是这种格式。</p>
-<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>Babel 支持多种格式的配置文件。</p>
-<p>所有的 Babel API 参数都可以被配置，但是如果该参数需要使用的 JS 代码，那么可能需要使用 JS 代码版的配置文件。</p>
-<p>如果希望以编程的方式创建配置文件或者希望编译 node_modules 目录下的模块：那么 babel.config.js 可以满足你的需求。</p>
-<p>如果只是需要一个简单的并且中用于单个软件包的配置：那么 .babelrc 即可满足你的需求。</p>
-]]></content>
-      <tags>
-        <tag>转换器</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>web前端的单点登录-三种实现方案</title>
     <url>/2021/04/29/SSO/</url>
     <content><![CDATA[<p><a href="https://zcy-cdn.oss-cn-shanghai.aliyuncs.com/f2e-assets/ebf178b6-0950-482b-8031-5bb70b4888d5.png?x-oss-process=image/quality,Q_75/format,jpg" target="_blank" rel="noopener">https://zcy-cdn.oss-cn-shanghai.aliyuncs.com/f2e-assets/ebf178b6-0950-482b-8031-5bb70b4888d5.png?x-oss-process=image/quality,Q_75/format,jpg</a></p>
@@ -246,6 +178,74 @@
       </tags>
   </entry>
   <entry>
+    <title>不容错过的 Babel7 知识</title>
+    <url>/2019/03/31/babel-7start/</url>
+    <content><![CDATA[<p>博客原文地址：<a href="https://juejin.im/post/5ddff3abe51d4502d56bd143" target="_blank" rel="noopener">不容错过的 Babel7 知识</a></p>
+<p>简单了解Babel</p>
+<h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><p>Babel 是一个 JS 编译器。</p>
+<p>Babel 是一个工具链，主要用于将 ECMAScript 2015+ 版本的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。</p>
+<h2 id="做什么"><a href="#做什么" class="headerlink" title="做什么"></a>做什么</h2><ul>
+<li><p>语法转换</p>
+</li>
+<li><p>通过 Polyfill 方式在目标环境中添加缺失的特性(@babel/polyfill模块)</p>
+</li>
+<li><p>源码转换(codemods)</p>
+</li>
+</ul>
+<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><h3 id="核心库-babel-core"><a href="#核心库-babel-core" class="headerlink" title="核心库 @babel/core"></a>核心库 @babel/core</h3><p>不安装 @babel/core，无法使用 babel 进行编译。</p>
+<p>npm install –save-dev @babel/core</p>
+<h3 id="CLI命令行工具-babel-cli"><a href="#CLI命令行工具-babel-cli" class="headerlink" title="CLI命令行工具 @babel/cli"></a>CLI命令行工具 @babel/cli</h3><p>babel 提供的命令行工具，主要是提供 babel 这个命令，适合安装在项目里。</p>
+<p>@babel/node 提供了 babel-node 命令，但是 @babel/node 更适合全局安装，不适合安装在项目里。</p>
+<p>npm install –save-dev @babel/cli</p>
+<p>将命令配置在 package.json 文件的 scripts 字段中:</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "compiler": "babel src --out-dir lib --watch"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h3><p>配置在.babelrc文件中</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123;</span><br><span class="line">    "plugins": ["@babel/plugin-transform-arrow-functions"], //插件发布在 npm 上，可以直接填写插件的名称，</span><br><span class="line">    "plugins": ["./node_modules/@babel/plugin-transform-arrow-functions"], //也可以指定插件的相对/绝对路径</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="预设"><a href="#预设" class="headerlink" title="预设"></a>预设</h3><p>通过使用或创建一个 preset 即可轻松使用一组插件。</p>
+<p>@babel/preset-env 主要作用是对我们所使用的并且目标浏览器中缺失的功能进行代码转换和加载 polyfill，在不进行任何配置的情况下，@babel/preset-env 所包含的插件将支持所有最新的JS特性(ES2015,ES2016等，不包含 stage 阶段)，将其转换成ES5代码。例如，如果你的代码中使用了可选链(目前，仍在 stage 阶段)，那么只配置 @babel/preset-env，转换时会抛出错误，需要另外安装相应的插件。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"presets"</span>: [<span class="string">"@babel/preset-env"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="polyfill"><a href="#polyfill" class="headerlink" title="polyfill"></a>polyfill</h3><p>垫片就是垫平不同浏览器或者不同环境下的差异，让新的内置函数、实例方法等在低版本浏览器中也可以使用。</p>
+<p>@babel/polyfill 模块包括 core-js 和一个自定义的 regenerator runtime 模块，可以模拟完整的 ES2015+ 环境（不包含第4阶段前的提议）。</p>
+<p>安装 @babel/polyfill 依赖: npm install –save @babel/polyfill</p>
+<p>注意：不使用 –save-dev，因为这是一个需要在源码之前运行的垫片。</p>
+<p>我们需要将完整的 polyfill 在代码之前加载，</p>
+<p>@babel/polyfill 需要在其它代码之前引入，我们也可以在 webpack 中进行配置。</p>
+<p>例如:</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">entry: [</span><br><span class="line">    require.resolve('./polyfills'),</span><br><span class="line">    path.resolve('./index')</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>@babel/preset-env 提供了一个 useBuiltIns 参数，设置值为 usage 时，就只会包含代码需要的 polyfill 。有一点需要注意：配置此参数的值为 usage ，必须要同时设置 corejs (如果不设置，会给出警告，默认使用的是”corejs”: 2) ，注意: 这里仍然需要安装 @babel/polyfill(当前 @babel/polyfill 版本默认会安装 “corejs”: 2):</p>
+<p>npm install –save core-js@3</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">//.babelrcconst </span><br><span class="line">presets = [    [        "@babel/env",        &#123;               "useBuiltIns": "usage",            "corejs": 3        &#125;    ]]</span><br></pre></td></tr></table></figure>
+<p>Babel 会检查所有代码，以便查找在目标环境中缺失的功能，然后仅仅把需要的 polyfill 包含进来。</p>
+<p>Babel 会使用很小的辅助函数来实现类似 _createClass 等公共方法。默认情况下，它将被添加(inject)到需要它的每个文件中。</p>
+<h3 id="babel-plugin-transform-runtime"><a href="#babel-plugin-transform-runtime" class="headerlink" title="@babel/plugin-transform-runtime"></a>@babel/plugin-transform-runtime</h3><p>@babel/plugin-transform-runtime 是一个可以重复使用 Babel 注入的帮助程序，以节省代码大小的插件。</p>
+<p>@babel/plugin-transform-runtime 需要和 @babel/runtime 配合使用。</p>
+<p>npm install –save-dev @babel/plugin-transform-runtime</p>
+<p>npm install –save @babel/runtime</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">//.babelrc</span><br><span class="line">&#123; <span class="attr">"presets"</span>: [</span><br><span class="line">    [<span class="string">"@babel/preset-env"</span>, &#123;<span class="attr">"useBuiltIns"</span>: <span class="string">"usage"</span>, <span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"plugins"</span>: [[<span class="string">"@babel/plugin-transform-runtime"</span>]]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果我们希望 @babel/plugin-transform-runtime 不仅仅处理帮助函数，同时也能加载 polyfill 的话，我们需要给 @babel/plugin-transform-runtime 增加配置信息。</p>
+<p>新增依赖 @babel/runtime-corejs3: npm install @babel/runtime-corejs3 –save</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123; <span class="attr">"presets"</span>: [</span><br><span class="line">    [<span class="string">"@babel/preset-env"</span>, &#123;<span class="attr">"useBuiltIns"</span>: <span class="string">"usage"</span>, <span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"plugins"</span>: [[<span class="string">"@babel/plugin-transform-runtime"</span>, &#123;<span class="attr">"corejs"</span>: <span class="number">3</span>&#125;]]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="插件-预设补充知识"><a href="#插件-预设补充知识" class="headerlink" title="插件/预设补充知识"></a>插件/预设补充知识</h3><p>如果两个转换插件都将处理“程序（Program）”的某个代码片段，则将根据转换插件或 preset 的排列顺序依次执行。</p>
+<ul>
+<li><p>插件在 Presets 前运行。</p>
+</li>
+<li><p>插件顺序从前往后排列。</p>
+</li>
+<li><p>Preset 顺序是颠倒的（从后往前）。</p>
+</li>
+</ul>
+<p>插件参数</p>
+<p>插件和 preset 都可以接受参数，参数由插件名和参数对象组成一个数组。preset 设置参数也是这种格式。</p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>Babel 支持多种格式的配置文件。</p>
+<p>所有的 Babel API 参数都可以被配置，但是如果该参数需要使用的 JS 代码，那么可能需要使用 JS 代码版的配置文件。</p>
+<p>如果希望以编程的方式创建配置文件或者希望编译 node_modules 目录下的模块：那么 babel.config.js 可以满足你的需求。</p>
+<p>如果只是需要一个简单的并且中用于单个软件包的配置：那么 .babelrc 即可满足你的需求。</p>
+]]></content>
+      <tags>
+        <tag>转换器</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据结构基本知识与常见的数据结构二：哈希表、树</title>
     <url>/2019/04/26/data-structure2/</url>
     <content><![CDATA[<h2 id="哈希"><a href="#哈希" class="headerlink" title="哈希"></a>哈希</h2><p>在学习哈希表之前要先了解一下什么叫哈希</p>
@@ -280,19 +280,6 @@
 <p>这个实现就是哈希表，哈希表是基于数组实现的，但是它在插入和删除的操作比数组要快</p>
 <p>哈希表的结构就是数组，与数组不相同的是，它的索引是经过哈希转换的</p>
 <h2 id="树"><a href="#树" class="headerlink" title="树"></a>树</h2>]]></content>
-      <categories>
-        <category>数据结构与算法</category>
-      </categories>
-      <tags>
-        <tag>数据结构与算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据结构基本知识与常见的数据结构三：图</title>
-    <url>/2019/05/03/data-structure4/</url>
-    <content><![CDATA[<p>什么是图？</p>
-<p>Graph，是一种数据结构，一种多对多的数据结构</p>
-]]></content>
       <categories>
         <category>数据结构与算法</category>
       </categories>
@@ -375,6 +362,19 @@
       </tags>
   </entry>
   <entry>
+    <title>数据结构基本知识与常见的数据结构三：图</title>
+    <url>/2019/05/03/data-structure4/</url>
+    <content><![CDATA[<p>什么是图？</p>
+<p>Graph，是一种数据结构，一种多对多的数据结构</p>
+]]></content>
+      <categories>
+        <category>数据结构与算法</category>
+      </categories>
+      <tags>
+        <tag>数据结构与算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>git操作</title>
     <url>/2017/04/08/git-base/</url>
     <content><![CDATA[<h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><p>新建分支：</p>
@@ -425,6 +425,55 @@
       </tags>
   </entry>
   <entry>
+    <title>函数内部this指向问题</title>
+    <url>/2019/04/13/js-202004this/</url>
+    <content><![CDATA[<p>this是一个对象，是在函数运行的时候基于函数的运行环境绑定的</p>
+<p>关于this指向的问题，可以简单的概括一句话：谁调用我，我就指向谁</p>
+<h2 id="this指向问题"><a href="#this指向问题" class="headerlink" title="this指向问题"></a>this指向问题</h2><p>在不同的场景下this的指向会不太一样，例如：</p>
+<h3 id="普通函数内部this指向window"><a href="#普通函数内部this指向window" class="headerlink" title="普通函数内部this指向window"></a>普通函数内部this指向window</h3><p>严格模式下this指向undefined，在函数内部执行：console.log(this)，控制台会输出undefined</p>
+<p>非严格模式下，this指向window，就是在window下调用了这个函数</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 普通函数中，this指向window</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// Window &#123;window: Window, self: Window, document: document, name: "", location: Location, …&#125;</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">aa</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// Window &#123;window: Window, self: Window, document: document, name: "", location: Location …&#125;</span></span><br><span class="line">  &#125;</span><br><span class="line">  aa()</span><br><span class="line">&#125;</span><br><span class="line">a();</span><br></pre></td></tr></table></figure>
+<h3 id="在对象的方法中this指向这个对象"><a href="#在对象的方法中this指向这个对象" class="headerlink" title="在对象的方法中this指向这个对象"></a>在对象的方法中this指向这个对象</h3><p>通过对象成员访问‘.’的方式调用，this指向这个对象，也就是这个对象调用了这个方法，所以这个方法的this指向这个对象</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  sayHi:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 在对象的方法中，指向sayHi对象</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);  <span class="comment">// window，this指向window，是因为这个函数是一个普通的函数，并不少某个对象的方法</span></span><br><span class="line">    &#125;</span><br><span class="line">    fn1();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 闭包window</span></span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.sayHi();</span><br></pre></td></tr></table></figure>
+<h3 id="在定时器中指向window"><a href="#在定时器中指向window" class="headerlink" title="在定时器中指向window"></a>在定时器中指向window</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// window</span></span><br><span class="line">&#125;,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="在构造函数中"><a href="#在构造函数中" class="headerlink" title="在构造函数中"></a>在构造函数中</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 指向实例对象：Person&#123;&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> Person();</span><br></pre></td></tr></table></figure>
+<h3 id="在事件处理函数中指向"><a href="#在事件处理函数中指向" class="headerlink" title="在事件处理函数中指向"></a>在事件处理函数中指向</h3><p>指向绑定事件的对象</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">input.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 绑定事件对象</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="在匿名函数中指向window"><a href="#在匿名函数中指向window" class="headerlink" title="在匿名函数中指向window"></a>在匿名函数中指向window</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">//window</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<h2 id="改变this的指向"><a href="#改变this的指向" class="headerlink" title="改变this的指向"></a>改变this的指向</h2><h3 id="call"><a href="#call" class="headerlink" title="call"></a>call</h3><p><code>func.call(调用者，参数1，参数2)</code></p>
+<p>调用的时候函数会被立即执行，函数体内的this指向调用者</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">b.call(obj, <span class="string">'lll'</span>); <span class="comment">// this指向调用者：obj</span></span><br></pre></td></tr></table></figure>
+<h3 id="apply"><a href="#apply" class="headerlink" title="apply"></a>apply</h3><p><code>func.apply(调用者, [参数1，...])</code></p>
+<p>调用的时候函数会被立即执行，函数体内的this指向调用者</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">b.call(obj, [<span class="string">'111'</span>]); <span class="comment">// this指向调用者：obj</span></span><br></pre></td></tr></table></figure>
+<h3 id="bind方法"><a href="#bind方法" class="headerlink" title="bind方法"></a>bind方法</h3><p><code>func.bind(调用者，参数1，参数2)</code></p>
+<p>调用的时候函数不会被立即执行，返回一个新的函数，函数体内的this指向调用者，需要手动调用新的函数</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> bb = b.bind(obj, <span class="string">'lll'</span>); <span class="comment">//this指向obj</span></span><br><span class="line">bb();</span><br></pre></td></tr></table></figure>
+<h2 id="为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢"><a href="#为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢" class="headerlink" title="为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢"></a>为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  sayHi:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 在对象的方法中，指向sayHi对象</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);  <span class="comment">// window</span></span><br><span class="line">    &#125;</span><br><span class="line">    fn1();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 闭包window</span></span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.sayHi();</span><br></pre></td></tr></table></figure>
+<p>在函数被调用的时候，会自动获取两个特殊的对象：arguments和this，内部函数在搜索这两个变量的时候，只会搜索到其活动对象位置，因此永远不能访问外部函数中的这两个对象。</p>
+]]></content>
+      <categories>
+        <category>javascript</category>
+      </categories>
+      <tags>
+        <tag>javascript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2016/07/10/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
     <title>js数组操作</title>
     <url>/2017/08/04/js-array/</url>
     <content><![CDATA[<h2 id="数组随机排序"><a href="#数组随机排序" class="headerlink" title="数组随机排序"></a>数组随机排序</h2><h3 id="随机数打乱数组的排序"><a href="#随机数打乱数组的排序" class="headerlink" title="随机数打乱数组的排序"></a>随机数打乱数组的排序</h3><p>遍历数组，每次循环都随机一个在数组长度范围内的数，并交换本次循环的位置和随机数位置上的元素</p>
@@ -467,20 +516,6 @@
       <tags>
         <tag>javascript</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2016/07/10/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-]]></content>
   </entry>
   <entry>
     <title>模态框的最佳实践</title>
@@ -541,59 +576,6 @@
       <tags>
         <tag>产品</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>函数内部this指向问题</title>
-    <url>/2019/04/13/js-202004this/</url>
-    <content><![CDATA[<p>this是一个对象，是在函数运行的时候基于函数的运行环境绑定的</p>
-<p>关于this指向的问题，可以简单的概括一句话：谁调用我，我就指向谁</p>
-<h2 id="this指向问题"><a href="#this指向问题" class="headerlink" title="this指向问题"></a>this指向问题</h2><p>在不同的场景下this的指向会不太一样，例如：</p>
-<h3 id="普通函数内部this指向window"><a href="#普通函数内部this指向window" class="headerlink" title="普通函数内部this指向window"></a>普通函数内部this指向window</h3><p>严格模式下this指向undefined，在函数内部执行：console.log(this)，控制台会输出undefined</p>
-<p>非严格模式下，this指向window，就是在window下调用了这个函数</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 普通函数中，this指向window</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// Window &#123;window: Window, self: Window, document: document, name: "", location: Location, …&#125;</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">aa</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// Window &#123;window: Window, self: Window, document: document, name: "", location: Location …&#125;</span></span><br><span class="line">  &#125;</span><br><span class="line">  aa()</span><br><span class="line">&#125;</span><br><span class="line">a();</span><br></pre></td></tr></table></figure>
-<h3 id="在对象的方法中this指向这个对象"><a href="#在对象的方法中this指向这个对象" class="headerlink" title="在对象的方法中this指向这个对象"></a>在对象的方法中this指向这个对象</h3><p>通过对象成员访问‘.’的方式调用，this指向这个对象，也就是这个对象调用了这个方法，所以这个方法的this指向这个对象</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  sayHi:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 在对象的方法中，指向sayHi对象</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);  <span class="comment">// window，this指向window，是因为这个函数是一个普通的函数，并不少某个对象的方法</span></span><br><span class="line">    &#125;</span><br><span class="line">    fn1();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 闭包window</span></span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.sayHi();</span><br></pre></td></tr></table></figure>
-<h3 id="在定时器中指向window"><a href="#在定时器中指向window" class="headerlink" title="在定时器中指向window"></a>在定时器中指向window</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// window</span></span><br><span class="line">&#125;,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<h3 id="在构造函数中"><a href="#在构造函数中" class="headerlink" title="在构造函数中"></a>在构造函数中</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 指向实例对象：Person&#123;&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> Person();</span><br></pre></td></tr></table></figure>
-<h3 id="在事件处理函数中指向"><a href="#在事件处理函数中指向" class="headerlink" title="在事件处理函数中指向"></a>在事件处理函数中指向</h3><p>指向绑定事件的对象</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">input.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 绑定事件对象</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="在匿名函数中指向window"><a href="#在匿名函数中指向window" class="headerlink" title="在匿名函数中指向window"></a>在匿名函数中指向window</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">//window</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
-<h2 id="改变this的指向"><a href="#改变this的指向" class="headerlink" title="改变this的指向"></a>改变this的指向</h2><h3 id="call"><a href="#call" class="headerlink" title="call"></a>call</h3><p><code>func.call(调用者，参数1，参数2)</code></p>
-<p>调用的时候函数会被立即执行，函数体内的this指向调用者</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">b.call(obj, <span class="string">'lll'</span>); <span class="comment">// this指向调用者：obj</span></span><br></pre></td></tr></table></figure>
-<h3 id="apply"><a href="#apply" class="headerlink" title="apply"></a>apply</h3><p><code>func.apply(调用者, [参数1，...])</code></p>
-<p>调用的时候函数会被立即执行，函数体内的this指向调用者</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">b.call(obj, [<span class="string">'111'</span>]); <span class="comment">// this指向调用者：obj</span></span><br></pre></td></tr></table></figure>
-<h3 id="bind方法"><a href="#bind方法" class="headerlink" title="bind方法"></a>bind方法</h3><p><code>func.bind(调用者，参数1，参数2)</code></p>
-<p>调用的时候函数不会被立即执行，返回一个新的函数，函数体内的this指向调用者，需要手动调用新的函数</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'xinxin'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> bb = b.bind(obj, <span class="string">'lll'</span>); <span class="comment">//this指向obj</span></span><br><span class="line">bb();</span><br></pre></td></tr></table></figure>
-<h2 id="为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢"><a href="#为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢" class="headerlink" title="为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢"></a>为什么内部函数和匿名函数没有取得外部包含作用域的this对象呢</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  sayHi:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// 在对象的方法中，指向sayHi对象</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);  <span class="comment">// window</span></span><br><span class="line">    &#125;</span><br><span class="line">    fn1();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 闭包window</span></span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.sayHi();</span><br></pre></td></tr></table></figure>
-<p>在函数被调用的时候，会自动获取两个特殊的对象：arguments和this，内部函数在搜索这两个变量的时候，只会搜索到其活动对象位置，因此永远不能访问外部函数中的这两个对象。</p>
-]]></content>
-      <categories>
-        <category>javascript</category>
-      </categories>
-      <tags>
-        <tag>javascript</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SMART原则</title>
-    <url>/2020/11/26/note-202011-smartstandard/</url>
-    <content><![CDATA[<p>SMART原则，是一种目标的制定和考核标准，使考核更加科学化、规范化，更能保证考核的公正、公开与公平。</p>
-<h2 id="SMART原则解析"><a href="#SMART原则解析" class="headerlink" title="SMART原则解析"></a>SMART原则解析</h2><ul>
-<li><p>S=Specific、具体的，就是说目标的制定必须是具体的，不能笼统</p>
-</li>
-<li><p>M=Measurable、可衡量的，目标是可以量化或者行为化的，验证指标是否达到标准的数据是可以获得的</p>
-</li>
-<li><p>A=Attainable、可实现的，指标在付出努力的情况下是可以达到的，不能设立的太高或者太低</p>
-</li>
-<li><p>R=Relevant、相关的，指标是与本职工作相关的</p>
-</li>
-<li><p>T=Time-bound、有时限的，指标具体完成的日期或者期限</p>
-</li>
-</ul>
-]]></content>
   </entry>
   <entry>
     <title>营销需求管理</title>
@@ -694,77 +676,27 @@
       </tags>
   </entry>
   <entry>
-    <title>人间失格</title>
-    <url>/2020/11/19/note-renjianshige/</url>
-    <content><![CDATA[<p>生而为人，我很抱歉</p>
-<p>胆小鬼连幸福都会害怕，碰到棉花都会受伤，有时还会被幸福所伤。”孤独、怯懦、自卑的叶藏了解自己，却走不出自己的牢笼。狂妄的为所欲为只是一种伪饰，心事从未向世人展开。</p>
-<p>读别人的残疾，明白了自己的残疾，愿你读完之后能真正的原谅自己，原谅周围的世界。</p>
-<p>人活在这个世界，确实有很多的卑微和无奈，但是不应该放松任由卑微和无奈肆意生长，你要用尽全力去争斗一个为人的资格</p>
-]]></content>
-      <categories>
-        <category>读书</category>
-      </categories>
-      <tags>
-        <tag>读书</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>我什么也没忘，但是有些事只适合收藏，不能说，也不能想，却又不能忘。</title>
-    <url>/2019/10/26/notes1/</url>
-    <content><![CDATA[<p>更多时候，击垮我们的瞬间不是那些灾难性的事件和人生重大的意外，而是日常生活中不断消磨我们情感、意志的等待，纠缠、进退两难；是你认为最熟悉、亲近你，处处为你好的家人、朋友充满善意的误解；我们要拿出来应对这一切的往往也不是什么智慧的决断、钢铁的意志，而是无尽的耐心。</p>
-<p>我什么也没忘，但是有些事只适合收藏，不能说，也不能想，却又不能忘。</p>
-<p>我用真心待你，但不执着于你，活在缘分中，而非关系里。如果执着于某种关系，以此对关系中的对方作种种要求，关系就成了彼此的束缚。</p>
-<p>愿神明偏爱，一切从欢</p>
-<p>十年饮冰，难凉热血；千载暗室，一灯即明</p>
-<p>心里藏着小星星，生活才能亮晶晶</p>
-<p>播种和收获不在同一个季节，中间隔着的一段时间，我们叫它：坚持</p>
-<p>在人生的某个年纪之前，你可以依靠透支身体，小聪明和老天给你的运气，一直巧取的活着。然而到了某个年纪之后，真正能让你走远的，都是自律、积极和勤奋，不论是工作还是身材的管理</p>
-<p>众生皆苦，你就是那一点甜</p>
-<p>相遇都有目的，不是恩赐就是教训 愿你遍历山河 ，仍觉得人间值得</p>
-<p>愿你内心山河壮阔，始终相信人间值得。每个人都会经历一段特别艰难的时光，生活的窘迫，工作的失意，爱的惶惶不可终日，挺过来的，人生就会豁然开朗，挺不过来的，时间也会教你怎么与它们握手言和。所以你不用害怕，日升月落，总有黎明。 《杨绛先生语录》</p>
-<ul>
-<li><p>愿你一生温暖纯良，不舍爱与自由。</p>
+    <title>SMART原则</title>
+    <url>/2020/11/26/note-202011-smartstandard/</url>
+    <content><![CDATA[<p>SMART原则，是一种目标的制定和考核标准，使考核更加科学化、规范化，更能保证考核的公正、公开与公平。</p>
+<h2 id="SMART原则解析"><a href="#SMART原则解析" class="headerlink" title="SMART原则解析"></a>SMART原则解析</h2><ul>
+<li><p>S=Specific、具体的，就是说目标的制定必须是具体的，不能笼统</p>
 </li>
-<li><p>愿你一生平安喜乐，皆能得偿所愿。</p>
+<li><p>M=Measurable、可衡量的，目标是可以量化或者行为化的，验证指标是否达到标准的数据是可以获得的</p>
 </li>
-<li><p>愿你眼里长着太阳，笑里全是坦荡。</p>
+<li><p>A=Attainable、可实现的，指标在付出努力的情况下是可以达到的，不能设立的太高或者太低</p>
 </li>
-<li><p>愿你心里一直有光芒，活成自己想要的模样。</p>
+<li><p>R=Relevant、相关的，指标是与本职工作相关的</p>
 </li>
-<li><p>愿你回望皆是无悔，不负如梦青春。</p>
-</li>
-<li><p>愿你付出甘之如饴，所得归于欢喜。</p>
-</li>
-<li><p>愿你有前进一寸的勇气，亦有后退一尺的从容，</p>
-</li>
-<li><p>愿你忠于自己活的还像自己。</p>
-</li>
-<li><p>愿你温柔可爱依如往昔</p>
-</li>
-<li><p>愿你天黑有灯，下雨有伞，一路上有良人相伴</p>
-</li>
-<li><p>愿你眼里有星辰大海，心里有繁花似锦</p>
+<li><p>T=Time-bound、有时限的，指标具体完成的日期或者期限</p>
 </li>
 </ul>
-<p>前半生择其所爱，余下的岁月爱其所择。</p>
-<p>最美的你不是生如夏花，而是在时间的长河里，波澜不惊。</p>
-<p>比起有人左右情绪的日子，我更喜欢过无人问津的生活</p>
-<p>要努力，但是不要着急，繁花似锦和硕果累累都需要过程</p>
 ]]></content>
       <categories>
-        <category>阅读</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>关于项目风险来源</title>
-    <url>/2021/03/05/pm-202102-project-risk/</url>
-    <content><![CDATA[<p><img src="/img/project/项目风险来源.png" alt="图片"></p>
-]]></content>
-      <categories>
-        <category>项目管理</category>
+        <category>note</category>
       </categories>
       <tags>
-        <tag>项目管理</tag>
+        <tag>note</tag>
       </tags>
   </entry>
   <entry>
@@ -949,40 +881,63 @@
 ]]></content>
   </entry>
   <entry>
-    <title>react-fiber 原理介绍</title>
-    <url>/2020/12/30/react-fiber/</url>
-    <content><![CDATA[<h2 id="为什么会出现react-fiber"><a href="#为什么会出现react-fiber" class="headerlink" title="为什么会出现react-fiber"></a>为什么会出现react-fiber</h2><p>react15的问题：当我们调用setState更新页面的时候，React 会遍历应用的所有节点，计算出差异，然后再更新 UI。整个过程是一气呵成，不能被打断的</p>
-<p>默认情况下，js运算，页面布局，页面绘制都在浏览器的主线程运行，如果页面元素很多，在大量的频繁计算之下，js运算持续占用主线成，页面就没有办法即使的更新</p>
-<h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>要解决上面的问题，就是要解决js运算占用主线成大量时间的问题，将运算切割成多个部分，分批完成</p>
-<p>15以下的react使用的是递归的方式进行渲染，使用js引擎自身调用函数栈，是不能被中断的，fiber使用window.requestIdleCallback()方法实现切片运行</p>
-<p>window.requestIdleCallback()会在浏览器空闲时期依次调用函数，</p>
-<h2 id="react是怎么做的"><a href="#react是怎么做的" class="headerlink" title="react是怎么做的"></a>react是怎么做的</h2><p>react框架内部的运作可以分为三层</p>
-<ul>
-<li><p>virtual DOM层，描述页面长什么样子</p>
-</li>
-<li><p>react reconciler（调节器） 负责调用组件生命周期方法，进行diff运算</p>
-</li>
-<li><p>Renderer，根据不同的平台，渲染出响应的页面，比较常见的是reactDom 和reactNative</p>
-</li>
-</ul>
-<p>fiber 是一个新的reconciler,它有一个新的名字叫fiber-reconsiler</p>
-<p>fiber-reconsiler运行一段时间就会把控制权交给浏览器</p>
-<p>Fiber Reconciler 在执行过程中，会分为 2 个阶段。</p>
-<ol>
-<li><p>生成 Fiber 树，得出需要更新的节点信息。这一步是一个渐进的过程，可以被打断。</p>
-</li>
-<li><p>将需要更新的节点一次过批量更新，这个过程不能被打断。</p>
-</li>
-</ol>
-<p>第一个阶段是Diff 计算的时候生成一个fiber树，这个阶段是可以被打断的，这颗新树每生成一个新的节点，都会将控制权交回给主线程，去检查有没有优先级更高的任务需要执行。如果没有，则继续构建树的过程：</p>
-<p>如果过程中有优先级更高的任务需要进行，则 Fiber Reconciler 会丢弃正在生成的树，在空闲的时候再重新执行一遍。</p>
+    <title>关于项目风险来源</title>
+    <url>/2021/03/05/pm-202102-project-risk/</url>
+    <content><![CDATA[<p><img src="/img/project/项目风险来源.png" alt="图片"></p>
 ]]></content>
       <categories>
-        <category>技术</category>
+        <category>项目管理</category>
       </categories>
       <tags>
-        <tag>react</tag>
+        <tag>项目管理</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>我什么也没忘，但是有些事只适合收藏，不能说，也不能想，却又不能忘。</title>
+    <url>/2019/10/26/notes1/</url>
+    <content><![CDATA[<p>更多时候，击垮我们的瞬间不是那些灾难性的事件和人生重大的意外，而是日常生活中不断消磨我们情感、意志的等待，纠缠、进退两难；是你认为最熟悉、亲近你，处处为你好的家人、朋友充满善意的误解；我们要拿出来应对这一切的往往也不是什么智慧的决断、钢铁的意志，而是无尽的耐心。</p>
+<p>我什么也没忘，但是有些事只适合收藏，不能说，也不能想，却又不能忘。</p>
+<p>我用真心待你，但不执着于你，活在缘分中，而非关系里。如果执着于某种关系，以此对关系中的对方作种种要求，关系就成了彼此的束缚。</p>
+<p>愿神明偏爱，一切从欢</p>
+<p>十年饮冰，难凉热血；千载暗室，一灯即明</p>
+<p>心里藏着小星星，生活才能亮晶晶</p>
+<p>播种和收获不在同一个季节，中间隔着的一段时间，我们叫它：坚持</p>
+<p>在人生的某个年纪之前，你可以依靠透支身体，小聪明和老天给你的运气，一直巧取的活着。然而到了某个年纪之后，真正能让你走远的，都是自律、积极和勤奋，不论是工作还是身材的管理</p>
+<p>众生皆苦，你就是那一点甜</p>
+<p>相遇都有目的，不是恩赐就是教训 愿你遍历山河 ，仍觉得人间值得</p>
+<p>愿你内心山河壮阔，始终相信人间值得。每个人都会经历一段特别艰难的时光，生活的窘迫，工作的失意，爱的惶惶不可终日，挺过来的，人生就会豁然开朗，挺不过来的，时间也会教你怎么与它们握手言和。所以你不用害怕，日升月落，总有黎明。 《杨绛先生语录》</p>
+<ul>
+<li><p>愿你一生温暖纯良，不舍爱与自由。</p>
+</li>
+<li><p>愿你一生平安喜乐，皆能得偿所愿。</p>
+</li>
+<li><p>愿你眼里长着太阳，笑里全是坦荡。</p>
+</li>
+<li><p>愿你心里一直有光芒，活成自己想要的模样。</p>
+</li>
+<li><p>愿你回望皆是无悔，不负如梦青春。</p>
+</li>
+<li><p>愿你付出甘之如饴，所得归于欢喜。</p>
+</li>
+<li><p>愿你有前进一寸的勇气，亦有后退一尺的从容，</p>
+</li>
+<li><p>愿你忠于自己活的还像自己。</p>
+</li>
+<li><p>愿你温柔可爱依如往昔</p>
+</li>
+<li><p>愿你天黑有灯，下雨有伞，一路上有良人相伴</p>
+</li>
+<li><p>愿你眼里有星辰大海，心里有繁花似锦</p>
+</li>
+</ul>
+<p>前半生择其所爱，余下的岁月爱其所择。</p>
+<p>最美的你不是生如夏花，而是在时间的长河里，波澜不惊。</p>
+<p>比起有人左右情绪的日子，我更喜欢过无人问津的生活</p>
+<p>要努力，但是不要着急，繁花似锦和硕果累累都需要过程</p>
+]]></content>
+      <categories>
+        <category>阅读</category>
+      </categories>
   </entry>
   <entry>
     <title>window.print打印设置水印和页头页底</title>
@@ -1037,6 +992,42 @@
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// theme-context.js</span></span><br><span class="line"><span class="keyword">const</span> themes = &#123;</span><br><span class="line">  light: &#123;</span><br><span class="line">    foreground: <span class="string">"#000000"</span>,</span><br><span class="line">    background: <span class="string">"#eeeeee"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  dark: &#123;</span><br><span class="line">    foreground: <span class="string">"#ffffff"</span>,</span><br><span class="line">    background: <span class="string">"#222222"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ThemeContext = React.createContext(&#123;</span><br><span class="line">  theme: themes.dark,</span><br><span class="line">  <span class="comment">// 默认值，函数</span></span><br><span class="line">  toggleTheme: <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"default click"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// theme-toggler-button.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ThemeToggleButton</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="comment">// 利用函数式组件和Consumer订阅Context</span></span><br><span class="line">    &lt;ThemeContext.Consumer&gt;</span><br><span class="line">      &#123;(&#123; theme, toggleTheme &#125;) =&gt; (</span><br><span class="line">        &lt;button</span><br><span class="line">          onClick=&#123;toggleTheme&#125;</span><br><span class="line">          style=&#123;&#123; <span class="attr">backgroundColor</span>: theme.background, <span class="attr">color</span>: theme.foreground &#125;&#125;</span><br><span class="line">        &gt;</span><br><span class="line">          Toggle Theme</span><br><span class="line">        &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      )&#125;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>ThemeContext.Consumer&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="keyword">super</span>(props);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.toggleTheme = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"click"</span>);</span><br><span class="line">      <span class="keyword">this</span>.setState(<span class="function"><span class="params">state</span> =&gt;</span> (&#123;</span><br><span class="line">        theme: state.theme === themes.dark ? themes.light : themes.dark</span><br><span class="line">      &#125;));</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.state = &#123;</span><br><span class="line">      theme: themes.light,</span><br><span class="line">      toggleTheme: <span class="keyword">this</span>.toggleTheme</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;ThemeContext.Provider value=&#123;<span class="keyword">this</span>.state&#125;&gt;</span><br><span class="line">        &lt;Content /&gt;</span><br><span class="line">      &lt;<span class="regexp">/ThemeContext.Provider&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default App;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">function Content() &#123;</span></span><br><span class="line"><span class="regexp">  return (</span></span><br><span class="line"><span class="regexp">    &lt;div&gt;</span></span><br><span class="line"><span class="regexp">      &lt;ThemeToggleButton /</span>&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
 <h2 id="消费多个-Context"><a href="#消费多个-Context" class="headerlink" title="消费多个 Context"></a>消费多个 Context</h2><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">&lt;ThemeContext.Consumer&gt;</span><br><span class="line">  &#123;theme =&gt; (</span><br><span class="line">    &lt;UserContext.Consumer&gt;</span><br><span class="line">      &#123;user =&gt; &lt;ProfilePage user=&#123;user&#125; theme=&#123;theme&#125; /&gt;&#125;</span><br><span class="line">    &lt;/UserContext.Consumer&gt;</span><br><span class="line">  )&#125;</span><br><span class="line">&lt;/ThemeContext.Consumer&gt;</span><br></pre></td></tr></table></figure>
 ]]></content>
+      <tags>
+        <tag>react</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>react-fiber 原理介绍</title>
+    <url>/2020/12/30/react-fiber/</url>
+    <content><![CDATA[<h2 id="为什么会出现react-fiber"><a href="#为什么会出现react-fiber" class="headerlink" title="为什么会出现react-fiber"></a>为什么会出现react-fiber</h2><p>react15的问题：当我们调用setState更新页面的时候，React 会遍历应用的所有节点，计算出差异，然后再更新 UI。整个过程是一气呵成，不能被打断的</p>
+<p>默认情况下，js运算，页面布局，页面绘制都在浏览器的主线程运行，如果页面元素很多，在大量的频繁计算之下，js运算持续占用主线成，页面就没有办法即使的更新</p>
+<h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>要解决上面的问题，就是要解决js运算占用主线成大量时间的问题，将运算切割成多个部分，分批完成</p>
+<p>15以下的react使用的是递归的方式进行渲染，使用js引擎自身调用函数栈，是不能被中断的，fiber使用window.requestIdleCallback()方法实现切片运行</p>
+<p>window.requestIdleCallback()会在浏览器空闲时期依次调用函数，</p>
+<h2 id="react是怎么做的"><a href="#react是怎么做的" class="headerlink" title="react是怎么做的"></a>react是怎么做的</h2><p>react框架内部的运作可以分为三层</p>
+<ul>
+<li><p>virtual DOM层，描述页面长什么样子</p>
+</li>
+<li><p>react reconciler（调节器） 负责调用组件生命周期方法，进行diff运算</p>
+</li>
+<li><p>Renderer，根据不同的平台，渲染出响应的页面，比较常见的是reactDom 和reactNative</p>
+</li>
+</ul>
+<p>fiber 是一个新的reconciler,它有一个新的名字叫fiber-reconsiler</p>
+<p>fiber-reconsiler运行一段时间就会把控制权交给浏览器</p>
+<p>Fiber Reconciler 在执行过程中，会分为 2 个阶段。</p>
+<ol>
+<li><p>生成 Fiber 树，得出需要更新的节点信息。这一步是一个渐进的过程，可以被打断。</p>
+</li>
+<li><p>将需要更新的节点一次过批量更新，这个过程不能被打断。</p>
+</li>
+</ol>
+<p>第一个阶段是Diff 计算的时候生成一个fiber树，这个阶段是可以被打断的，这颗新树每生成一个新的节点，都会将控制权交回给主线程，去检查有没有优先级更高的任务需要执行。如果没有，则继续构建树的过程：</p>
+<p>如果过程中有优先级更高的任务需要进行，则 Fiber Reconciler 会丢弃正在生成的树，在空闲的时候再重新执行一遍。</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
       <tags>
         <tag>react</tag>
       </tags>
@@ -1160,26 +1151,18 @@
       </tags>
   </entry>
   <entry>
-    <title>跨域问题的解决方案</title>
-    <url>/2017/04/14/web-201904-CO/</url>
-    <content><![CDATA[<h2 id="为什么会产生跨域"><a href="#为什么会产生跨域" class="headerlink" title="为什么会产生跨域"></a>为什么会产生跨域</h2><p>前后端分离，前端的代码和服务端的代码分别部署在不同的域名下，导致的跨域问题</p>
-<p>协议，域名端，口号不一样都是跨域</p>
-<h2 id="跨域资源共享CORS"><a href="#跨域资源共享CORS" class="headerlink" title="跨域资源共享CORS"></a>跨域资源共享CORS</h2><p>定义在访问跨域资源的时候，浏览器与服务端如何沟通</p>
-<p>使用自定义的HTTP头部让浏览器与服务器进行沟通，例如：</p>
-<p>Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
-<p>如果浏览器可以处理请求，就在Access-Control-Allow-Origin头部中返回相同的源信息，例如</p>
-<p>Access-Control-Allow-Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
-<h2 id="其他的跨域方案"><a href="#其他的跨域方案" class="headerlink" title="其他的跨域方案"></a>其他的跨域方案</h2><h3 id="jsonp"><a href="#jsonp" class="headerlink" title="jsonp"></a>jsonp</h3><p>动态创建script标签， src赋值为要请求的地址，仅支持get请求</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  <span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params">data</span>) </span>&#123;&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'http://xx.com/list/callback=func'</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>jsonp存在的问题：不安全、有缓存、传递的信息有限制、需要服务器处理</p>
-<h3 id="服务端允许跨域"><a href="#服务端允许跨域" class="headerlink" title="服务端允许跨域"></a>服务端允许跨域</h3><p>设置一个允许跨域访问的源：Access-Control-Allow-Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
-<h3 id="webpack-proxy"><a href="#webpack-proxy" class="headerlink" title="webpack proxy"></a>webpack proxy</h3><figure class="highlight"><table><tr><td class="code"><pre><span class="line">"proxy": "代里地址"</span><br></pre></td></tr></table></figure>
-<h3 id="nginx反向代理"><a href="#nginx反向代理" class="headerlink" title="nginx反向代理"></a>nginx反向代理</h3>]]></content>
+    <title>人间失格</title>
+    <url>/2020/11/19/read-renjianshige/</url>
+    <content><![CDATA[<p>生而为人，我很抱歉</p>
+<p>胆小鬼连幸福都会害怕，碰到棉花都会受伤，有时还会被幸福所伤。”孤独、怯懦、自卑的叶藏了解自己，却走不出自己的牢笼。狂妄的为所欲为只是一种伪饰，心事从未向世人展开。</p>
+<p>读别人的残疾，明白了自己的残疾，愿你读完之后能真正的原谅自己，原谅周围的世界。</p>
+<p>人活在这个世界，确实有很多的卑微和无奈，但是不应该放松任由卑微和无奈肆意生长，你要用尽全力去争斗一个为人的资格</p>
+]]></content>
       <categories>
-        <category>前端</category>
+        <category>读书</category>
       </categories>
       <tags>
-        <tag>前端</tag>
+        <tag>读书</tag>
       </tags>
   </entry>
   <entry>
@@ -1204,6 +1187,29 @@
 <p>应用场景：购物车，表单暂存</p>
 <h2 id="sessionStorage"><a href="#sessionStorage" class="headerlink" title="sessionStorage"></a>sessionStorage</h2><p>存储大小也是5M，存储在session对象中，如果浏览器被关闭了sessionStorage会被清空</p>
 ]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>前端</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>跨域问题的解决方案</title>
+    <url>/2017/04/14/web-201904-CO/</url>
+    <content><![CDATA[<h2 id="为什么会产生跨域"><a href="#为什么会产生跨域" class="headerlink" title="为什么会产生跨域"></a>为什么会产生跨域</h2><p>前后端分离，前端的代码和服务端的代码分别部署在不同的域名下，导致的跨域问题</p>
+<p>协议，域名端，口号不一样都是跨域</p>
+<h2 id="跨域资源共享CORS"><a href="#跨域资源共享CORS" class="headerlink" title="跨域资源共享CORS"></a>跨域资源共享CORS</h2><p>定义在访问跨域资源的时候，浏览器与服务端如何沟通</p>
+<p>使用自定义的HTTP头部让浏览器与服务器进行沟通，例如：</p>
+<p>Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
+<p>如果浏览器可以处理请求，就在Access-Control-Allow-Origin头部中返回相同的源信息，例如</p>
+<p>Access-Control-Allow-Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
+<h2 id="其他的跨域方案"><a href="#其他的跨域方案" class="headerlink" title="其他的跨域方案"></a>其他的跨域方案</h2><h3 id="jsonp"><a href="#jsonp" class="headerlink" title="jsonp"></a>jsonp</h3><p>动态创建script标签， src赋值为要请求的地址，仅支持get请求</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  <span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params">data</span>) </span>&#123;&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'http://xx.com/list/callback=func'</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>jsonp存在的问题：不安全、有缓存、传递的信息有限制、需要服务器处理</p>
+<h3 id="服务端允许跨域"><a href="#服务端允许跨域" class="headerlink" title="服务端允许跨域"></a>服务端允许跨域</h3><p>设置一个允许跨域访问的源：Access-Control-Allow-Origin: <a href="http://xx.com:80" target="_blank" rel="noopener">http://xx.com:80</a></p>
+<h3 id="webpack-proxy"><a href="#webpack-proxy" class="headerlink" title="webpack proxy"></a>webpack proxy</h3><figure class="highlight"><table><tr><td class="code"><pre><span class="line">"proxy": "代里地址"</span><br></pre></td></tr></table></figure>
+<h3 id="nginx反向代理"><a href="#nginx反向代理" class="headerlink" title="nginx反向代理"></a>nginx反向代理</h3>]]></content>
       <categories>
         <category>前端</category>
       </categories>
@@ -1766,80 +1772,12 @@
       </tags>
   </entry>
   <entry>
-    <title>编写可维护的webpack构建配置，进阶学习</title>
-    <url>/2020/05/27/webpack-builder/</url>
-    <content><![CDATA[<p>如何把webpack的配置编写的更加通用，把webpack的配置编写成一个构建包，在每个项目里都能快速使用</p>
-<p>现在的webpack配置分为webpack.prod.js，  webpack.dev.js，  webpack.ssr.js，分别对应三个不同的环境场景，三个配置文件里面的配置有些都是相同的例如es6代码的转换，react的使用、处理less样式文件等，不得不每次复制到每个配置文件代码里面去，而不同的环境场景的配置又具有差异，解决思路就是新建一个webpack.base.js文件存放共用的配置，使用webpack-merge组件合并配置</p>
-<p>在根目录新建build-webpack文件夹，cd build-webpack，进入目录，npm init -y初始化package.json文件</p>
-<p>build-webpack文件夹下新建lib目录，存放webpack配置文件，在lib文件下新建webpack.base.js，webpack.prod.js，  webpack.dev.js，  webpack.ssr.js文件：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.base.js</span></span><br><span class="line"><span class="keyword">const</span> &#123;CleanWebpackPlugin&#125; = <span class="built_in">require</span>(<span class="string">'clean-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> MiniCssExtractPlugin = <span class="built_in">require</span>(<span class="string">'mini-css-extract-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">'html-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> FriendlyErrorsWebpackPlugin = <span class="built_in">require</span>(<span class="string">'friendly-errors-webpack-plugin'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 动态设置entry 和 htmlWebpackPlugin</span></span><br><span class="line"><span class="keyword">const</span> glob = <span class="built_in">require</span>(<span class="string">'glob'</span>);</span><br><span class="line">setMPA = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> entry = &#123;&#125;;</span><br><span class="line">  <span class="keyword">const</span> htmlWebpackPlugin = [];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> entryFiles = glob.sync(path.join(__dirname, <span class="string">'./src/*/index.jsx'</span>));</span><br><span class="line">  <span class="built_in">Object</span>.keys(entryFiles).map(<span class="function">(<span class="params">index</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> entryFile = entryFiles[index];</span><br><span class="line">    <span class="keyword">const</span> match = entryFile.match(<span class="regexp">/src\/(.*)\/index\.jsx/</span>);</span><br><span class="line">    <span class="keyword">const</span> pageName = match &amp;&amp; match[<span class="number">1</span>];</span><br><span class="line">    entry[pageName] = entryFile;</span><br><span class="line">    htmlWebpackPlugin.push(</span><br><span class="line">      <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">        template: path.join(__dirname, <span class="string">`src/<span class="subst">$&#123;pageName&#125;</span>/index.html`</span>),</span><br><span class="line">        filename: <span class="string">`<span class="subst">$&#123;pageName&#125;</span>.html`</span>, <span class="comment">//打包后的文件名</span></span><br><span class="line">        chunks: [<span class="string">'vendors'</span>, pageName],</span><br><span class="line">        inject: <span class="literal">true</span>,</span><br><span class="line">        minify: &#123;</span><br><span class="line">          html5: <span class="literal">true</span>,</span><br><span class="line">          preserveLineBreaks: <span class="literal">false</span>,</span><br><span class="line">          removeAttributeQuotes: <span class="literal">false</span>, <span class="comment">//是否删除属性的双引号</span></span><br><span class="line">          collapseWhitespace: <span class="literal">true</span>, <span class="comment">//是否折叠空白</span></span><br><span class="line">          removeComments: <span class="literal">true</span>,</span><br><span class="line">          minifyCSS: <span class="literal">true</span>,</span><br><span class="line">          minifyJS: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;)</span><br><span class="line">    )</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    entry, htmlWebpackPlugin</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123;entry, htmlWebpackPlugin&#125; = setMPA();</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: entry,</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: path.resolve(projectRoot, <span class="string">'dist'</span>), <span class="comment">//必须是绝对路径</span></span><br><span class="line">    filename: <span class="string">'[name]_[chunkhash:8].js'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.(js|jsx)$/</span>,</span><br><span class="line">        use: [<span class="string">'babel-loader'</span>]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.css$/</span>,</span><br><span class="line">        use: [MiniCssExtractPlugin.loader,<span class="string">'css-loader'</span>]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.less$/</span>,</span><br><span class="line">        use: [MiniCssExtractPlugin.loader,<span class="string">'css-loader'</span>, &#123;</span><br><span class="line">          loader: <span class="string">'postcss-loader'</span>, <span class="attr">options</span>: &#123;</span><br><span class="line">            plugins: <span class="function"><span class="params">()</span> =&gt;</span> [</span><br><span class="line">              <span class="built_in">require</span>(<span class="string">'autoprefixer'</span>)(&#123;</span><br><span class="line">                overrideBrowserslist: [<span class="string">'last 2 version'</span>, <span class="string">'&gt;1%'</span>, <span class="string">'ios 7'</span>]</span><br><span class="line">              &#125;)</span><br><span class="line">            ]</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;, <span class="string">'less-loader'</span>, &#123;</span><br><span class="line">          loader: <span class="string">'px2rem-loader'</span>,</span><br><span class="line">          options: &#123;</span><br><span class="line">            remUnit: <span class="number">75</span>, <span class="comment">// 转换率：1rem = 75px</span></span><br><span class="line">            remPrecision: <span class="number">8</span> <span class="comment">// 转换之后保留小数点后位数</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.(png|jpg|gif|jpeg)$/</span>,</span><br><span class="line">        use: &#123;</span><br><span class="line">          loader: <span class="string">'file-loader'</span>,</span><br><span class="line">          options: &#123;</span><br><span class="line">            name: <span class="string">'[name]_[hash:8].[ext]'</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.(woff|woff2|eot|otf|ttf)$/</span>,</span><br><span class="line">        use: [<span class="string">'file-loader'</span>]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> CleanWebpackPlugin(),</span><br><span class="line">    <span class="keyword">new</span> MiniCssExtractPlugin(&#123;</span><br><span class="line">      filename: <span class="string">'[name]_[contenthash:8].css'</span></span><br><span class="line">    &#125;),</span><br><span class="line">    ...htmlWebpackPlugin,</span><br><span class="line">    <span class="keyword">new</span> FriendlyErrorsWebpackPlugin(),</span><br><span class="line">    <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.hooks.done.tab(<span class="string">'done'</span>, (stats) =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span>(stats.compilation.errors &amp;&amp; stats.compilation.errors.length &amp;&amp; process.argv.indexOf(<span class="string">'--watch'</span>) == <span class="number">-1</span>) &#123;</span><br><span class="line">          <span class="built_in">console</span>.log(<span class="string">'build error'</span>);</span><br><span class="line">          process.exit(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  stats: <span class="string">'errors-only'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>安装 :<code>npm i webpack-merge -D</code></p>
-<p>webpack.dev.js包括热更新和source-map，使用webpack-merge合并配置</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.dev.js</span></span><br><span class="line"><span class="keyword">const</span> merge = <span class="built_in">require</span>(<span class="string">'webpack-merge'</span>);</span><br><span class="line"><span class="keyword">const</span> baseConfig = <span class="built_in">require</span>(<span class="string">'./webpack.base'</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 热更新，source-map</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> devConfig = &#123;</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> webpack.HotModuleReplacementPlugin()</span><br><span class="line">  ],</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    contentBase: <span class="string">'./dist'</span>, <span class="comment">// 服务基础目录</span></span><br><span class="line">    hot: <span class="literal">true</span>, <span class="comment">// 开启热更新</span></span><br><span class="line">    stats: <span class="string">'errors-only'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  devtool: <span class="string">'source-map'</span>,</span><br><span class="line">  mode: <span class="string">'development'</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = merge(baseConfig, devConfig);</span><br></pre></td></tr></table></figure>
-<p>webpack.prod.jsb包括代码压缩，文件指纹,公共资源的提取：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.prod.js</span></span><br><span class="line"><span class="keyword">const</span> merge = <span class="built_in">require</span>(<span class="string">'webpack-merge'</span>);</span><br><span class="line"><span class="keyword">const</span> baseConfig = <span class="built_in">require</span>(<span class="string">'./webpack.base'</span>);</span><br><span class="line"><span class="keyword">const</span> OpimizeCssAssetsPlugin = <span class="built_in">require</span>(<span class="string">'optimize-css-assets-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> HtmlWebpackExternalsPlugin = <span class="built_in">require</span>(<span class="string">'html-webpack-externals-plugin'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 代码压缩，文件指纹,公共资源的提取</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> prodConfig = &#123;</span><br><span class="line">  mode: <span class="string">'production'</span>,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> OpimizeCssAssetsPlugin(&#123;</span><br><span class="line">      AccetNameRegExp: <span class="regexp">/\.css$/g</span>,</span><br><span class="line">      cssProcessor: <span class="built_in">require</span>(<span class="string">'cssnano'</span>)</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> HtmlWebpackExternalsPlugin(&#123;</span><br><span class="line">      externals: [&#123;</span><br><span class="line">        <span class="built_in">module</span>: <span class="string">'react'</span>,</span><br><span class="line">        entry: <span class="string">'https://unpkg.com/react@16/umd/react.development.js'</span>,</span><br><span class="line">        global: <span class="string">'React'</span></span><br><span class="line">      &#125;,&#123;</span><br><span class="line">        <span class="built_in">module</span>: <span class="string">'react-dom'</span>,</span><br><span class="line">        entry: <span class="string">'https://unpkg.com/react-dom@16/umd/react-dom.development.js'</span>,</span><br><span class="line">        global: <span class="string">'ReactDom'</span></span><br><span class="line">      &#125;]</span><br><span class="line">    &#125;)</span><br><span class="line">  ],</span><br><span class="line">  optimization: &#123;</span><br><span class="line">    splitChunks: &#123;</span><br><span class="line">      minSize: <span class="number">0</span>,</span><br><span class="line">      cacheGroups: &#123;</span><br><span class="line">        commons: &#123;</span><br><span class="line">          name: <span class="string">'commons'</span>,</span><br><span class="line">          chunks: <span class="string">'all'</span>,</span><br><span class="line">          minChunks: <span class="number">2</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = merge(baseConfig, prodConfig);</span><br></pre></td></tr></table></figure>
-<p>webpack.ssr.js主要是不解析css文件</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.ssr.js</span></span><br><span class="line"><span class="keyword">const</span> merge = <span class="built_in">require</span>(<span class="string">'webpack-merge'</span>);</span><br><span class="line"><span class="keyword">const</span> baseConfig = <span class="built_in">require</span>(<span class="string">'./webpack.base'</span>);</span><br><span class="line"><span class="keyword">const</span> OpimizeCssAssetsPlugin = <span class="built_in">require</span>(<span class="string">'optimize-css-assets-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> HtmlWebpackExternalsPlugin = <span class="built_in">require</span>(<span class="string">'html-webpack-externals-plugin'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 代码压缩，文件指纹,公共资源的提取</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> prodConfig = &#123;</span><br><span class="line">  mode: <span class="string">'production'</span>,</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.css$/</span>,</span><br><span class="line">        use: <span class="string">'ignore-loader'</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.less$/</span>,</span><br><span class="line">        use: <span class="string">'ignore-loader'</span></span><br><span class="line">      &#125;,</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> OpimizeCssAssetsPlugin(&#123;</span><br><span class="line">      AccetNameRegExp: <span class="regexp">/\.css$/g</span>,</span><br><span class="line">      cssProcessor: <span class="built_in">require</span>(<span class="string">'cssnano'</span>)</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> HtmlWebpackExternalsPlugin(&#123;</span><br><span class="line">      externals: [&#123;</span><br><span class="line">        <span class="built_in">module</span>: <span class="string">'react'</span>,</span><br><span class="line">        entry: <span class="string">'https://unpkg.com/react@16/umd/react.development.js'</span>,</span><br><span class="line">        global: <span class="string">'React'</span></span><br><span class="line">      &#125;,&#123;</span><br><span class="line">        <span class="built_in">module</span>: <span class="string">'react-dom'</span>,</span><br><span class="line">        entry: <span class="string">'https://unpkg.com/react-dom@16/umd/react-dom.development.js'</span>,</span><br><span class="line">        global: <span class="string">'ReactDom'</span></span><br><span class="line">      &#125;]</span><br><span class="line">    &#125;)</span><br><span class="line">  ],</span><br><span class="line">  optimization: &#123;</span><br><span class="line">    splitChunks: &#123;</span><br><span class="line">      minSize: <span class="number">0</span>,</span><br><span class="line">      cacheGroups: &#123;</span><br><span class="line">        commons: &#123;</span><br><span class="line">          name: <span class="string">'commons'</span>,</span><br><span class="line">          chunks: <span class="string">'all'</span>,</span><br><span class="line">          minChunks: <span class="number">2</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = merge(baseConfig, prodConfig);</span><br></pre></td></tr></table></figure>
-<p>新建.gitignore文件</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">/node_modules</span><br><span class="line">/logs</span><br></pre></td></tr></table></figure>
-<h2 id="使用eslint规范构建脚本"><a href="#使用eslint规范构建脚本" class="headerlink" title="使用eslint规范构建脚本"></a>使用eslint规范构建脚本</h2><p>eslint可以帮助在构建之前检查代码的规范，而不是等到运行的时候在报错</p>
-<p>在build-webpack目录安装eslint以及eslint所需要的依赖：<code>npm i eslint eslint-config-airbnb-base babel-eslint -D</code></p>
-<p>新建.eslintrc.js文件</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// build-webpack/.eslintrc.</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="string">"parser"</span>: <span class="string">"babel-eslint"</span>,</span><br><span class="line">  <span class="string">"extends"</span>: <span class="string">"airbnb-base"</span>,</span><br><span class="line">  <span class="string">"env"</span>: &#123;</span><br><span class="line">    <span class="string">"browser"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="string">"node"</span>: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在package.json增加eslint script</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">// build-webpack/package.json</span><br><span class="line">"scripts": &#123;</span><br><span class="line">    "test": "echo \"Error: no test specified\" &amp;&amp; exit 1",</span><br><span class="line">    "eslint": "eslint ./lib --fix"</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
-<p>运行npm run eslint可以帮助在构建之前检查规范，</p>
-<p>在命令行运行npm run eslint</p>
-<p><img src="/img/webpack/w17.png" alt="图片"></p>
-<p>这边的报错是因为我的webpack配置中使用的插件没有安装</p>
-<p>根据报错一次安装插件到dependencies，根据提示解决报错</p>
-<h2 id="冒烟测试"><a href="#冒烟测试" class="headerlink" title="冒烟测试"></a>冒烟测试</h2><p>冒烟测试确保构建没有大问题，检测一些基本的功能可用</p>
-<p>例如构建是否成功，每次构建完成是否正确的打包静态资源</p>
-<p>在test新建template目录，作为模版目录，也就是要使用构建脚本构建的项目，可以把之前的项目复制一份进来，删除不需要的文件：</p>
-<p><img src="/img/webpack/w18.png" alt="图片"></p>
-<p>在build-webpack目录新建test目录，test新建smoke目录，smoke新建index.js文件用来编写测试脚本：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// test/smoke/index.js</span></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"><span class="keyword">const</span> rimraf = <span class="built_in">require</span>(<span class="string">'rimraf'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 进入tamplate，__dirname代表运行时候的目录</span></span><br><span class="line">process.chdir(path.join(__dirname, <span class="string">'template'</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每次构建之前，删除dist目录</span></span><br><span class="line">rimraf(<span class="string">'./dist'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="comment">// 引入配置</span></span><br><span class="line">  <span class="keyword">const</span> prodConfig = <span class="built_in">require</span>(<span class="string">'../../lib/webpack.prod.js'</span>);</span><br><span class="line">  <span class="comment">// 通过webpack对template目录的代码运行prodConfig这个配置</span></span><br><span class="line">  webpack(prodConfig, (err, stats) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span>(err) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(err);</span><br><span class="line">      process.exit(<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.log(stats.toString(&#123;</span><br><span class="line">      color: <span class="literal">true</span>,</span><br><span class="line">      modules: <span class="literal">false</span>,</span><br><span class="line">      children: <span class="literal">false</span></span><br><span class="line">    &#125;))</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>在build-webpack目录安装： <code>npm i rimraf -S</code></p>
-<p>修改webpack.base.js文件，增加projectRoot，修改执行的目录为tamplate目录</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.base.js</span></span><br><span class="line"><span class="keyword">const</span> projectRoot = process.cwd(); <span class="comment">// 当前目录</span></span><br><span class="line"><span class="keyword">const</span> setMPA = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> entryFiles = glob.sync(path.join(projectRoot, <span class="string">'./src/*/index.jsx'</span>));</span><br><span class="line">  <span class="built_in">Object</span>.keys(entryFiles).map(<span class="function">(<span class="params">index</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">return</span> htmlWebpackPlugin.push(</span><br><span class="line">      <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">        template: path.join(projectRoot, <span class="string">`src/<span class="subst">$&#123;pageName&#125;</span>/index.html`</span>),</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">      &#125;),</span><br><span class="line">    );</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    entry, htmlWebpackPlugin,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>在终端运行：<code>node test/smoke/index.js</code></p>
-<h3 id="检查dist目录是否有构建出来的文件"><a href="#检查dist目录是否有构建出来的文件" class="headerlink" title="检查dist目录是否有构建出来的文件"></a>检查dist目录是否有构建出来的文件</h3><p>使用mocha编写单元测试的测试用例，安装： <code>npm i mocha -D</code></p>
-<p><code>npm i glob-all -D</code></p>
-<p>新建smoke/html-test.js：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> glob = <span class="built_in">require</span>(<span class="string">'glob-all'</span>);</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'checking generated html files'</span>, () =&gt; &#123;</span><br><span class="line">  it(<span class="string">'should genarate html files'</span>, (done) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> files = glob.sync([<span class="string">'./dist/index.html'</span>, <span class="string">'./dist/search.html'</span>]);</span><br><span class="line">    <span class="keyword">if</span>(files.length &gt; <span class="number">0</span>) done();</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'no html files genarated'</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>新建smoke/css-js-test.js:</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> glob = <span class="built_in">require</span>(<span class="string">'glob-all'</span>);</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'checking generated css js files'</span>, () =&gt; &#123;</span><br><span class="line">  it(<span class="string">'should genarate css js files'</span>, (done) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> files = glob.sync([<span class="string">'./dist/index_*.js'</span>, <span class="string">'./dist/search_*.js'</span>, <span class="string">'./dist/index_*.css'</span>, <span class="string">'./dist/search_*.css'</span>]);</span><br><span class="line">    <span class="keyword">if</span>(files.length &gt; <span class="number">0</span>) done();</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'no css js files genarated'</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>修改smoke/index.js</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// /...</span></span><br><span class="line"><span class="keyword">const</span> Mocha = <span class="built_in">require</span>(<span class="string">'mocha'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mocha = <span class="keyword">new</span> Mocha(&#123;</span><br><span class="line">  timeout: <span class="string">'10000ms'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="comment">// 每次构建之前，删除dist目录</span></span><br><span class="line">rimraf(<span class="string">'./dist'</span>, () =&gt; &#123;</span><br><span class="line">  webpack(prodConfig, (err, stats) =&gt; &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'webpack build success, begin run test'</span>);</span><br><span class="line">    mocha.addFile(path.join(__dirname, <span class="string">'html-test.js'</span>));</span><br><span class="line">    mocha.addFile(path.join(__dirname, <span class="string">'css-js-test.js'</span>));</span><br><span class="line">    mocha.run();</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>在终端运行：<code>node test/smoke/index.js</code>，冒烟测试成功之后会在终端打印</p>
-<p><img src="/img/webpack/w19.png" alt="图片"></p>
-<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><p>使用抹茶和断言库进行单元测试</p>
-<p>安装断言库：<code>npm i assert -D</code></p>
-<p>在test目录新建index文件，作为单元测试的入口，在test目录新建unit目录，这个目录放单元测试的代码</p>
-<p>测试webpack.base配置，test/unit/webpack-base-test.js:</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// test/unit/webpack-base-test.js</span></span><br><span class="line">describe(<span class="string">'webpack.base.js test case'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> baseConfig = <span class="built_in">require</span>(<span class="string">'../../lib/webpack.base'</span>);</span><br><span class="line">  <span class="keyword">const</span> assert = <span class="built_in">require</span>(<span class="string">'assert'</span>);</span><br><span class="line">  <span class="comment">// console.log(baseConfig)</span></span><br><span class="line">  <span class="comment">// 测试entry字段</span></span><br><span class="line">  it(<span class="string">'entry'</span>, () =&gt; &#123;</span><br><span class="line">    assert.equal(baseConfig.entry.index, <span class="string">'/Users/lizhaoxin/mypro/webpack-first/build-webpack/test/smoke/template/src/index/index.jsx'</span>);</span><br><span class="line">    assert.equal(baseConfig.entry.search, <span class="string">'/Users/lizhaoxin/mypro/webpack-first/build-webpack/test/smoke/template/src/search/index.jsx'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>test/index：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 进入tamplate, __dirname代表运行时候的目录</span></span><br><span class="line">process.chdir(path.join(__dirname, <span class="string">'smoke/template'</span>));</span><br><span class="line"><span class="comment">// 引入测试代码</span></span><br><span class="line">describe(<span class="string">'builder-webpack test case'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">require</span>(<span class="string">'./unit/webpack-base-test'</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>修改build-webpack/package.json，增加test运行脚本</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "test": "./node_modules/.bin/_mocha",</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
-<p>运行npm run test:测试用例成功了，会在前面打勾</p>
-<p><img src="/img/webpack/w20.png" alt="图片"></p>
-<p>测试覆盖率， istanbul是一个单元测试代码覆盖率检查工具，可以很直观地告诉我们，单元测试对代码的控制程度。，安装 npm i istanbul -D, 修改build-webpack/package.json</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "test": "istanbul cover ./node_modules/.bin/_mocha",</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
-<p>运行npm run build,可以在终端看到，测试用例的覆盖情况,例如单元测试覆盖了多少函数，多少代码行数，多少分支：</p>
-<p><img src="/img/webpack/w21.png" alt="图片"></p>
-<h2 id="持续集成"><a href="#持续集成" class="headerlink" title="持续集成"></a>持续集成</h2>]]></content>
-      <tags>
-        <tag>webpack</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>webpack构建速度、体积分析和优化</title>
     <url>/2020/06/16/webpack-optimize/</url>
     <content><![CDATA[<p><img src="/img/webpack/36.png" alt="图片"></p>
 <h2 id="初级分析：构建体积和速度"><a href="#初级分析：构建体积和速度" class="headerlink" title="初级分析：构建体积和速度"></a>初级分析：构建体积和速度</h2><p>基本的分析可以使用webpack内置的stats进行构建的统计分析，例如总共消耗的时间和每个构建资源的大小，使用方法就是在根目录的package.json方法里面添加运行脚本：</p>
 <figure class="highlight"><table><tr><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "build:stats": "webpack --config webpack.prod.js --json &gt; stats.json"</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
-<p>运行npm run build:stats会在根目录生成一个stats.json文件，里面包含构建资源的信息，是否构架成功，大致用了多少时间构建，但是这个分析只是作为一个基础的分析，颗粒度泰国粗糙</p>
+<p>运行npm run build:stats会在根目录生成一个stats.json文件，里面包含构建资源的信息，是否构架成功，大致用了多少时间构建，但是这个分析只是作为一个基础的分析，颗粒度太过粗糙</p>
 <h2 id="精细分析：构建速度分析"><a href="#精细分析：构建速度分析" class="headerlink" title="精细分析：构建速度分析"></a>精细分析：构建速度分析</h2><p>借助speed-measure-webpack-plugin 插件分析详细的构建速度，可以清晰的看到每个loader和plugin的耗时情况</p>
 <p>安装：<code>npm i speed-measure-webpack-plugin -D</code></p>
 <p>在webpack.prod.js中引入并使用：</p>
@@ -1913,6 +1851,74 @@
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.prod.js</span></span><br><span class="line"><span class="keyword">const</span> webpackConfig = smp.wrap(&#123;</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.(png|jpg|gif|jpeg)$/</span>,</span><br><span class="line">        use: [&#123;</span><br><span class="line">          loader: <span class="string">'file-loader'</span>,</span><br><span class="line">          options: &#123;</span><br><span class="line">            name: <span class="string">'[name]_[hash:8].[ext]'</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,&#123;</span><br><span class="line">          loader: <span class="string">'image-webpack-loader'</span>,</span><br><span class="line">          options: &#123;</span><br><span class="line">            mozjpeg: &#123;</span><br><span class="line">              progressive: <span class="literal">true</span>,</span><br><span class="line">              quality: <span class="number">65</span></span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="comment">// optipng.enabled: false will disable optipng</span></span><br><span class="line">            optipng: &#123;</span><br><span class="line">              enabled: <span class="literal">false</span>,</span><br><span class="line">            &#125;,</span><br><span class="line">            pngquant: &#123;</span><br><span class="line">              quality: [<span class="number">0.65</span>, <span class="number">0.90</span>],</span><br><span class="line">              speed: <span class="number">4</span></span><br><span class="line">            &#125;,</span><br><span class="line">            gifsicle: &#123;</span><br><span class="line">              interlaced: <span class="literal">false</span>,</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="comment">// the webp option will enable WEBP</span></span><br><span class="line">            webp: &#123;</span><br><span class="line">              quality: <span class="number">75</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;]</span><br><span class="line">      &#125;,</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = webpackConfig;</span><br></pre></td></tr></table></figure>
 <h2 id="动态polyfill"><a href="#动态polyfill" class="headerlink" title="动态polyfill"></a>动态polyfill</h2><p>polyfill可以垫平不同浏览器之间的差异，但是有些浏览器版本较高，对于es6的语法支持很好，依然还是会使用polyfill，其实这些高版本的浏览器都是不需要的，所有会造成浪费，动态polyfill会判断当前浏览器的内核以及版本，动态的返回这个浏览器所需要的代码，从而提升速度</p>
 ]]></content>
+      <tags>
+        <tag>webpack</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>编写可维护的webpack构建配置，进阶学习</title>
+    <url>/2020/05/27/webpack-builder/</url>
+    <content><![CDATA[<p>如何把webpack的配置编写的更加通用，把webpack的配置编写成一个构建包，在每个项目里都能快速使用</p>
+<p>现在的webpack配置分为webpack.prod.js，  webpack.dev.js，  webpack.ssr.js，分别对应三个不同的环境场景，三个配置文件里面的配置有些都是相同的例如es6代码的转换，react的使用、处理less样式文件等，不得不每次复制到每个配置文件代码里面去，而不同的环境场景的配置又具有差异，解决思路就是新建一个webpack.base.js文件存放共用的配置，使用webpack-merge组件合并配置</p>
+<p>在根目录新建build-webpack文件夹，cd build-webpack，进入目录，npm init -y初始化package.json文件</p>
+<p>build-webpack文件夹下新建lib目录，存放webpack配置文件，在lib文件下新建webpack.base.js，webpack.prod.js，  webpack.dev.js，  webpack.ssr.js文件：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.base.js</span></span><br><span class="line"><span class="keyword">const</span> &#123;CleanWebpackPlugin&#125; = <span class="built_in">require</span>(<span class="string">'clean-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> MiniCssExtractPlugin = <span class="built_in">require</span>(<span class="string">'mini-css-extract-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">'html-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> FriendlyErrorsWebpackPlugin = <span class="built_in">require</span>(<span class="string">'friendly-errors-webpack-plugin'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 动态设置entry 和 htmlWebpackPlugin</span></span><br><span class="line"><span class="keyword">const</span> glob = <span class="built_in">require</span>(<span class="string">'glob'</span>);</span><br><span class="line">setMPA = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> entry = &#123;&#125;;</span><br><span class="line">  <span class="keyword">const</span> htmlWebpackPlugin = [];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> entryFiles = glob.sync(path.join(__dirname, <span class="string">'./src/*/index.jsx'</span>));</span><br><span class="line">  <span class="built_in">Object</span>.keys(entryFiles).map(<span class="function">(<span class="params">index</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> entryFile = entryFiles[index];</span><br><span class="line">    <span class="keyword">const</span> match = entryFile.match(<span class="regexp">/src\/(.*)\/index\.jsx/</span>);</span><br><span class="line">    <span class="keyword">const</span> pageName = match &amp;&amp; match[<span class="number">1</span>];</span><br><span class="line">    entry[pageName] = entryFile;</span><br><span class="line">    htmlWebpackPlugin.push(</span><br><span class="line">      <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">        template: path.join(__dirname, <span class="string">`src/<span class="subst">$&#123;pageName&#125;</span>/index.html`</span>),</span><br><span class="line">        filename: <span class="string">`<span class="subst">$&#123;pageName&#125;</span>.html`</span>, <span class="comment">//打包后的文件名</span></span><br><span class="line">        chunks: [<span class="string">'vendors'</span>, pageName],</span><br><span class="line">        inject: <span class="literal">true</span>,</span><br><span class="line">        minify: &#123;</span><br><span class="line">          html5: <span class="literal">true</span>,</span><br><span class="line">          preserveLineBreaks: <span class="literal">false</span>,</span><br><span class="line">          removeAttributeQuotes: <span class="literal">false</span>, <span class="comment">//是否删除属性的双引号</span></span><br><span class="line">          collapseWhitespace: <span class="literal">true</span>, <span class="comment">//是否折叠空白</span></span><br><span class="line">          removeComments: <span class="literal">true</span>,</span><br><span class="line">          minifyCSS: <span class="literal">true</span>,</span><br><span class="line">          minifyJS: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;)</span><br><span class="line">    )</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    entry, htmlWebpackPlugin</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123;entry, htmlWebpackPlugin&#125; = setMPA();</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: entry,</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: path.resolve(projectRoot, <span class="string">'dist'</span>), <span class="comment">//必须是绝对路径</span></span><br><span class="line">    filename: <span class="string">'[name]_[chunkhash:8].js'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.(js|jsx)$/</span>,</span><br><span class="line">        use: [<span class="string">'babel-loader'</span>]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.css$/</span>,</span><br><span class="line">        use: [MiniCssExtractPlugin.loader,<span class="string">'css-loader'</span>]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.less$/</span>,</span><br><span class="line">        use: [MiniCssExtractPlugin.loader,<span class="string">'css-loader'</span>, &#123;</span><br><span class="line">          loader: <span class="string">'postcss-loader'</span>, <span class="attr">options</span>: &#123;</span><br><span class="line">            plugins: <span class="function"><span class="params">()</span> =&gt;</span> [</span><br><span class="line">              <span class="built_in">require</span>(<span class="string">'autoprefixer'</span>)(&#123;</span><br><span class="line">                overrideBrowserslist: [<span class="string">'last 2 version'</span>, <span class="string">'&gt;1%'</span>, <span class="string">'ios 7'</span>]</span><br><span class="line">              &#125;)</span><br><span class="line">            ]</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;, <span class="string">'less-loader'</span>, &#123;</span><br><span class="line">          loader: <span class="string">'px2rem-loader'</span>,</span><br><span class="line">          options: &#123;</span><br><span class="line">            remUnit: <span class="number">75</span>, <span class="comment">// 转换率：1rem = 75px</span></span><br><span class="line">            remPrecision: <span class="number">8</span> <span class="comment">// 转换之后保留小数点后位数</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.(png|jpg|gif|jpeg)$/</span>,</span><br><span class="line">        use: &#123;</span><br><span class="line">          loader: <span class="string">'file-loader'</span>,</span><br><span class="line">          options: &#123;</span><br><span class="line">            name: <span class="string">'[name]_[hash:8].[ext]'</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.(woff|woff2|eot|otf|ttf)$/</span>,</span><br><span class="line">        use: [<span class="string">'file-loader'</span>]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> CleanWebpackPlugin(),</span><br><span class="line">    <span class="keyword">new</span> MiniCssExtractPlugin(&#123;</span><br><span class="line">      filename: <span class="string">'[name]_[contenthash:8].css'</span></span><br><span class="line">    &#125;),</span><br><span class="line">    ...htmlWebpackPlugin,</span><br><span class="line">    <span class="keyword">new</span> FriendlyErrorsWebpackPlugin(),</span><br><span class="line">    <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.hooks.done.tab(<span class="string">'done'</span>, (stats) =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span>(stats.compilation.errors &amp;&amp; stats.compilation.errors.length &amp;&amp; process.argv.indexOf(<span class="string">'--watch'</span>) == <span class="number">-1</span>) &#123;</span><br><span class="line">          <span class="built_in">console</span>.log(<span class="string">'build error'</span>);</span><br><span class="line">          process.exit(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  stats: <span class="string">'errors-only'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>安装 :<code>npm i webpack-merge -D</code></p>
+<p>webpack.dev.js包括热更新和source-map，使用webpack-merge合并配置</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.dev.js</span></span><br><span class="line"><span class="keyword">const</span> merge = <span class="built_in">require</span>(<span class="string">'webpack-merge'</span>);</span><br><span class="line"><span class="keyword">const</span> baseConfig = <span class="built_in">require</span>(<span class="string">'./webpack.base'</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 热更新，source-map</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> devConfig = &#123;</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> webpack.HotModuleReplacementPlugin()</span><br><span class="line">  ],</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    contentBase: <span class="string">'./dist'</span>, <span class="comment">// 服务基础目录</span></span><br><span class="line">    hot: <span class="literal">true</span>, <span class="comment">// 开启热更新</span></span><br><span class="line">    stats: <span class="string">'errors-only'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  devtool: <span class="string">'source-map'</span>,</span><br><span class="line">  mode: <span class="string">'development'</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = merge(baseConfig, devConfig);</span><br></pre></td></tr></table></figure>
+<p>webpack.prod.jsb包括代码压缩，文件指纹,公共资源的提取：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.prod.js</span></span><br><span class="line"><span class="keyword">const</span> merge = <span class="built_in">require</span>(<span class="string">'webpack-merge'</span>);</span><br><span class="line"><span class="keyword">const</span> baseConfig = <span class="built_in">require</span>(<span class="string">'./webpack.base'</span>);</span><br><span class="line"><span class="keyword">const</span> OpimizeCssAssetsPlugin = <span class="built_in">require</span>(<span class="string">'optimize-css-assets-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> HtmlWebpackExternalsPlugin = <span class="built_in">require</span>(<span class="string">'html-webpack-externals-plugin'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 代码压缩，文件指纹,公共资源的提取</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> prodConfig = &#123;</span><br><span class="line">  mode: <span class="string">'production'</span>,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> OpimizeCssAssetsPlugin(&#123;</span><br><span class="line">      AccetNameRegExp: <span class="regexp">/\.css$/g</span>,</span><br><span class="line">      cssProcessor: <span class="built_in">require</span>(<span class="string">'cssnano'</span>)</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> HtmlWebpackExternalsPlugin(&#123;</span><br><span class="line">      externals: [&#123;</span><br><span class="line">        <span class="built_in">module</span>: <span class="string">'react'</span>,</span><br><span class="line">        entry: <span class="string">'https://unpkg.com/react@16/umd/react.development.js'</span>,</span><br><span class="line">        global: <span class="string">'React'</span></span><br><span class="line">      &#125;,&#123;</span><br><span class="line">        <span class="built_in">module</span>: <span class="string">'react-dom'</span>,</span><br><span class="line">        entry: <span class="string">'https://unpkg.com/react-dom@16/umd/react-dom.development.js'</span>,</span><br><span class="line">        global: <span class="string">'ReactDom'</span></span><br><span class="line">      &#125;]</span><br><span class="line">    &#125;)</span><br><span class="line">  ],</span><br><span class="line">  optimization: &#123;</span><br><span class="line">    splitChunks: &#123;</span><br><span class="line">      minSize: <span class="number">0</span>,</span><br><span class="line">      cacheGroups: &#123;</span><br><span class="line">        commons: &#123;</span><br><span class="line">          name: <span class="string">'commons'</span>,</span><br><span class="line">          chunks: <span class="string">'all'</span>,</span><br><span class="line">          minChunks: <span class="number">2</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = merge(baseConfig, prodConfig);</span><br></pre></td></tr></table></figure>
+<p>webpack.ssr.js主要是不解析css文件</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.ssr.js</span></span><br><span class="line"><span class="keyword">const</span> merge = <span class="built_in">require</span>(<span class="string">'webpack-merge'</span>);</span><br><span class="line"><span class="keyword">const</span> baseConfig = <span class="built_in">require</span>(<span class="string">'./webpack.base'</span>);</span><br><span class="line"><span class="keyword">const</span> OpimizeCssAssetsPlugin = <span class="built_in">require</span>(<span class="string">'optimize-css-assets-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> HtmlWebpackExternalsPlugin = <span class="built_in">require</span>(<span class="string">'html-webpack-externals-plugin'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 代码压缩，文件指纹,公共资源的提取</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> prodConfig = &#123;</span><br><span class="line">  mode: <span class="string">'production'</span>,</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.css$/</span>,</span><br><span class="line">        use: <span class="string">'ignore-loader'</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.less$/</span>,</span><br><span class="line">        use: <span class="string">'ignore-loader'</span></span><br><span class="line">      &#125;,</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> OpimizeCssAssetsPlugin(&#123;</span><br><span class="line">      AccetNameRegExp: <span class="regexp">/\.css$/g</span>,</span><br><span class="line">      cssProcessor: <span class="built_in">require</span>(<span class="string">'cssnano'</span>)</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> HtmlWebpackExternalsPlugin(&#123;</span><br><span class="line">      externals: [&#123;</span><br><span class="line">        <span class="built_in">module</span>: <span class="string">'react'</span>,</span><br><span class="line">        entry: <span class="string">'https://unpkg.com/react@16/umd/react.development.js'</span>,</span><br><span class="line">        global: <span class="string">'React'</span></span><br><span class="line">      &#125;,&#123;</span><br><span class="line">        <span class="built_in">module</span>: <span class="string">'react-dom'</span>,</span><br><span class="line">        entry: <span class="string">'https://unpkg.com/react-dom@16/umd/react-dom.development.js'</span>,</span><br><span class="line">        global: <span class="string">'ReactDom'</span></span><br><span class="line">      &#125;]</span><br><span class="line">    &#125;)</span><br><span class="line">  ],</span><br><span class="line">  optimization: &#123;</span><br><span class="line">    splitChunks: &#123;</span><br><span class="line">      minSize: <span class="number">0</span>,</span><br><span class="line">      cacheGroups: &#123;</span><br><span class="line">        commons: &#123;</span><br><span class="line">          name: <span class="string">'commons'</span>,</span><br><span class="line">          chunks: <span class="string">'all'</span>,</span><br><span class="line">          minChunks: <span class="number">2</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = merge(baseConfig, prodConfig);</span><br></pre></td></tr></table></figure>
+<p>新建.gitignore文件</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">/node_modules</span><br><span class="line">/logs</span><br></pre></td></tr></table></figure>
+<h2 id="使用eslint规范构建脚本"><a href="#使用eslint规范构建脚本" class="headerlink" title="使用eslint规范构建脚本"></a>使用eslint规范构建脚本</h2><p>eslint可以帮助在构建之前检查代码的规范，而不是等到运行的时候在报错</p>
+<p>在build-webpack目录安装eslint以及eslint所需要的依赖：<code>npm i eslint eslint-config-airbnb-base babel-eslint -D</code></p>
+<p>新建.eslintrc.js文件</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// build-webpack/.eslintrc.</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="string">"parser"</span>: <span class="string">"babel-eslint"</span>,</span><br><span class="line">  <span class="string">"extends"</span>: <span class="string">"airbnb-base"</span>,</span><br><span class="line">  <span class="string">"env"</span>: &#123;</span><br><span class="line">    <span class="string">"browser"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="string">"node"</span>: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在package.json增加eslint script</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">// build-webpack/package.json</span><br><span class="line">"scripts": &#123;</span><br><span class="line">    "test": "echo \"Error: no test specified\" &amp;&amp; exit 1",</span><br><span class="line">    "eslint": "eslint ./lib --fix"</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+<p>运行npm run eslint可以帮助在构建之前检查规范，</p>
+<p>在命令行运行npm run eslint</p>
+<p><img src="/img/webpack/w17.png" alt="图片"></p>
+<p>这边的报错是因为我的webpack配置中使用的插件没有安装</p>
+<p>根据报错一次安装插件到dependencies，根据提示解决报错</p>
+<h2 id="冒烟测试"><a href="#冒烟测试" class="headerlink" title="冒烟测试"></a>冒烟测试</h2><p>冒烟测试确保构建没有大问题，检测一些基本的功能可用</p>
+<p>例如构建是否成功，每次构建完成是否正确的打包静态资源</p>
+<p>在test新建template目录，作为模版目录，也就是要使用构建脚本构建的项目，可以把之前的项目复制一份进来，删除不需要的文件：</p>
+<p><img src="/img/webpack/w18.png" alt="图片"></p>
+<p>在build-webpack目录新建test目录，test新建smoke目录，smoke新建index.js文件用来编写测试脚本：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// test/smoke/index.js</span></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"><span class="keyword">const</span> rimraf = <span class="built_in">require</span>(<span class="string">'rimraf'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 进入tamplate，__dirname代表运行时候的目录</span></span><br><span class="line">process.chdir(path.join(__dirname, <span class="string">'template'</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每次构建之前，删除dist目录</span></span><br><span class="line">rimraf(<span class="string">'./dist'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="comment">// 引入配置</span></span><br><span class="line">  <span class="keyword">const</span> prodConfig = <span class="built_in">require</span>(<span class="string">'../../lib/webpack.prod.js'</span>);</span><br><span class="line">  <span class="comment">// 通过webpack对template目录的代码运行prodConfig这个配置</span></span><br><span class="line">  webpack(prodConfig, (err, stats) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span>(err) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(err);</span><br><span class="line">      process.exit(<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.log(stats.toString(&#123;</span><br><span class="line">      color: <span class="literal">true</span>,</span><br><span class="line">      modules: <span class="literal">false</span>,</span><br><span class="line">      children: <span class="literal">false</span></span><br><span class="line">    &#125;))</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>在build-webpack目录安装： <code>npm i rimraf -S</code></p>
+<p>修改webpack.base.js文件，增加projectRoot，修改执行的目录为tamplate目录</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.base.js</span></span><br><span class="line"><span class="keyword">const</span> projectRoot = process.cwd(); <span class="comment">// 当前目录</span></span><br><span class="line"><span class="keyword">const</span> setMPA = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> entryFiles = glob.sync(path.join(projectRoot, <span class="string">'./src/*/index.jsx'</span>));</span><br><span class="line">  <span class="built_in">Object</span>.keys(entryFiles).map(<span class="function">(<span class="params">index</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">return</span> htmlWebpackPlugin.push(</span><br><span class="line">      <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">        template: path.join(projectRoot, <span class="string">`src/<span class="subst">$&#123;pageName&#125;</span>/index.html`</span>),</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">      &#125;),</span><br><span class="line">    );</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    entry, htmlWebpackPlugin,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在终端运行：<code>node test/smoke/index.js</code></p>
+<h3 id="检查dist目录是否有构建出来的文件"><a href="#检查dist目录是否有构建出来的文件" class="headerlink" title="检查dist目录是否有构建出来的文件"></a>检查dist目录是否有构建出来的文件</h3><p>使用mocha编写单元测试的测试用例，安装： <code>npm i mocha -D</code></p>
+<p><code>npm i glob-all -D</code></p>
+<p>新建smoke/html-test.js：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> glob = <span class="built_in">require</span>(<span class="string">'glob-all'</span>);</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'checking generated html files'</span>, () =&gt; &#123;</span><br><span class="line">  it(<span class="string">'should genarate html files'</span>, (done) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> files = glob.sync([<span class="string">'./dist/index.html'</span>, <span class="string">'./dist/search.html'</span>]);</span><br><span class="line">    <span class="keyword">if</span>(files.length &gt; <span class="number">0</span>) done();</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'no html files genarated'</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>新建smoke/css-js-test.js:</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> glob = <span class="built_in">require</span>(<span class="string">'glob-all'</span>);</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'checking generated css js files'</span>, () =&gt; &#123;</span><br><span class="line">  it(<span class="string">'should genarate css js files'</span>, (done) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> files = glob.sync([<span class="string">'./dist/index_*.js'</span>, <span class="string">'./dist/search_*.js'</span>, <span class="string">'./dist/index_*.css'</span>, <span class="string">'./dist/search_*.css'</span>]);</span><br><span class="line">    <span class="keyword">if</span>(files.length &gt; <span class="number">0</span>) done();</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'no css js files genarated'</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>修改smoke/index.js</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// /...</span></span><br><span class="line"><span class="keyword">const</span> Mocha = <span class="built_in">require</span>(<span class="string">'mocha'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mocha = <span class="keyword">new</span> Mocha(&#123;</span><br><span class="line">  timeout: <span class="string">'10000ms'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="comment">// 每次构建之前，删除dist目录</span></span><br><span class="line">rimraf(<span class="string">'./dist'</span>, () =&gt; &#123;</span><br><span class="line">  webpack(prodConfig, (err, stats) =&gt; &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'webpack build success, begin run test'</span>);</span><br><span class="line">    mocha.addFile(path.join(__dirname, <span class="string">'html-test.js'</span>));</span><br><span class="line">    mocha.addFile(path.join(__dirname, <span class="string">'css-js-test.js'</span>));</span><br><span class="line">    mocha.run();</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>在终端运行：<code>node test/smoke/index.js</code>，冒烟测试成功之后会在终端打印</p>
+<p><img src="/img/webpack/w19.png" alt="图片"></p>
+<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><p>使用抹茶和断言库进行单元测试</p>
+<p>安装断言库：<code>npm i assert -D</code></p>
+<p>在test目录新建index文件，作为单元测试的入口，在test目录新建unit目录，这个目录放单元测试的代码</p>
+<p>测试webpack.base配置，test/unit/webpack-base-test.js:</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// test/unit/webpack-base-test.js</span></span><br><span class="line">describe(<span class="string">'webpack.base.js test case'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> baseConfig = <span class="built_in">require</span>(<span class="string">'../../lib/webpack.base'</span>);</span><br><span class="line">  <span class="keyword">const</span> assert = <span class="built_in">require</span>(<span class="string">'assert'</span>);</span><br><span class="line">  <span class="comment">// console.log(baseConfig)</span></span><br><span class="line">  <span class="comment">// 测试entry字段</span></span><br><span class="line">  it(<span class="string">'entry'</span>, () =&gt; &#123;</span><br><span class="line">    assert.equal(baseConfig.entry.index, <span class="string">'/Users/lizhaoxin/mypro/webpack-first/build-webpack/test/smoke/template/src/index/index.jsx'</span>);</span><br><span class="line">    assert.equal(baseConfig.entry.search, <span class="string">'/Users/lizhaoxin/mypro/webpack-first/build-webpack/test/smoke/template/src/search/index.jsx'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>test/index：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 进入tamplate, __dirname代表运行时候的目录</span></span><br><span class="line">process.chdir(path.join(__dirname, <span class="string">'smoke/template'</span>));</span><br><span class="line"><span class="comment">// 引入测试代码</span></span><br><span class="line">describe(<span class="string">'builder-webpack test case'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">require</span>(<span class="string">'./unit/webpack-base-test'</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>修改build-webpack/package.json，增加test运行脚本</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "test": "./node_modules/.bin/_mocha",</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+<p>运行npm run test:测试用例成功了，会在前面打勾</p>
+<p><img src="/img/webpack/w20.png" alt="图片"></p>
+<p>测试覆盖率， istanbul是一个单元测试代码覆盖率检查工具，可以很直观地告诉我们，单元测试对代码的控制程度。，安装 npm i istanbul -D, 修改build-webpack/package.json</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "test": "istanbul cover ./node_modules/.bin/_mocha",</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+<p>运行npm run build,可以在终端看到，测试用例的覆盖情况,例如单元测试覆盖了多少函数，多少代码行数，多少分支：</p>
+<p><img src="/img/webpack/w21.png" alt="图片"></p>
+<h2 id="持续集成"><a href="#持续集成" class="headerlink" title="持续集成"></a>持续集成</h2>]]></content>
       <tags>
         <tag>webpack</tag>
       </tags>
@@ -2689,6 +2695,139 @@
 ]]></content>
       <tags>
         <tag>webpack</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>《我的牧羊日记》</title>
+    <url>/2021/08/27/read-20210827/</url>
+    <content><![CDATA[<h2 id="章节：9月5日"><a href="#章节：9月5日" class="headerlink" title="章节：9月5日"></a>章节：9月5日</h2><blockquote>
+<p>就像天气无所谓好坏，那不过是你需要面对的自然现象。天气晴好，就检查水是否结冰；狂风大作，就一定要确保大门固定在墙上；若是下雨，就穿上防雨的衣服；当树叶变黄，就该储备过冬饲料了。但我猜想，这一切该是蕴含着某种内在之美吧。</p>
+</blockquote>
+<h2 id="章节：11月5日"><a href="#章节：11月5日" class="headerlink" title="章节：11月5日"></a>章节：11月5日</h2><blockquote>
+<p>在网络世界中，你可以离线，而在现实生活中，你却永远无法隐身</p>
+</blockquote>
+<h2 id="章节：11月18日"><a href="#章节：11月18日" class="headerlink" title="章节：11月18日"></a>章节：11月18日</h2><blockquote>
+<p>你的生活环境是否具有社会性也许并不取决于你的社交频率，而是取决于你与谁为伍：你们是否同声相应，同气相求；你们是否能相互影响，相互渗透。若论人际往来，其实乡村和城市没有多少差别。何况只有在乡下，我才能与羊群为伴。</p>
+</blockquote>
+<h2 id="章节：1月18日"><a href="#章节：1月18日" class="headerlink" title="章节：1月18日"></a>章节：1月18日</h2><blockquote>
+<p>成功的重要理念：别着急，慢慢来，不断总结经验，坚持不懈地把同一件事做好。换句话说，做一个称职的农民。或者，把事情做对就不错了。</p>
+</blockquote>
+<h2 id="章节：7月4日"><a href="#章节：7月4日" class="headerlink" title="章节：7月4日"></a>章节：7月4日</h2><blockquote>
+<p>羊儿不会把一块地上的草全部吃光，他们会有选择地吃掉一部分，而不是随心所欲地乱吃一气。这样，牧草就会生生不息。放眼未来，也许只需几年，牧场连带羊儿的生活都会得到改善。这一切归功于他们的克制。如果一个物种只顾满足眼前的贪欲而停止了对未来的思考，那么他们注定会走向衰败</p>
+</blockquote>
+<h2 id="章节：10月19日"><a href="#章节：10月19日" class="headerlink" title="章节：10月19日"></a>章节：10月19日</h2><blockquote>
+<p>在一场真实的杀戮面前，任何语言文字都是苍白无力的。也许是场面血腥令人作呕，也许是因为人根本无从理解生与死之间的界线。</p>
+</blockquote>
+<h2 id="章节：6月25日"><a href="#章节：6月25日" class="headerlink" title="章节：6月25日"></a>章节：6月25日</h2><blockquote>
+<p>所谓最佳道德立场并不存在量化的评判标准。有些人认为是可以量化的，但是在对是非的衡量过程中，总有一个附加值，一个你无法真正把控的东西。就像爱一样</p>
+</blockquote>
+<blockquote>
+<p>你不可能准确清楚地罗列出你爱某人的原因，否则，那就不是爱，而更像投资决策前的利弊权衡。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>读书</category>
+      </categories>
+      <tags>
+        <tag>读书</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>《进化：从孤胆极客到高效团队》</title>
+    <url>/2021/08/28/read-20210828/</url>
+    <content><![CDATA[<h2 id="章节：天才神话"><a href="#章节：天才神话" class="headerlink" title="章节：天才神话"></a>章节：天才神话</h2><blockquote>
+<p>工作的闪亮成果。（Unix系统本身也不是完全由肯·汤普森和</p>
+</blockquote>
+<h2 id="章节：隐藏是有害的"><a href="#章节：隐藏是有害的" class="headerlink" title="章节：隐藏是有害的"></a>章节：隐藏是有害的</h2><blockquote>
+<p>拥有不受干扰的时间并没有错，但用这些时间来做错误的事情就是浪费时间。</p>
+</blockquote>
+<h2 id="章节：快速失败和迭代"><a href="#章节：快速失败和迭代" class="headerlink" title="章节：快速失败和迭代"></a>章节：快速失败和迭代</h2><blockquote>
+<p>我们认为，如果从来不犯错误，说明你没有足够的创新性去承担足够的风险。在我们看来，失败为下一次的努力提供了学习和改进的最佳机会。</p>
+</blockquote>
+<blockquote>
+<p>请记住，将失败完备地记录下来，还可以让别人（在现在及将来）更容易了解当时发生了什么并避免重复历史。不要擦除你的足迹，照亮来路，以便后来者追随！</p>
+</blockquote>
+<blockquote>
+<p>一份完备的事后分析报告应包含以下内容：<br>•概述<br>•从发现问题，调查问题，到解决问题的时间线</p>
+</blockquote>
+<blockquote>
+<p>•事件发生的主要原因<br>•影响和损失估计<br>•立即解决问题的一系列措施<br>•预防事件再次发生的一系列措施<br>•吸取的经验教训</p>
+</blockquote>
+<h2 id="章节：接受改变"><a href="#章节：接受改变" class="headerlink" title="章节：接受改变"></a>章节：接受改变</h2><blockquote>
+<p>但是每个人都可以回想一下一起工作过的特别固执的人。别人越是试图说服他，他反而更加固执。</p>
+</blockquote>
+<h2 id="章节：团队文化的重要性"><a href="#章节：团队文化的重要性" class="headerlink" title="章节：团队文化的重要性"></a>章节：团队文化的重要性</h2><blockquote>
+<p>虽然创始人和领导者通常会关注团队文化的健康，但团队的每个成员都应参与其中，担负起定义、维护、保护团队文化的责任。</p>
+</blockquote>
+<h2 id="章节：成功团队文化的沟通模式"><a href="#章节：成功团队文化的沟通模式" class="headerlink" title="章节：成功团队文化的沟通模式"></a>章节：成功团队文化的沟通模式</h2><blockquote>
+<p>关于沟通有一个通用准则：人少时使用同步沟通（如会议和电话会议），人多时使用异步沟通（如邮件、问题跟踪系统、文档注释）。</p>
+</blockquote>
+<h2 id="章节：代码注释"><a href="#章节：代码注释" class="headerlink" title="章节：代码注释"></a>章节：代码注释</h2><blockquote>
+<p>注释应当关注代码如此实现的理由，而不是代码的功能。</p>
+</blockquote>
+<blockquote>
+<p>—保持风格一致比选用何种风格更为重要</p>
+</blockquote>
+<blockquote>
+<p>降低代码复杂度</p>
+</blockquote>
+<blockquote>
+<p>代码风格，亦为可读性，是管理C++代码的约定。</p>
+</blockquote>
+<h2 id="章节：每次提交必有审阅"><a href="#章节：每次提交必有审阅" class="headerlink" title="章节：每次提交必有审阅"></a>章节：每次提交必有审阅</h2><blockquote>
+<p>每次提交必有审阅</p>
+</blockquote>
+<h2 id="章节：以诚相待"><a href="#章节：以诚相待" class="headerlink" title="章节：以诚相待"></a>章节：以诚相待</h2><blockquote>
+<p>在提供直接反馈或批评意见时，要想确保消息传达到位，表达方式是关键。如果让对方产生反感，他就不会思考该如何改进，而是想方设法与你辩解，证明你说得不对</p>
+</blockquote>
+<h2 id="章节：关注幸福度"><a href="#章节：关注幸福度" class="headerlink" title="章节：关注幸福度"></a>章节：关注幸福度</h2><blockquote>
+<p>然后了解每位工程师是否得到了完成工作所需的各项条件。</p>
+</blockquote>
+<h2 id="章节：内在激励和外在激励"><a href="#章节：内在激励和外在激励" class="headerlink" title="章节：内在激励和外在激励"></a>章节：内在激励和外在激励</h2><blockquote>
+<p>当然，如果缺乏工作目标，则自主性再强，卓越性再高，也无法激励一个人，因此你需要为其工作提供目标。很多人所做的产品意义深远，但他们却无法体会该产品对公司、客户甚至全世界可能产生的积极影响。即使产品产生的影响可能不那么大，你也可以探索该工作的意义并传达给团队成员，以激励大家</p>
+</blockquote>
+<blockquote>
+<p>如果你能帮助团队成员看到自己所从事工作的意义，就能极大地提高大家的主动性和效率</p>
+</blockquote>
+<h2 id="章节：自大"><a href="#章节：自大" class="headerlink" title="章节：自大"></a>章节：自大</h2><blockquote>
+<p>事情的关键并不是谁对谁错，而是不同意见是否必须得出结论，是否值得花时间继续讨论。请时刻提醒自己这类问题。在</p>
+</blockquote>
+<h2 id="章节：不要喂食能量生物"><a href="#章节：不要喂食能量生物" class="headerlink" title="章节：不要喂食能量生物"></a>章节：不要喂食能量生物</h2><blockquote>
+<p>。这一策略对故意捣乱的人（即那些有意激怒你或团队的人）特别有效。你回应得越多，对方消耗你的能量就越多，你浪费的时间也就越多。最好的简单方法通常是保持沉默。不管你有多想用一句一针见血的回应置对方于死地，请尽量克制。</p>
+</blockquote>
+<h2 id="章节：学会向上管理"><a href="#章节：学会向上管理" class="headerlink" title="章节：学会向上管理"></a>章节：学会向上管理</h2><blockquote>
+<p>开始将工作分为“进攻性”和“防御性”。进攻性工作通常是新用户可见的功能——容易展示给外人并使大家兴奋的漂亮东西，或者是可以提高产品吸引力的可见改进（例如，改进的用户界面，更短的响应时间）。防御性工作针对的是产品的长期健康（例如，代码重构、功能重写、格式修改、数据迁移，或者改进的紧急情况监控）。</p>
+</blockquote>
+<blockquote>
+<p>全部工作时间的三分之一到二分之一。超出这个范围都是自寻死路。</p>
+</blockquote>
+<h2 id="章节：设计很重要"><a href="#章节：设计很重要" class="headerlink" title="章节：设计很重要"></a>章节：设计很重要</h2><blockquote>
+<p>—你的产品需要漂亮的外观而且使用要简单方便。如今，</p>
+</blockquote>
+<h2 id="章节：以用户为先"><a href="#章节：以用户为先" class="headerlink" title="章节：以用户为先"></a>章节：以用户为先</h2><blockquote>
+<p>“以用户为先”的意思是，你和团队应当在产品开发中付出一切努力，令用户使用产品更容易。</p>
+</blockquote>
+<h2 id="章节：速度不容忽视"><a href="#章节：速度不容忽视" class="headerlink" title="章节：速度不容忽视"></a>章节：速度不容忽视</h2><blockquote>
+<p>！降低延迟是提高使用量，保持用户满意度的最佳方法之一。正如谷歌创始人喜欢说的一样：“速度是一个功能。”</p>
+</blockquote>
+<h2 id="章节：耐心"><a href="#章节：耐心" class="headerlink" title="章节：耐心"></a>章节：耐心</h2><blockquote>
+<p>最关键的倾听技巧在于学会理解人们想说的是什么，而不一定要试图解释他们实际说的是什么。这不仅需要一些语言翻译，而且还需要情商，以及读心术。</p>
+</blockquote>
+<h2 id="章节：创造信任和愉快"><a href="#章节：创造信任和愉快" class="headerlink" title="章节：创造信任和愉快"></a>章节：创造信任和愉快</h2><blockquote>
+<p>不存在所谓的暂时失去诚信</p>
+</blockquote>
+<blockquote>
+<p>关注你的长期形象，而非短期便利。</p>
+</blockquote>
+<h2 id="章节：记住用户"><a href="#章节：记住用户" class="headerlink" title="章节：记住用户"></a>章节：记住用户</h2><blockquote>
+<p>本章讨论了很多想法，但最后可归结为三个简单概念。<br>市场营销<br>了解人们对软件的看法；这决定了他们会不会愿意尝试。<br>产品设计<br>如果软件做不到容易尝试、速度快、友好，而且用户面广，用户就会流失。<br>客户服务<br>主动与用户建立长期的良好关系能影响软件的演化和用户保持率。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>读书</category>
+      </categories>
+      <tags>
+        <tag>读书</tag>
       </tags>
   </entry>
 </search>
