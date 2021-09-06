@@ -10,9 +10,17 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate">
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="所念皆星河，星河不及你,什么是图？
-Graph，是一种数据结构，一种多对多的数据结构
-"> 
+    <meta name="description" content="所念皆星河，星河不及你,什么是图？Graph，是一种数据结构，一种多对多的数据结构
+先来回忆一下之前了解到的两种数据结构：
+
+一对一：线性结构
+
+
+
+一对多：树形结构
+
+
+我们即将学习的图形结构长这样子：从图中可以看出，数,"> 
     <meta name="author" content="小心心"> 
     <link rel="alternative" href="atom.xml" title="小心心的笔记" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -61,8 +69,113 @@ Graph，是一种数据结构，一种多对多的数据结构
 
         </div>
         <div class="content markdown">
-            <p>什么是图？</p>
-<p>Graph，是一种数据结构，一种多对多的数据结构</p>
+            <h2 id="什么是图？"><a href="#什么是图？" class="headerlink" title="什么是图？"></a>什么是图？</h2><p>Graph，是一种数据结构，一种多对多的数据结构</p>
+<p>先来回忆一下之前了解到的两种数据结构：</p>
+<blockquote>
+<p>一对一：线性结构</p>
+</blockquote>
+<p><img src="/img/data/xianxingjiegou.jpg" alt="线性结构"></p>
+<blockquote>
+<p>一对多：树形结构</p>
+</blockquote>
+<p><img src="/img/data/shuxingjiegou.jpg" alt="树形结构"></p>
+<p>我们即将学习的图形结构长这样子：从图中可以看出，数据元素和数据元素之间的关系是多对多的</p>
+<p><img src="/img/data/tuxingjiegou.jpg" alt="图形结构"></p>
+<h2 id="图的概念"><a href="#图的概念" class="headerlink" title="图的概念"></a>图的概念</h2><p>顶点：上图中数据元素叫做图的顶点</p>
+<p>边：连接两个顶点的关系，叫做边</p>
+<p>图是没有父顶点的子顶点之分，所有的顶点都是平等的</p>
+<h2 id="图的分类"><a href="#图的分类" class="headerlink" title="图的分类"></a>图的分类</h2><blockquote>
+<p>无向图：边没有方向的图</p>
+</blockquote>
+<p><img src="/img/data/wuxiangtu.jpg" alt="图形结构"></p>
+<blockquote>
+<p>有向图:边有方向的图，可能是单项的，也可能是双向的</p>
+</blockquote>
+<p><img src="/img/data/youxiangtu.jpg" alt="图形结构"></p>
+<blockquote>
+<p>带权图</p>
+</blockquote>
+<p><img src="/img/data/daiquantu.jpg" alt="图形结构"></p>
+<h2 id="图的术语"><a href="#图的术语" class="headerlink" title="图的术语"></a>图的术语</h2><ol>
+<li><p>相邻顶点：当两个顶点通过一条鞭相连的时候</p>
+</li>
+<li><p>图的度：某个顶点的图，是这个顶点边的个数</p>
+</li>
+<li><p>子图：某个图中所有边的子集组成的图</p>
+</li>
+<li><p>路径：图的边顺序连接的一系列顶点组成</p>
+</li>
+<li><p>环：只有一条边，且终点和起点相同的路径</p>
+</li>
+<li><p>连通图：如果图中任意一个顶点，都存在一条路径到达另外一个顶点</p>
+</li>
+<li><p>连通子图：</p>
+</li>
+</ol>
+<h2 id="图的存储结构"><a href="#图的存储结构" class="headerlink" title="图的存储结构"></a>图的存储结构</h2><p>计算机可以使用数组去一次存储图的顶点，那么顶点和顶点之间的边，如何存储呢？</p>
+<p>计算机存储图形结构边的时候，有两种存储方法：</p>
+<ol>
+<li><p>邻接矩阵</p>
+</li>
+<li><p>邻接表</p>
+</li>
+</ol>
+<h3 id="邻接矩阵"><a href="#邻接矩阵" class="headerlink" title="邻接矩阵"></a>邻接矩阵</h3><p>例如下面这个图，用邻接矩阵的方法如何表示呢</p>
+<p>我们画一个N*N的矩阵，行和列分别表示图的各个顶点，行和列交叉的地方用数字表示两个顶点之间是否有关系</p>
+<p>1表示两个顶点之间是有关系的，0表示顶点和顶点之间是没有关系的</p>
+<p><img src="/img/data/linjiejuzhen.jpg" alt="图形结构"></p>
+<p>邻接矩阵对应到我们的代码里面，就是一个而为数组：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">  [<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">  [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">  [<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>],</span><br><span class="line">  [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">  [<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>邻接矩阵的优点： 表示非常明确，直观</p>
+</blockquote>
+<blockquote>
+<p>缺点：浪费非常大的内存，去存储很多0，消耗的空间是图的顶点个数的平方，假设图有n个顶点，那么邻接矩阵占的空间就是n的平方</p>
+</blockquote>
+<h3 id="邻接表"><a href="#邻接表" class="headerlink" title="邻接表"></a>邻接表</h3><p>邻接表是由图中的顶点和该顶点相邻的顶点列表组成</p>
+<p><img src="/img/data/linjiebiao.jpg" alt="图形结构"></p>
+<h2 id="用js代码实现图的存储"><a href="#用js代码实现图的存储" class="headerlink" title="用js代码实现图的存储"></a>用js代码实现图的存储</h2><p><img src="/img/data/wuxiangtu.jpg" alt="图形结构"></p>
+<p>我们用js实现存储上面这个图的代码，我们使用邻接表的方法来实现</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">this</span>.vertexs = [] <span class="comment">//存储顶点</span></span><br><span class="line">    <span class="keyword">this</span>.edgeList = &#123;&#125; <span class="comment">//存储边</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  addVertex (v) &#123;</span><br><span class="line">    <span class="keyword">this</span>.vertexs.push(v);</span><br><span class="line">    <span class="keyword">this</span>.edgeList[v] = [];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  addEdge (a, b) &#123;</span><br><span class="line">    <span class="keyword">this</span>.edgeList[a].push(b);</span><br><span class="line">    <span class="keyword">this</span>.edgeList[b].push(a);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> graph = <span class="keyword">new</span> Graph();</span><br><span class="line"><span class="comment">// 添加顶点</span></span><br><span class="line">graph.addVertex(<span class="number">1</span>)</span><br><span class="line">graph.addVertex(<span class="number">2</span>)</span><br><span class="line">graph.addVertex(<span class="number">3</span>)</span><br><span class="line">graph.addVertex(<span class="number">4</span>)</span><br><span class="line">graph.addVertex(<span class="number">5</span>)</span><br><span class="line">graph.addVertex(<span class="number">6</span>)</span><br><span class="line"><span class="comment">// 添加边</span></span><br><span class="line">graph.addEdge(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">graph.addEdge(<span class="number">1</span>, <span class="number">6</span>)</span><br><span class="line">graph.addEdge(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">graph.addEdge(<span class="number">2</span>, <span class="number">4</span>)</span><br><span class="line">graph.addEdge(<span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">graph.addEdge(<span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">graph.addEdge(<span class="number">4</span>, <span class="number">6</span>)</span><br><span class="line">graph.addEdge(<span class="number">5</span>, <span class="number">6</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(graph)</span><br></pre></td></tr></table></figure>
+<p>打印出来的结果</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Graph &#123;</span><br><span class="line">  vertexs: [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> ],</span><br><span class="line">  edgeList:</span><br><span class="line">   &#123; <span class="string">'1'</span>: [ <span class="number">2</span>, <span class="number">6</span> ],</span><br><span class="line">     <span class="string">'2'</span>: [ <span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span> ],</span><br><span class="line">     <span class="string">'3'</span>: [ <span class="number">2</span>, <span class="number">4</span> ],</span><br><span class="line">     <span class="string">'4'</span>: [ <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">6</span> ],</span><br><span class="line">     <span class="string">'5'</span>: [ <span class="number">4</span>, <span class="number">6</span> ],</span><br><span class="line">     <span class="string">'6'</span>: [ <span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span> ] &#125; </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>我们对比代码运行出来的结果和刚才在邻接表中的情况是一摸一样的</p>
+<p><img src="/img/data/linjiebiaojs.jpg" alt="图形结构"></p>
+<h2 id="图的遍历"><a href="#图的遍历" class="headerlink" title="图的遍历"></a>图的遍历</h2><p>从某个顶点出发，按照一定的路径，一次访问图中的每个顶点，且没有顶点只访问一次</p>
+<p>图的遍历也有两种方式，和树的遍历一样：广度优先、深度优先</p>
+<blockquote>
+<p>广度优先（BFS）</p>
+</blockquote>
+<p>从图中的某个顶点出发，依次访问该顶点未被访问过的连接顶点，然后在分别从这些邻接的顶点开始一次访问他们的邻接顶点</p>
+<p>其目的是图中所有的顶点都要被访问到</p>
+<p>还是这个图，我们先用广度优先的思路来看一下遍历的结果</p>
+<p><img src="/img/data/tuguangduyouxian.jpg" alt="图形结构"></p>
+<p>按照广度优先的规则，我们遍历出来的顺序应该是：1，2，6，3，4，5</p>
+<blockquote>
+<p>深度优先（DFS）</p>
+</blockquote>
+<p>从图的某个顶点出发，依次访问该顶点的未被访问过的邻接顶点，然后从每个邻接顶点出发，对每个邻接的顶点进行深度优先遍历，是一个递归的概念，直到图中所有和出发顶点有相通路径的顶点都被访问过</p>
+<blockquote>
+<p>图的遍历思路</p>
+</blockquote>
+<p>图中的每个顶点在遍历的时候有三种状态：</p>
+<ol>
+<li><p>未发现，没有发现这个顶点</p>
+</li>
+<li><p>已经发现，发现这个顶点，但是没有遍历该顶点的全部连接顶点</p>
+</li>
+<li><p>已探索，发现该顶点，并且已经遍历过该顶点的全部连接顶点</p>
+</li>
+</ol>
+<p>我们用三种颜色，分别表示图中顶点的访问状态：</p>
+<ol>
+<li><p>白色，未发现</p>
+</li>
+<li><p>灰色，已发现</p>
+</li>
+<li><p>已访问</p>
+</li>
+</ol>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
@@ -98,7 +211,7 @@ Graph，是一种数据结构，一种多对多的数据结构
     </div>
     
         <div class='side'>
-				
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是图？"><span class="toc-number">1.</span> <span class="toc-text">什么是图？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图的概念"><span class="toc-number">2.</span> <span class="toc-text">图的概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图的分类"><span class="toc-number">3.</span> <span class="toc-text">图的分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图的术语"><span class="toc-number">4.</span> <span class="toc-text">图的术语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图的存储结构"><span class="toc-number">5.</span> <span class="toc-text">图的存储结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#邻接矩阵"><span class="toc-number">5.1.</span> <span class="toc-text">邻接矩阵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#邻接表"><span class="toc-number">5.2.</span> <span class="toc-text">邻接表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用js代码实现图的存储"><span class="toc-number">6.</span> <span class="toc-text">用js代码实现图的存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图的遍历"><span class="toc-number">7.</span> <span class="toc-text">图的遍历</span></a></li></ol>	
         </div>
     
 </div>
