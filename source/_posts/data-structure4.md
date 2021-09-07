@@ -190,6 +190,10 @@ Graph {
 
 从图的某个顶点出发，依次访问该顶点的未被访问过的邻接顶点，然后从每个邻接顶点出发，对每个邻接的顶点进行深度优先遍历，是一个递归的概念，直到图中所有和出发顶点有相通路径的顶点都被访问过
 
+![图形结构](/img/data/tushenduyouxian.jpg)
+
+上面的图，按照深度优先遍历，顺序应该是： 1，2，3，4，5，6
+
 > 图的遍历思路
 
 图中的每个顶点在遍历的时候有三种状态：
@@ -207,3 +211,234 @@ Graph {
 2. 灰色，已发现
 
 3. 已访问
+
+### js实现广度优先
+
+图的广度优先算法需要借助之前写的队列来完成，，需要置顶一个开始遍历的顶点，我们可以叫做开始顶点，
+
+其思路是： 
+
+1. 发现顶点的颜色是白色的时候，存入队列，等待遍历其邻接顶点，并将这些顶点标记为已发现
+
+2. 从队列中拿出已发现的顶点，并开始访问其全部的邻接顶点，并且跳过已经访问的顶点
+
+3. 遍历完这个顶点后，将其标记为黑色
+
+4. 循环在队列中探索下一个顶点
+
+```javascript
+// 初始化颜色
+  initColor () {
+    const colors = {};
+    for (let i = 0; i < this.vertexs.length; i++) {
+      colors[this.vertexs[i]] = 'white';
+    }
+    return colors
+  }
+
+  bfs (v, callback) {
+    const colors = this.initColor();
+
+    const queue = new Queue();
+    queue.enqueue(v);
+    while(!queue.isEmpty()) {
+      const qVertexs = queue.dequeue();
+      const edge = this.edgeList[qVertexs]
+      for(let i = 0; i < edge.length; i++) {
+        const e = edge[i]
+        if(colors[e] === 'white') {
+          colors[e] = 'grey';
+          queue.enqueue(e)
+        }
+      }
+      colors[qVertexs] = 'black';
+      if(callback) {
+        callback(qVertexs)
+      }
+    }
+  }
+```
+
+### js实现深度优先
+
+深度优先需要使用的是递归，其思路是
+
+1. 从某个顶点开始查找，并将其标记为灰色，即已发现状态
+
+2. 从这个顶点开始访问其他的全部顶点，并需要跳过已访问过的顶点
+
+3. 遍历完这个顶点之后，将这个顶点标记为黑色
+
+4. 递归返回，继续访问下一个顶点
+
+```javascript
+dfsVisite (v, colors, callback) {
+    colors[v] = 'grey';
+    if(callback) {
+      callback(v);
+    }
+    const edge = this.edgeList[v];
+    for(let i = 0; i < edge.length; i++) {
+      const e = edge[i]
+      if(colors[e] === 'white') {
+        this.dfsVisite(edge[i], colors, callback)
+      }
+    }
+    colors[v] = 'black';
+  }
+
+  dfs (v, callback) {
+    const colors = this.initColor();
+    this.dfsVisite(v, colors, callback);
+  }
+```
+
+## 最短路径
+
+什么是路径：由边顺序连接的一些列的顶点所组成
+
+最短路径：从图中的某个顶点开始（起点），到达另外一个顶点（终点），可能有多条，我们需要找到一条路径上的顶点权值总和最小
+
+回溯点：离上一个顶点最近的顶点
+
+回溯路径：所有的回溯点组成回溯路径
+
+## 本节全部代码
+
+```javascript
+class Queue {
+  constructor() {
+    this.items = [];
+  }
+  // 入队
+  enqueue(ele) {
+    this.items.push(ele);
+  }
+  // 出队
+  dequeue() {
+    return this.items.shift();
+  }
+  // 查看队头
+  front() {
+    return this.items[0]
+  }
+  // 查看队尾
+  rear() {
+    return this.items[this.items.length-1]
+  }
+  // 是否为空
+  isEmpty() {
+    return this.items.length === 0;
+  }
+  // 获取长度
+  size() {
+    return this.items.length;
+  }
+  // 清空队列
+  clear() {
+    this.items.length = 0;
+  }
+}
+
+class Graph {
+  constructor() {
+    this.vertexs = [] //存储顶点
+    this.edgeList = {} //存储边
+  }
+
+  addVertex (v) {
+    this.vertexs.push(v);
+    this.edgeList[v] = [];
+  }
+
+  addEdge (a, b) {
+    this.edgeList[a].push(b);
+    this.edgeList[b].push(a);
+  }
+
+  // 初始化颜色
+  initColor () {
+    const colors = {};
+    for (let i = 0; i < this.vertexs.length; i++) {
+      colors[this.vertexs[i]] = 'white';
+    }
+    return colors
+  }
+
+  bfs (v, callback) {
+    const colors = this.initColor();
+
+    const queue = new Queue();
+    queue.enqueue(v);
+
+    let prev = {};
+    for(let i = 0; i < this.vertexs.length; i++) {
+      prev[this.vertexs[i]] = null
+    }
+
+    while(!queue.isEmpty()) {
+      const qVertexs = queue.dequeue();
+      const edge = this.edgeList[qVertexs]
+      for(let i = 0; i < edge.length; i++) {
+        const e = edge[i]
+        if(colors[e] === 'white') {
+          colors[e] = 'grey';
+          queue.enqueue(e)
+        }
+      }
+      colors[qVertexs] = 'black';
+      if(callback) {
+        callback(qVertexs)
+      }
+    }
+  }
+
+  dfsVisite (v, colors, callback) {
+    colors[v] = 'grey';
+    if(callback) {
+      callback(v);
+    }
+    const edge = this.edgeList[v];
+    for(let i = 0; i < edge.length; i++) {
+      const e = edge[i]
+      if(colors[e] === 'white') {
+        this.dfsVisite(edge[i], colors, callback)
+      }
+    }
+    colors[v] = 'black';
+  }
+
+  dfs (v, callback) {
+    const colors = this.initColor();
+    this.dfsVisite(v, colors, callback);
+  }
+}
+
+const graph = new Graph();
+// 添加顶点
+graph.addVertex(1)
+graph.addVertex(2)
+graph.addVertex(3)
+graph.addVertex(4)
+graph.addVertex(5)
+graph.addVertex(6)
+// 添加边
+graph.addEdge(1, 2)
+graph.addEdge(1, 6)
+graph.addEdge(2, 3)
+graph.addEdge(2, 4)
+graph.addEdge(3, 4)
+graph.addEdge(4, 5)
+graph.addEdge(4, 6)
+graph.addEdge(5, 6)
+
+console.log(graph)
+console.log('广度优先')
+graph.bfs(1, (v) => {
+  console.log(v)
+});
+console.log('深度优先')
+graph.dfs(1, (v) => {
+  console.log(v)
+})
+```
